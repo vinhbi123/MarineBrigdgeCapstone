@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShipCapstone.Application", "ShipCapstone.Application\ShipCapstone.Application.csproj", "{7AA7E8F1-4EC5-49EC-82B3-AD227B71695F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShipCapstone.Domain", "ShipCapstone.Domain\ShipCapstone.Domain.csproj", "{588E536A-E4D6-4E5E-8F4C-F994F65348EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShipCapstone.Infrastructure", "ShipCapstone.Infrastructure\ShipCapstone.Infrastructure.csproj", "{9E357B80-3AE7-4F84-B79C-8541B17F5008}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7AA7E8F1-4EC5-49EC-82B3-AD227B71695F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AA7E8F1-4EC5-49EC-82B3-AD227B71695F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AA7E8F1-4EC5-49EC-82B3-AD227B71695F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AA7E8F1-4EC5-49EC-82B3-AD227B71695F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{588E536A-E4D6-4E5E-8F4C-F994F65348EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{588E536A-E4D6-4E5E-8F4C-F994F65348EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{588E536A-E4D6-4E5E-8F4C-F994F65348EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{588E536A-E4D6-4E5E-8F4C-F994F65348EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E357B80-3AE7-4F84-B79C-8541B17F5008}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E357B80-3AE7-4F84-B79C-8541B17F5008}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E357B80-3AE7-4F84-B79C-8541B17F5008}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E357B80-3AE7-4F84-B79C-8541B17F5008}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
