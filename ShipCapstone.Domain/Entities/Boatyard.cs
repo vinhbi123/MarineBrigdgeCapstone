@@ -2,7 +2,7 @@ using ShipCapstone.Domain.Entities.Common;
 
 namespace ShipCapstone.Domain.Entities;
 
-public class Boatyard : EntityBase<Guid>
+public class Boatyard : EntityAuditBase<Guid>
 {
     public string Name { get; set; }
     public string? Longitude { get; set; }

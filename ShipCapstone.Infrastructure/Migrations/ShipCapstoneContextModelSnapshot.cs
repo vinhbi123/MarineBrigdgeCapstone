@@ -40,8 +40,8 @@ namespace ShipCapstone.Infrastructure.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("FullName")
                         .IsRequired()
@@ -63,9 +63,17 @@ namespace ShipCapstone.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Username")
                         .IsUnique();
 
                     b.ToTable("Account");
@@ -79,6 +87,12 @@ namespace ShipCapstone.Infrastructure.Migrations
 
                     b.Property<Guid>("AccountId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastModifiedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Latitude")
                         .HasMaxLength(50)
@@ -296,7 +310,12 @@ namespace ShipCapstone.Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<Guid>("SupplierId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("SupplierId");
 
                     b.ToTable("Category");
                 });
@@ -450,7 +469,12 @@ namespace ShipCapstone.Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<Guid>("SupplierId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("SupplierId");
 
                     b.ToTable("ModifierGroup");
                 });
@@ -667,8 +691,6 @@ namespace ShipCapstone.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("SupplierId");
-
                     b.ToTable("Product");
                 });
 
@@ -869,6 +891,12 @@ namespace ShipCapstone.Infrastructure.Migrations
                     b.Property<Guid>("AccountId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastModifiedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Latitude")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -881,10 +909,6 @@ namespace ShipCapstone.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -1018,6 +1042,17 @@ namespace ShipCapstone.Infrastructure.Migrations
                     b.Navigation("Booking");
                 });
 
+            modelBuilder.Entity("ShipCapstone.Domain.Entities.Category", b =>
+                {
+                    b.HasOne("ShipCapstone.Domain.Entities.Supplier", "Supplier")
+                        .WithMany("Categories")
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Supplier");
+                });
+
             modelBuilder.Entity("ShipCapstone.Domain.Entities.Complaint", b =>
                 {
                     b.HasOne("ShipCapstone.Domain.Entities.Account", "Account")
@@ -1091,6 +1126,17 @@ namespace ShipCapstone.Infrastructure.Migrations
                     b.Navigation("ProductVariant");
                 });
 
+            modelBuilder.Entity("ShipCapstone.Domain.Entities.ModifierGroup", b =>
+                {
+                    b.HasOne("ShipCapstone.Domain.Entities.Supplier", "Supplier")
+                        .WithMany("ModifierGroups")
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Supplier");
+                });
+
             modelBuilder.Entity("ShipCapstone.Domain.Entities.ModifierOption", b =>
                 {
                     b.HasOne("ShipCapstone.Domain.Entities.ModifierGroup", "ModifierGroup")
@@ -1162,15 +1208,7 @@ namespace ShipCapstone.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ShipCapstone.Domain.Entities.Supplier", "Supplier")
-                        .WithMany("Products")
-                        .HasForeignKey("SupplierId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Category");
-
-                    b.Navigation("Supplier");
                 });
 
             modelBuilder.Entity("ShipCapstone.Domain.Entities.ProductImage", b =>
@@ -1399,7 +1437,9 @@ namespace ShipCapstone.Infrastructure.Migrations
 
             modelBuilder.Entity("ShipCapstone.Domain.Entities.Supplier", b =>
                 {
-                    b.Navigation("Products");
+                    b.Navigation("Categories");
+
+                    b.Navigation("ModifierGroups");
                 });
 #pragma warning restore 612, 618
         }

@@ -48,7 +48,7 @@ public class ShipCapstoneContext : DbContext
     {
         await using var transaction = await Database.BeginTransactionAsync(cancellationToken);
         try
-        {
+        { 
             var modified = ChangeTracker.Entries()
                 .Where(e => e.State == EntityState.Modified ||
                             e.State == EntityState.Added ||

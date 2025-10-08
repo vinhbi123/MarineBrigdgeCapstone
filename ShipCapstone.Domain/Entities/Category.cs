@@ -8,6 +8,8 @@ public class Category : EntityAuditBase<Guid>
     public string? Description { get; set; }
     public string? ImageUrl { get; set; }
     public bool IsActive { get; set; }
+    public Guid SupplierId { get; set; }
     
+    public virtual Supplier Supplier { get; set; }
     public virtual ICollection<Product>? Products { get; set; }
 }
