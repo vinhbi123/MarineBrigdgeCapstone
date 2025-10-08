@@ -13,6 +13,7 @@ try
 {
     builder.Services.AddInfrastructureServices(builder.Configuration);
     builder.Services.AddApplicationServices(builder.Configuration);
+    builder.Services.AddHttpClient();
 
     var app = builder.Build();
 
@@ -28,19 +29,19 @@ try
         });
     }
 
-    // using (var scope = app.Services.CreateScope())
-    // {
-    //     try
-    //     {
-    //         var shipCapstoneSeed = scope.ServiceProvider.GetRequiredService<ShipCapstoneSeed>();
-    //         await shipCapstoneSeed.InitializeAsync();
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         Log.Error(e, "An error occurred while seeding the database.");
-    //         throw;
-    //     }
-    // }
+    using (var scope = app.Services.CreateScope())
+    {
+        try
+        {
+            var shipCapstoneSeed = scope.ServiceProvider.GetRequiredService<ShipCapstoneSeed>();
+            await shipCapstoneSeed.InitializeAsync();
+        }
+        catch (Exception e)
+        {
+            Log.Error(e, "An error occurred while seeding the database");
+            throw;
+        }
+    }
 
     app.UseCors(builder =>
         builder.AllowAnyOrigin()

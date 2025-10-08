@@ -13,5 +13,9 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder.Property(c => c.Description).HasMaxLength(1000);
         builder.Property(c => c.IsActive).IsRequired();
         builder.Property(c => c.ImageUrl).HasMaxLength(500);
+        builder.HasOne(c => c.Supplier)
+            .WithMany(s => s.Categories)
+            .HasForeignKey(c => c.SupplierId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

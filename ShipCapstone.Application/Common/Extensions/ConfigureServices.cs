@@ -1,7 +1,22 @@
+using FluentValidation;
 using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using ShipCapstone.Application.Common.Behaviours;
 using ShipCapstone.Application.Common.Utils;
+using ShipCapstone.Application.Features.Accounts.Command.Register;
+using ShipCapstone.Application.Features.Authentication.Command.Login;
+using ShipCapstone.Application.Features.Authentication.Command.SendOtp;
+using ShipCapstone.Application.Features.Categories.Command.CreateCategory;
+using ShipCapstone.Application.Features.Categories.Command.UpdateCategory;
+using ShipCapstone.Application.Features.ModifierGroups.Command.CreateModifierGroup;
+using ShipCapstone.Application.Features.ModifierGroups.Command.UpdateModifierGroup;
+using ShipCapstone.Application.Features.ModifierOptions.Command.CreateModifierOption;
+using ShipCapstone.Application.Features.ModifierOptions.Command.UpdateModifierOption;
+using ShipCapstone.Application.Features.Ships.Command.CreateShip;
+using ShipCapstone.Application.Features.Ships.Command.UpdateShip;
+using ShipCapstone.Application.Features.Suppliers.Command.CreateSupplier;
+using ShipCapstone.Application.Services.Implements;
+using ShipCapstone.Application.Services.Interfaces;
 using ShipCapstone.Domain.Models.Common;
 
 namespace ShipCapstone.Application.Common.Extensions;
@@ -12,14 +27,33 @@ public static class ConfigureServices
         IConfiguration configuration)
     {
         services
-            .AddMediator( options =>
+            .AddMediator(options =>
             {
                 options.Namespace = "ShipCapstone.Application.Controllers";
                 options.ServiceLifetime = ServiceLifetime.Scoped;
             })
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>))
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+        services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddScoped<IClaimService, ClaimService>();
+        services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IRedisService, RedisService>();
+        services.AddScoped<IUploadService, UploadService>();
+        services.AddScoped<IOAuthService, OAuthService>();
         services.AddScoped(typeof(ValidationUtil<>));
+        services.AddScoped<IValidator<LoginCommand>, LoginCommandValidator>();
+        services.AddScoped<IValidator<SendOtpCommand>, SendOtpCommandValidator>();
+        services.AddScoped<IValidator<RegisterCommand>, RegisterCommandValidator>();
+        services.AddScoped<IValidator<CreateShipCommand>, CreateShipCommandValidator>();
+        services.AddScoped<IValidator<UpdateShipCommand>, UpdateShipCommandValidator>();
+        services.AddScoped<IValidator<CreateSupplierCommand>, CreateSupplierCommandValidator>();
+        services.AddScoped<IValidator<CreateCategoryCommand>, CreateCategoryCommandValidator>();
+        services.AddScoped<IValidator<UpdateCategoryCommand>, UpdateCategoryCommandValidator>();
+        services.AddScoped<IValidator<CreateModifierGroupCommand>, CreateModifierGroupCommandValidator>();
+        services.AddScoped<IValidator<UpdateModifierGroupCommand>, UpdateModifierGroupCommandValidator>();
+        services.AddScoped<IValidator<CreateModifierOptionCommand>, CreateModifierOptionCommandValidator>();
+        services.AddScoped<IValidator<UpdateModifierOptionCommand>, UpdateModifierOptionCommandValidator>();
+        services.AddHttpContextAccessor();
         services.Configure<ApiBehaviorOptions>(options =>
         {
             options.InvalidModelStateResponseFactory = context =>

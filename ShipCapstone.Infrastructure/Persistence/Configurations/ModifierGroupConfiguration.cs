@@ -10,5 +10,9 @@ public class ModifierGroupConfiguration : IEntityTypeConfiguration<ModifierGroup
     {
         builder.HasKey(mg => mg.Id);
         builder.Property(mg => mg.Name).IsRequired().HasMaxLength(255);
+        builder.HasOne(mg => mg.Supplier)
+            .WithMany(s => s.ModifierGroups)
+            .HasForeignKey(mg => mg.SupplierId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

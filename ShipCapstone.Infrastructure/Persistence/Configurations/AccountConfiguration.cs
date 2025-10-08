@@ -13,7 +13,10 @@ public class AccountConfiguration : IEntityTypeConfiguration<Account>
         builder.Property(a => a.FullName).IsRequired().HasMaxLength(255);
         builder.HasIndex(a => a.Email)
             .IsUnique();
-        builder.Property(a => a.Email).IsRequired().HasMaxLength(255);
+        builder.HasIndex(a => a.Username)
+            .IsUnique();
+        builder.Property(a => a.Email).IsRequired().HasMaxLength(100);
+        builder.Property(a => a.Username).IsRequired().HasMaxLength(20);
         builder.Property(a => a.PasswordHash).IsRequired();
         builder.Property(a => a.Address).HasMaxLength(500);
         builder.Property(a => a.PhoneNumber).HasMaxLength(15);
