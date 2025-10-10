@@ -42,4 +42,15 @@ public class ApiEndPointConstant
         public const string ModifierOptionsEndpoint = ApiEndpoint + "/modifier-options";
         public const string ModifierOptionById = ModifierOptionsEndpoint + "/{id}";
     }
+    public static class Ports
+    {
+        public const string PortEndpoint = ApiEndpoint + "/ports";
+        public const string PortById = PortEndpoint + "/{id}";
+    }
+
+    public static class Boatyards
+    {
+        public const string BoatyardEndpoint = ApiEndpoint + "/boatyards";
+        public const string BoatyardById = BoatyardEndpoint + "/{id}";
+    }
 }
