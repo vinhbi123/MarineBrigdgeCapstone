@@ -6,12 +6,15 @@ using ShipCapstone.Application.Common.Utils;
 using ShipCapstone.Application.Features.Accounts.Command.Register;
 using ShipCapstone.Application.Features.Authentication.Command.Login;
 using ShipCapstone.Application.Features.Authentication.Command.SendOtp;
+using ShipCapstone.Application.Features.Boatyards.Command.CreateBoatyard;
 using ShipCapstone.Application.Features.Categories.Command.CreateCategory;
 using ShipCapstone.Application.Features.Categories.Command.UpdateCategory;
 using ShipCapstone.Application.Features.ModifierGroups.Command.CreateModifierGroup;
 using ShipCapstone.Application.Features.ModifierGroups.Command.UpdateModifierGroup;
 using ShipCapstone.Application.Features.ModifierOptions.Command.CreateModifierOption;
 using ShipCapstone.Application.Features.ModifierOptions.Command.UpdateModifierOption;
+using ShipCapstone.Application.Features.Ports.Command.CreatePort;
+using ShipCapstone.Application.Features.Ports.Command.UpdatePort;
 using ShipCapstone.Application.Features.Ships.Command.CreateShip;
 using ShipCapstone.Application.Features.Ships.Command.UpdateShip;
 using ShipCapstone.Application.Features.Suppliers.Command.CreateSupplier;
@@ -53,6 +56,9 @@ public static class ConfigureServices
         services.AddScoped<IValidator<UpdateModifierGroupCommand>, UpdateModifierGroupCommandValidator>();
         services.AddScoped<IValidator<CreateModifierOptionCommand>, CreateModifierOptionCommandValidator>();
         services.AddScoped<IValidator<UpdateModifierOptionCommand>, UpdateModifierOptionCommandValidator>();
+        services.AddScoped<IValidator<CreatePortCommand>, CreatePortCommandValidator>();
+        services.AddScoped<IValidator<UpdatePortCommand>, UpdatePortCommandValidator>();
+        services.AddScoped<IValidator<CreateBoatyardCommand>, CreateBoatyardCommandValidator>();
         services.AddHttpContextAccessor();
         services.Configure<ApiBehaviorOptions>(options =>
         {
