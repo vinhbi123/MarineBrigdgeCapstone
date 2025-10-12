@@ -60,4 +60,10 @@ public class ApiEndPointConstant
         public const string DockSlotEndpoint = ApiEndpoint + "/dock-slots";
         public const string DockSlotById = DockSlotEndpoint + "/{id}";
     }
+
+    public static class BoatyardServices
+    {
+        public const string BoatyardServiceEndpoint = ApiEndpoint + "/boatyard-services";
+        public const string BoatyardServiceById = BoatyardServiceEndpoint + "/{id}";
+    }
 }
