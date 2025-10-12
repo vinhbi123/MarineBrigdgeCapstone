@@ -70,8 +70,8 @@ public class CreateBoatyardCommandValidator : AbstractValidator<CreateBoatyardCo
 
                     return allowedImageExtensions.Contains(extension);
                 }).WithMessage("Hình đại diện không hợp lý với các định dạng: " + string.Join(", ", allowedImageExtensions));
-            RuleForEach(x => x.DockSlots).SetValidator(new CreateDockSlotForCreateBoatyardValidator());
         });
+        RuleForEach(x => x.DockSlots).SetValidator(new CreateDockSlotForCreateBoatyardValidator());
     }
 }
 

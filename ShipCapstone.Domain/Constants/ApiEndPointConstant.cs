@@ -52,5 +52,12 @@ public class ApiEndPointConstant
     {
         public const string BoatyardEndpoint = ApiEndpoint + "/boatyards";
         public const string BoatyardById = BoatyardEndpoint + "/{id}";
+        public const string BoatyardDetail = BoatyardEndpoint + "/detail";
+    }
+
+    public static class DockSlots
+    {
+        public const string DockSlotEndpoint = ApiEndpoint + "/dock-slots";
+        public const string DockSlotById = DockSlotEndpoint + "/{id}";
     }
 }

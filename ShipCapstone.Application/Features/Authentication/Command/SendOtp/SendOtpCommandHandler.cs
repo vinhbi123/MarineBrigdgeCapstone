@@ -53,9 +53,9 @@ public class SendOtpCommandHandler : IRequestHandler<SendOtpCommand, ApiResponse
             Subject = otp + " là mã xác thực của bạn",
         };
         await _emailService.SendEmailAsync(emailMessage);
-        
-        var isSuccess = await _redisService.SetStringAsync(key, otp, TimeSpan.FromMinutes(2));
-        
+
+        var isSuccess = await _redisService.SetStringAsync(key, otp, TimeSpan.FromMinutes(5));
+
         if (!isSuccess)
             throw new BadHttpRequestException("Lỗi khi lưu mã OTP");
         
