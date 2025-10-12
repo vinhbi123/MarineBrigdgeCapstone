@@ -8,6 +8,8 @@ using ShipCapstone.Application.Features.Authentication.Command.Login;
 using ShipCapstone.Application.Features.Authentication.Command.SendOtp;
 using ShipCapstone.Application.Features.Boatyards.Command.CreateBoatyard;
 using ShipCapstone.Application.Features.Boatyards.Command.UpdateBoatyard;
+using ShipCapstone.Application.Features.BoatyardServices.Command.CreateBoatyardService;
+using ShipCapstone.Application.Features.BoatyardServices.Command.UpdateBoatyardService;
 using ShipCapstone.Application.Features.Categories.Command.CreateCategory;
 using ShipCapstone.Application.Features.Categories.Command.UpdateCategory;
 using ShipCapstone.Application.Features.DockSlots.Command.CreateDockSlot;
@@ -65,6 +67,8 @@ public static class ConfigureServices
         services.AddScoped<IValidator<UpdateBoatyardCommand>, UpdateBoatyardCommandValidator>();
         services.AddScoped<IValidator<CreateDockSlotCommand>, CreateDockSlotCommandValidator>();
         services.AddScoped<IValidator<UpdateDockSlotCommand>, UpdateDockSlotCommandValidator>();
+        services.AddScoped<IValidator<CreateBoatyardServiceCommand>, CreateBoatyardServiceCommandValidator>();
+        services.AddScoped<IValidator<UpdateBoatyardServiceCommand>, UpdateBoatyardServiceCommandValidator>();
         services.AddHttpContextAccessor();
         services.Configure<ApiBehaviorOptions>(options =>
         {
