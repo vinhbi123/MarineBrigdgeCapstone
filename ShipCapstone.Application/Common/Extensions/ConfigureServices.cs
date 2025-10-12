@@ -7,8 +7,11 @@ using ShipCapstone.Application.Features.Accounts.Command.Register;
 using ShipCapstone.Application.Features.Authentication.Command.Login;
 using ShipCapstone.Application.Features.Authentication.Command.SendOtp;
 using ShipCapstone.Application.Features.Boatyards.Command.CreateBoatyard;
+using ShipCapstone.Application.Features.Boatyards.Command.UpdateBoatyard;
 using ShipCapstone.Application.Features.Categories.Command.CreateCategory;
 using ShipCapstone.Application.Features.Categories.Command.UpdateCategory;
+using ShipCapstone.Application.Features.DockSlots.Command.CreateDockSlot;
+using ShipCapstone.Application.Features.DockSlots.Command.UpdateDockSlot;
 using ShipCapstone.Application.Features.ModifierGroups.Command.CreateModifierGroup;
 using ShipCapstone.Application.Features.ModifierGroups.Command.UpdateModifierGroup;
 using ShipCapstone.Application.Features.ModifierOptions.Command.CreateModifierOption;
@@ -59,6 +62,9 @@ public static class ConfigureServices
         services.AddScoped<IValidator<CreatePortCommand>, CreatePortCommandValidator>();
         services.AddScoped<IValidator<UpdatePortCommand>, UpdatePortCommandValidator>();
         services.AddScoped<IValidator<CreateBoatyardCommand>, CreateBoatyardCommandValidator>();
+        services.AddScoped<IValidator<UpdateBoatyardCommand>, UpdateBoatyardCommandValidator>();
+        services.AddScoped<IValidator<CreateDockSlotCommand>, CreateDockSlotCommandValidator>();
+        services.AddScoped<IValidator<UpdateDockSlotCommand>, UpdateDockSlotCommandValidator>();
         services.AddHttpContextAccessor();
         services.Configure<ApiBehaviorOptions>(options =>
         {
