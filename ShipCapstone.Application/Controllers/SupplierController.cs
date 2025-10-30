@@ -1,11 +1,9 @@
 using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using ShipCapstone.Application.Common.Utils;
-using ShipCapstone.Application.Common.Validators;
 using ShipCapstone.Application.Features.Suppliers.Command.CreateSupplier;
 using ShipCapstone.Application.Features.Suppliers.Query.GetSuppliers;
 using ShipCapstone.Domain.Constants;
-using ShipCapstone.Domain.Enums;
 using ShipCapstone.Domain.Models.Authentication;
 using ShipCapstone.Domain.Models.Common;
 using ShipCapstone.Domain.Models.Suppliers;
@@ -40,7 +38,6 @@ public class SupplierController : BaseController<SupplierController>
         return CreatedAtAction(nameof(CreateSupplier), apiResponse);
     }
 
-    [CustomAuthorize(ERole.Admin)]
     [ProducesResponseType<ApiResponse<IPaginate<GetSuppliersResponse>>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]

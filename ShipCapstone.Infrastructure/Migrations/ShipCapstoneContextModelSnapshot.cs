@@ -839,8 +839,7 @@ namespace ShipCapstone.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountId")
-                        .IsUnique();
+                    b.HasIndex("AccountId");
 
                     b.ToTable("Ship");
                 });
@@ -1274,8 +1273,8 @@ namespace ShipCapstone.Infrastructure.Migrations
             modelBuilder.Entity("ShipCapstone.Domain.Entities.Ship", b =>
                 {
                     b.HasOne("ShipCapstone.Domain.Entities.Account", "Account")
-                        .WithOne("Ship")
-                        .HasForeignKey("ShipCapstone.Domain.Entities.Ship", "AccountId")
+                        .WithMany("Ships")
+                        .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -1339,7 +1338,7 @@ namespace ShipCapstone.Infrastructure.Migrations
 
                     b.Navigation("Reviews");
 
-                    b.Navigation("Ship");
+                    b.Navigation("Ships");
 
                     b.Navigation("Supplier");
                 });
