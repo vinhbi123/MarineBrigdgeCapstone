@@ -15,8 +15,8 @@ public class ShipConfiguration : IEntityTypeConfiguration<Ship>
         builder.Property(s => s.Longitude).HasMaxLength(20);
         builder.Property(s => s.Latitude).HasMaxLength(20);
         builder.HasOne(s => s.Account)
-            .WithOne(a => a.Ship)
-            .HasForeignKey<Ship>(s => s.AccountId)
+            .WithMany(a => a.Ships)
+            .HasForeignKey(s => s.AccountId)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -95,7 +95,6 @@ public class BoatyardServiceController : BaseController<BoatyardController>
         return Ok(apiResponse);
     }
 
-    [CustomAuthorize(ERole.Boatyard)]
     [HttpGet(ApiEndPointConstant.BoatyardServices.BoatyardServiceById)]
     [ProducesResponseType<GetBoatyardServiceByIdResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
@@ -103,7 +102,7 @@ public class BoatyardServiceController : BaseController<BoatyardController>
     [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetBoatyardServicesForBoatyard([FromRoute] Guid id)
+    public async Task<IActionResult> GetBoatyardServiceById([FromRoute] Guid id)
     {
         var query = new GetBoatyardServiceByIdQuery()
         {

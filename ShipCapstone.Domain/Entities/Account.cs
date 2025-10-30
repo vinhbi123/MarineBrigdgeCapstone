@@ -14,7 +14,7 @@ public class Account : EntityAuditBase<Guid>
     public string? AvatarUrl { get; set; }
     public ERole Role { get; set; }
 
-    public virtual Ship? Ship { get; set; }
+    public virtual ICollection<Ship>? Ships { get; set; } = new List<Ship>();
     public virtual ICollection<Order>? Orders { get; set; } = new List<Order>();
     public virtual Boatyard? Boatyard { get; set; }
     public virtual ICollection<Booking>? Bookings { get; set; } = new List<Booking>();

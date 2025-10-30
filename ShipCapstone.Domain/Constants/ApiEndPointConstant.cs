@@ -52,6 +52,7 @@ public class ApiEndPointConstant
     {
         public const string BoatyardEndpoint = ApiEndpoint + "/boatyards";
         public const string BoatyardById = BoatyardEndpoint + "/{id}";
+        public const string BoatyardWithBoatyardServices = BoatyardById + "/boatyard-services";
         public const string BoatyardDetail = BoatyardEndpoint + "/detail";
     }
 
