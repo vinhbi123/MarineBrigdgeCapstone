@@ -5,8 +5,9 @@ using ShipCapstone.Domain.Entities;
 using ShipCapstone.Domain.Models.Common;
 using ShipCapstone.Infrastructure.Persistence;
 using ShipCapstone.Infrastructure.Repositories.Interface;
+using ReviewEntity = ShipCapstone.Domain.Entities.Review;
 
-namespace ShipCapstone.Application.Features.Reviews.Command.CreateReview
+namespace ShipCapstone.Application.Features.Review.Command.CreateReview
 {
     public class CreateReviewCommandHandler : IRequestHandler<CreateReviewCommand, ApiResponse>
     {
@@ -30,7 +31,7 @@ namespace ShipCapstone.Application.Features.Reviews.Command.CreateReview
                 throw new BadHttpRequestException("Tài khoản không hợp lệ");
             }
 
-            var product = await _unitOfWork.GetRepository<Domain.Entities.Product>()
+            var product = await _unitOfWork.GetRepository<Product>()
       .SingleOrDefaultAsync(predicate: p => p.Id == request.ProductId);
             if (product == null)
             {

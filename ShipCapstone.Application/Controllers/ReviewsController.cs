@@ -2,8 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using ShipCapstone.Application.Common.Utils;
 using ShipCapstone.Application.Common.Validators;
-using ShipCapstone.Application.Features.Reviews.Command.CreateReview;
-using ShipCapstone.Application.Features.Reviews.Query.GetReviewsByProduct;
+using ShipCapstone.Application.Features.Review.Command.CreateReview;
+using ShipCapstone.Application.Features.Review.Command.DeleteReview;
+using ShipCapstone.Application.Features.Review.Query.GetReviewsByProduct;
 using ShipCapstone.Domain.Models.Common;
 using ShipCapstone.Domain.Models.Reviews;
 using ShipCapstone.Infrastructure.Paginate.Interface;
@@ -61,6 +62,29 @@ namespace ShipCapstone.Application.Controllers
             var apiResponse = await _mediator.Send(query);
             return Ok(apiResponse);
         }
+
+        /// <summary>
+        /// Xóa một đánh giá theo reviewId
+        /// DELETE /api/v1/reviews/{id}
+        /// </summary>
+        [HttpDelete("{id:guid}")]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteReview([FromRoute] Guid id)
+        {
+            var command = new DeleteReviewCommand
+            {
+                ReviewId = id
+            };
+
+            var apiResponse = await _mediator.Send(command);
+            return Ok(apiResponse);
+        }
     }
 }
+
+
  
