@@ -13,7 +13,7 @@ public class GetBoatyardServiceByIdQueryHandler : IRequestHandler<GetBoatyardSer
 {
     private readonly IUnitOfWork<ShipCapstoneContext> _unitOfWork;
     private readonly ILogger _logger;
-
+    
     public GetBoatyardServiceByIdQueryHandler(IUnitOfWork<ShipCapstoneContext> unitOfWork, ILogger logger)
     {
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));

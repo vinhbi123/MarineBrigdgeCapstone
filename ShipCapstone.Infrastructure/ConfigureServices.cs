@@ -27,6 +27,7 @@ public static class ConfigureServices
         services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
         services.Configure<OAuthSettings>(configuration.GetSection("OAuthSettings"));
+        services.Configure<PayOSSettings>(configuration.GetSection("PayOSSettings"));
         services.Configure<S3CompatibleStorageSettings>(configuration.GetSection("S3CompatibleStorageSettings"));
         services.AddScoped<ShipCapstoneSeed>();
         services.AddJwt(configuration);

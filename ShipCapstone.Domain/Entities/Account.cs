@@ -4,7 +4,7 @@ using ShipCapstone.Domain.Enums;
 namespace ShipCapstone.Domain.Entities;
 
 public class Account : EntityAuditBase<Guid>
-{
+{ 
     public string FullName { get; set; }
     public string Username { get; set; }
     public string Email { get; set; }
@@ -13,7 +13,7 @@ public class Account : EntityAuditBase<Guid>
     public string? PhoneNumber { get; set; }
     public string? AvatarUrl { get; set; }
     public ERole Role { get; set; }
-
+    public virtual Ship? CaptainShip { get; set; }
     public virtual ICollection<Ship>? Ships { get; set; } = new List<Ship>();
     public virtual ICollection<Order>? Orders { get; set; } = new List<Order>();
     public virtual Boatyard? Boatyard { get; set; }
@@ -22,5 +22,4 @@ public class Account : EntityAuditBase<Guid>
     public virtual ICollection<Notification>? Notifications { get; set; } = new List<Notification>();
     public virtual Supplier? Supplier { get; set; }
     public virtual ICollection<Review>? Reviews { get; set; } = new List<Review>();
-    public virtual ICollection<Payment>? Payments { get; set; } = new List<Payment>();
 }

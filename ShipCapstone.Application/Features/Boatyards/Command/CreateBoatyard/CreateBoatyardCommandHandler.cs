@@ -1,4 +1,4 @@
-﻿using Mediator;
+using Mediator;
 using ShipCapstone.Application.Common.Utils;
 using ShipCapstone.Application.Services.Interfaces;
 using ShipCapstone.Domain.Entities;
@@ -15,10 +15,10 @@ public class CreateBoatyardCommandHandler : IRequestHandler<CreateBoatyardComman
     private readonly ILogger _logger;
     private readonly IRedisService _redisService;
     private readonly IUploadService _uploadService;
-
+    
     public CreateBoatyardCommandHandler(
-        IUnitOfWork<ShipCapstoneContext> unitOfWork,
-        ILogger logger,
+        IUnitOfWork<ShipCapstoneContext> unitOfWork, 
+        ILogger logger, 
         IRedisService redisService,
         IUploadService uploadService)
     {
@@ -27,19 +27,19 @@ public class CreateBoatyardCommandHandler : IRequestHandler<CreateBoatyardComman
         _redisService = redisService ?? throw new ArgumentNullException(nameof(redisService));
         _uploadService = uploadService ?? throw new ArgumentNullException(nameof(uploadService));
     }
-
+    
     public async ValueTask<ApiResponse> Handle(CreateBoatyardCommand request, CancellationToken cancellationToken)
     {
-        var key = "otp:" + request.Email;
+        var key = "ShipCapstone-Otp:" + request.Email;
         var existingOtp = await _redisService.GetStringAsync(key);
-
+        
         if (string.IsNullOrEmpty(existingOtp))
             throw new BadHttpRequestException("Không tìm thấy mã OTP");
         if (!existingOtp.Equals(request.Otp))
             throw new BadHttpRequestException("Mã OTP không chính xác");
-
+        
         var existingAccount = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
-            predicate: x => x.Email.Equals(request.Email) || x.Username.Equals(request.Username) ||
+            predicate: x => x.Email.Equals(request.Email) || x.Username.Equals(request.Username) || 
                             (request.PhoneNumber != null && x.PhoneNumber != null && x.PhoneNumber.Equals(request.PhoneNumber))
         );
         if (existingAccount != null)
@@ -85,14 +85,14 @@ public class CreateBoatyardCommandHandler : IRequestHandler<CreateBoatyardComman
             boatyard.Account.AvatarUrl = avatarUrl;
         }
         await _unitOfWork.GetRepository<Boatyard>().InsertAsync(boatyard);
-
+        
         var isSuccess = await _unitOfWork.CommitAsync() > 0;
         if (!isSuccess)
         {
             _logger.Error("CreateBoatyardCommandHandler - Handle: Tạo bến thuyền thất bại");
             throw new Exception("Tạo bến thuyền thất bại");
         }
-
+        
         return new ApiResponse()
         {
             Status = StatusCodes.Status201Created,

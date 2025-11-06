@@ -20,7 +20,6 @@ public class ShipCapstoneContext : DbContext
     public virtual DbSet<BookingService> BookingService { get; set; }
     public virtual DbSet<Category> Category { get; set; }
     public virtual DbSet<Complaint> Complaint { get; set; }
-    public virtual DbSet<Delivery> Delivery { get; set; }
     public virtual DbSet<DockSlot> DockSlot { get; set; }
     public virtual DbSet<Inventory> Inventory { get; set; }
     public virtual DbSet<ModifierGroup> ModifierGroup { get; set; }
@@ -38,7 +37,6 @@ public class ShipCapstoneContext : DbContext
     public virtual DbSet<ShipPortHistory> ShipPortHistory { get; set; }
     public virtual DbSet<Supplier> Supplier { get; set; }
     public virtual DbSet<Transaction> Transaction { get; set; }
-    public virtual DbSet<Payment> Payment { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ShipCapstoneContext).Assembly);

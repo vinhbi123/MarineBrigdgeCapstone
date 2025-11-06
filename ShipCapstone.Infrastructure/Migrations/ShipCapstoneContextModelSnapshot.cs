@@ -184,7 +184,7 @@ namespace ShipCapstone.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AccountId")
+                    b.Property<Guid?>("AccountId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
@@ -198,6 +198,9 @@ namespace ShipCapstone.Infrastructure.Migrations
 
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ShipId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
@@ -219,6 +222,8 @@ namespace ShipCapstone.Infrastructure.Migrations
                     b.HasIndex("AccountId");
 
                     b.HasIndex("DockSlotId");
+
+                    b.HasIndex("ShipId");
 
                     b.ToTable("Booking");
                 });
@@ -359,37 +364,6 @@ namespace ShipCapstone.Infrastructure.Migrations
                     b.HasIndex("OrderId");
 
                     b.ToTable("Complaint");
-                });
-
-            modelBuilder.Entity("ShipCapstone.Domain.Entities.Delivery", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("ArrivalTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DepartureTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ShipId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("ShipId");
-
-                    b.ToTable("Delivery");
                 });
 
             modelBuilder.Entity("ShipCapstone.Domain.Entities.DockSlot", b =>
@@ -543,7 +517,7 @@ namespace ShipCapstone.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AccountId")
+                    b.Property<Guid?>("AccountId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
@@ -552,6 +526,9 @@ namespace ShipCapstone.Infrastructure.Migrations
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("ShipId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<decimal>("TotalAmount")
                         .HasPrecision(12, 2)
                         .HasColumnType("decimal(12,2)");
@@ -559,6 +536,8 @@ namespace ShipCapstone.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
+
+                    b.HasIndex("ShipId");
 
                     b.ToTable("Order");
                 });
@@ -593,32 +572,6 @@ namespace ShipCapstone.Infrastructure.Migrations
                     b.HasIndex("ProductVariantId");
 
                     b.ToTable("OrderItem");
-                });
-
-            modelBuilder.Entity("ShipCapstone.Domain.Entities.Payment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AccountId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("LastModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("PaymentMethod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
-
-                    b.ToTable("Payment");
                 });
 
             modelBuilder.Entity("ShipCapstone.Domain.Entities.Port", b =>
@@ -810,6 +763,9 @@ namespace ShipCapstone.Infrastructure.Migrations
                     b.Property<int?>("BuildYear")
                         .HasColumnType("int");
 
+                    b.Property<Guid?>("CaptainId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -840,6 +796,10 @@ namespace ShipCapstone.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
+
+                    b.HasIndex("CaptainId")
+                        .IsUnique()
+                        .HasFilter("[CaptainId] IS NOT NULL");
 
                     b.ToTable("Ship");
                 });
@@ -927,24 +887,29 @@ namespace ShipCapstone.Infrastructure.Migrations
                         .HasPrecision(12, 2)
                         .HasColumnType("decimal(12,2)");
 
+                    b.Property<Guid?>("BookingId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Currency")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("OrderId")
+                    b.Property<Guid?>("OrderId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("TransactionCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("BookingId");
 
                     b.HasIndex("OrderId");
 
@@ -986,11 +951,9 @@ namespace ShipCapstone.Infrastructure.Migrations
 
             modelBuilder.Entity("ShipCapstone.Domain.Entities.Booking", b =>
                 {
-                    b.HasOne("ShipCapstone.Domain.Entities.Account", "Account")
+                    b.HasOne("ShipCapstone.Domain.Entities.Account", null)
                         .WithMany("Bookings")
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("AccountId");
 
                     b.HasOne("ShipCapstone.Domain.Entities.DockSlot", "DockSlot")
                         .WithMany("Bookings")
@@ -998,9 +961,15 @@ namespace ShipCapstone.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Account");
+                    b.HasOne("ShipCapstone.Domain.Entities.Ship", "Ship")
+                        .WithMany("Bookings")
+                        .HasForeignKey("ShipId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("DockSlot");
+
+                    b.Navigation("Ship");
                 });
 
             modelBuilder.Entity("ShipCapstone.Domain.Entities.BookingReplacementProduct", b =>
@@ -1077,25 +1046,6 @@ namespace ShipCapstone.Infrastructure.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("ShipCapstone.Domain.Entities.Delivery", b =>
-                {
-                    b.HasOne("ShipCapstone.Domain.Entities.Order", "Order")
-                        .WithMany("Deliveries")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ShipCapstone.Domain.Entities.Ship", "Ship")
-                        .WithMany("Deliveries")
-                        .HasForeignKey("ShipId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-
-                    b.Navigation("Ship");
-                });
-
             modelBuilder.Entity("ShipCapstone.Domain.Entities.DockSlot", b =>
                 {
                     b.HasOne("ShipCapstone.Domain.Entities.Boatyard", "Boatyard")
@@ -1160,13 +1110,17 @@ namespace ShipCapstone.Infrastructure.Migrations
 
             modelBuilder.Entity("ShipCapstone.Domain.Entities.Order", b =>
                 {
-                    b.HasOne("ShipCapstone.Domain.Entities.Account", "Account")
+                    b.HasOne("ShipCapstone.Domain.Entities.Account", null)
                         .WithMany("Orders")
-                        .HasForeignKey("AccountId")
+                        .HasForeignKey("AccountId");
+
+                    b.HasOne("ShipCapstone.Domain.Entities.Ship", "Ship")
+                        .WithMany("Orders")
+                        .HasForeignKey("ShipId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Account");
+                    b.Navigation("Ship");
                 });
 
             modelBuilder.Entity("ShipCapstone.Domain.Entities.OrderItem", b =>
@@ -1186,17 +1140,6 @@ namespace ShipCapstone.Infrastructure.Migrations
                     b.Navigation("Order");
 
                     b.Navigation("ProductVariant");
-                });
-
-            modelBuilder.Entity("ShipCapstone.Domain.Entities.Payment", b =>
-                {
-                    b.HasOne("ShipCapstone.Domain.Entities.Account", "Account")
-                        .WithMany("Payments")
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("ShipCapstone.Domain.Entities.Product", b =>
@@ -1278,7 +1221,14 @@ namespace ShipCapstone.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("ShipCapstone.Domain.Entities.Account", "Captain")
+                        .WithOne("CaptainShip")
+                        .HasForeignKey("ShipCapstone.Domain.Entities.Ship", "CaptainId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Account");
+
+                    b.Navigation("Captain");
                 });
 
             modelBuilder.Entity("ShipCapstone.Domain.Entities.ShipPortHistory", b =>
@@ -1313,11 +1263,17 @@ namespace ShipCapstone.Infrastructure.Migrations
 
             modelBuilder.Entity("ShipCapstone.Domain.Entities.Transaction", b =>
                 {
+                    b.HasOne("ShipCapstone.Domain.Entities.Booking", "Booking")
+                        .WithMany("Transactions")
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("ShipCapstone.Domain.Entities.Order", "Order")
                         .WithMany("Transactions")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Booking");
 
                     b.Navigation("Order");
                 });
@@ -1328,13 +1284,13 @@ namespace ShipCapstone.Infrastructure.Migrations
 
                     b.Navigation("Bookings");
 
+                    b.Navigation("CaptainShip");
+
                     b.Navigation("Complaints");
 
                     b.Navigation("Notifications");
 
                     b.Navigation("Orders");
-
-                    b.Navigation("Payments");
 
                     b.Navigation("Reviews");
 
@@ -1362,6 +1318,8 @@ namespace ShipCapstone.Infrastructure.Migrations
                     b.Navigation("BookingServices");
 
                     b.Navigation("Complaints");
+
+                    b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("ShipCapstone.Domain.Entities.BookingService", b =>
@@ -1395,8 +1353,6 @@ namespace ShipCapstone.Infrastructure.Migrations
                 {
                     b.Navigation("Complaints");
 
-                    b.Navigation("Deliveries");
-
                     b.Navigation("OrderItems");
 
                     b.Navigation("Transactions");
@@ -1429,7 +1385,9 @@ namespace ShipCapstone.Infrastructure.Migrations
 
             modelBuilder.Entity("ShipCapstone.Domain.Entities.Ship", b =>
                 {
-                    b.Navigation("Deliveries");
+                    b.Navigation("Bookings");
+
+                    b.Navigation("Orders");
 
                     b.Navigation("ShipPortHistories");
                 });

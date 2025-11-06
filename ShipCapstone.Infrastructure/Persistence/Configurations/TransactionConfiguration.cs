@@ -11,6 +11,8 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
     {
         builder.HasKey(t => t.Id);
         builder.Property(t => t.Amount).IsRequired().HasPrecision(12, 2);
+        builder.Property(t => t.TransactionCode)
+            .IsRequired();
         builder.Property(t => t.Status)
             .IsRequired()
             .HasConversion(
@@ -20,6 +22,10 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
         builder.HasOne(t => t.Order)
             .WithMany(o => o.Transactions)
             .HasForeignKey(t => t.OrderId)
+            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(t => t.Booking)
+            .WithMany(b => b.Transactions)
+            .HasForeignKey(t => t.BookingId)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }

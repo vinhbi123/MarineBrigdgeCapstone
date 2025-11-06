@@ -6,9 +6,10 @@ namespace ShipCapstone.Domain.Entities;
 public class Transaction : EntityAuditBase<Guid>
 {
     public decimal Amount { get; set; }
-    public string Currency { get; set; }
+    public string TransactionCode { get; set; }
     public ETransactionStatus Status { get; set; }
-    public Guid OrderId { get; set; }
-    
-    public virtual Order Order { get; set; }
+    public Guid? OrderId { get; set; }
+    public Guid? BookingId { get; set; }
+    public virtual Order? Order { get; set; }
+    public virtual Booking? Booking { get; set; }
 }

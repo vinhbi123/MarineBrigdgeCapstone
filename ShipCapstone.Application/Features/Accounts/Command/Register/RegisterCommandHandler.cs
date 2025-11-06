@@ -31,7 +31,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ApiRespon
     
     public async ValueTask<ApiResponse> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        var key = "otp:" + request.Email;
+        var key = "ShipCapstone-Otp:" + request.Email;
         var existingOtp = await _redisService.GetStringAsync(key);
         
         if (string.IsNullOrEmpty(existingOtp))
@@ -39,7 +39,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ApiRespon
         if (!existingOtp.Equals(request.Otp))
             throw new BadHttpRequestException("Mã OTP không chính xác");
         
-        var existingAccount = await _unitOfWork.GetRepository<Domain.Entities.Account>().SingleOrDefaultAsync(
+        var existingAccount = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
             predicate: x => x.Email.Equals(request.Email) || x.Username.Equals(request.Username) || 
                             (request.PhoneNumber != null && x.PhoneNumber != null && x.PhoneNumber.Equals(request.PhoneNumber))
         );
