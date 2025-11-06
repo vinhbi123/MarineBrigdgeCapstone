@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 
 namespace ShipCapstone.Application.Features.Boatyards.Command.CreateBoatyard;
 
@@ -39,7 +39,7 @@ public class CreateBoatyardCommandValidator : AbstractValidator<CreateBoatyardCo
             .NotEmpty().WithMessage("Mật khẩu không được để trống")
             .NotNull().WithMessage("Mật khẩu không được để trống")
             .MinimumLength(6).WithMessage("Mật khẩu phải có ít nhất 6 ký tự")
-            .MaximumLength(20).WithMessage("Mật khẩu không vượt quá 20 ký tự");
+            .MaximumLength(20).WithMessage("Mật khẩu không vượt quá 20 ký tự");        
         When(x => x.Address != null, () =>
         {
             RuleFor(x => x.Address)

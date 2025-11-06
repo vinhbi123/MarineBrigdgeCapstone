@@ -30,7 +30,7 @@ public class CreateSupplierCommandHandler : IRequestHandler<CreateSupplierComman
     
     public async ValueTask<ApiResponse> Handle(CreateSupplierCommand request, CancellationToken cancellationToken)
     {
-        var key = "otp:" + request.Email;
+        var key = "ShipCapstone-Otp:" + request.Email;
         var existingOtp = await _redisService.GetStringAsync(key);
         
         if (string.IsNullOrEmpty(existingOtp))

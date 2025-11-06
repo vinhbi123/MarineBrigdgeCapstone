@@ -26,9 +26,9 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
                 v => (EBookingType)Enum.Parse(typeof(EBookingType), v)
             );
         builder.Property(b => b.StartTime).IsRequired();
-        builder.HasOne(b => b.Account)
-            .WithMany(a => a.Bookings)
-            .HasForeignKey(b => b.AccountId)
+        builder.HasOne(b => b.Ship)
+            .WithMany(s => s.Bookings)
+            .HasForeignKey(b => b.ShipId)
             .OnDelete(DeleteBehavior.Restrict);
         builder.HasOne(b => b.DockSlot)
             .WithMany(ds => ds.Bookings)

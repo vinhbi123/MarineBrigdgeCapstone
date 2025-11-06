@@ -1,4 +1,4 @@
-﻿using Mediator;
+using Mediator;
 using ShipCapstone.Domain.Entities;
 using ShipCapstone.Domain.Models.BoatyardServices;
 using ShipCapstone.Domain.Models.Common;
@@ -11,13 +11,13 @@ public class GetBoatyardServicesByBoatyardIdQueryHandler : IRequestHandler<GetBo
 {
     private readonly IUnitOfWork<ShipCapstoneContext> _unitOfWork;
     private readonly ILogger _logger;
-
+    
     public GetBoatyardServicesByBoatyardIdQueryHandler(IUnitOfWork<ShipCapstoneContext> unitOfWork, ILogger logger)
     {
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
-
+    
     public async ValueTask<ApiResponse> Handle(GetBoatyardServicesByBoatyardIdQuery request, CancellationToken cancellationToken)
     {
         var boatyardServices = await _unitOfWork.GetRepository<BoatyardService>().GetPagingListAsync(
@@ -30,14 +30,14 @@ public class GetBoatyardServicesByBoatyardIdQueryHandler : IRequestHandler<GetBo
                 CreatedDate = x.CreatedDate,
                 LastModifiedDate = x.LastModifiedDate
             },
-            predicate: x => x.BoatyardId == request.BoatyardId
+            predicate: x => x.BoatyardId == request.BoatyardId 
                             && (string.IsNullOrEmpty(request.Name) || x.TypeService.Contains(request.Name)),
             page: request.Page,
             size: request.Size,
             sortBy: request.SortBy ?? nameof(BoatyardService.CreatedDate),
             isAsc: request.IsAsc
         );
-
+        
         return new ApiResponse()
         {
             Status = StatusCodes.Status200OK,

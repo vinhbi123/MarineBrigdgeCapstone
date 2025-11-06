@@ -18,5 +18,9 @@ public class ShipConfiguration : IEntityTypeConfiguration<Ship>
             .WithMany(a => a.Ships)
             .HasForeignKey(s => s.AccountId)
             .OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(s => s.Captain)
+            .WithOne(a => a.CaptainShip)
+            .HasForeignKey<Ship>(s => s.CaptainId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

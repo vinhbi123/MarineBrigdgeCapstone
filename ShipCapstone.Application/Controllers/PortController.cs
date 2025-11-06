@@ -1,4 +1,4 @@
-﻿using Mediator;
+using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using ShipCapstone.Application.Common.Utils;
 using ShipCapstone.Application.Common.Validators;
@@ -18,7 +18,7 @@ namespace ShipCapstone.Application.Controllers;
 [Route(ApiEndPointConstant.Ports.PortEndpoint)]
 public class PortController : BaseController<PortController>
 {
-
+    
     public PortController(ILogger logger, IMediator mediator) : base(logger, mediator)
     {
     }
@@ -30,7 +30,7 @@ public class PortController : BaseController<PortController>
     [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CreatePort([FromBody] CreatePortCommand command,
+    public async Task<IActionResult> CreatePort([FromBody] CreatePortCommand command, 
         [FromServices] ValidationUtil<CreatePortCommand> validationUtil)
     {
         var (isValid, response) = await validationUtil.ValidateAsync(command);
@@ -50,7 +50,7 @@ public class PortController : BaseController<PortController>
     [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdatePort([FromRoute] Guid id, [FromBody] UpdatePortRequest request,
+    public async Task<IActionResult> UpdatePort([FromRoute] Guid id, [FromBody] UpdatePortRequest request, 
         [FromServices] ValidationUtil<UpdatePortCommand> validationUtil)
     {
         var command = new UpdatePortCommand()
@@ -70,7 +70,7 @@ public class PortController : BaseController<PortController>
         var apiResponse = await _mediator.Send(command);
         return Ok(apiResponse);
     }
-
+    
     [HttpGet(ApiEndPointConstant.Ports.PortEndpoint)]
     [ProducesResponseType<ApiResponse<IPaginate<GetPortsResponse>>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
@@ -101,7 +101,7 @@ public class PortController : BaseController<PortController>
         {
             PortId = id
         };
-
+        
         var apiResponse = await _mediator.Send(query);
         return Ok(apiResponse);
     }

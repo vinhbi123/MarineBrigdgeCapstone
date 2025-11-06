@@ -29,7 +29,7 @@ public class SendOtpCommandHandler : IRequestHandler<SendOtpCommand, ApiResponse
     
     public async ValueTask<ApiResponse> Handle(SendOtpCommand request, CancellationToken cancellationToken)
     {
-        var key = "otp:" + request.Email;
+        var key = "ShipCapstone-Otp:" + request.Email;
         var existingOtp = await _redisService.GetStringAsync(key);
         
         if (!string.IsNullOrEmpty(existingOtp))
@@ -53,9 +53,9 @@ public class SendOtpCommandHandler : IRequestHandler<SendOtpCommand, ApiResponse
             Subject = otp + " là mã xác thực của bạn",
         };
         await _emailService.SendEmailAsync(emailMessage);
-
+        
         var isSuccess = await _redisService.SetStringAsync(key, otp, TimeSpan.FromMinutes(5));
-
+        
         if (!isSuccess)
             throw new BadHttpRequestException("Lỗi khi lưu mã OTP");
         
