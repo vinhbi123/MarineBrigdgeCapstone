@@ -1,4 +1,4 @@
-﻿namespace ShipCapstone.Domain.Models.BoatyardServices;
+namespace ShipCapstone.Domain.Models.BoatyardServices;
 
 public record GetBoatyardServicesByBoatyardIdResponse
 {

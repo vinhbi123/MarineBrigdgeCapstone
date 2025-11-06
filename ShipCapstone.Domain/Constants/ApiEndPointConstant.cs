@@ -36,7 +36,6 @@ public class ApiEndPointConstant
         public const string ModifierGroupById = ModifierGroupEndpoint + "/{id}";
         public const string ModifierGroupByIdWithOptions = ModifierGroupById + "/modifier-options";
     }
-
     public static class ModifierOptions
     {
         public const string ModifierOptionsEndpoint = ApiEndpoint + "/modifier-options";
@@ -52,19 +51,20 @@ public class ApiEndPointConstant
     {
         public const string BoatyardEndpoint = ApiEndpoint + "/boatyards";
         public const string BoatyardById = BoatyardEndpoint + "/{id}";
-        public const string BoatyardWithBoatyardServices = BoatyardById + "/boatyard-services";
         public const string BoatyardDetail = BoatyardEndpoint + "/detail";
+        public const string BoatyardWithBoatyardServices = BoatyardById + "/boatyard-services";
     }
-
+    
     public static class DockSlots
     {
         public const string DockSlotEndpoint = ApiEndpoint + "/dock-slots";
         public const string DockSlotById = DockSlotEndpoint + "/{id}";
     }
-
+    
     public static class BoatyardServices
     {
         public const string BoatyardServiceEndpoint = ApiEndpoint + "/boatyard-services";
         public const string BoatyardServiceById = BoatyardServiceEndpoint + "/{id}";
     }
+    
 }
