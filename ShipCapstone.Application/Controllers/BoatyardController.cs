@@ -1,4 +1,4 @@
-﻿using Mediator;
+using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using ShipCapstone.Application.Common.Utils;
 using ShipCapstone.Application.Common.Validators;
@@ -89,7 +89,7 @@ public class BoatyardController : BaseController<BoatyardController>
     public async Task<IActionResult> GetBoatyardDetail()
     {
         var query = new GetBoatyardDetailQuery();
-
+        
         var apiResponse = await _mediator.Send(query);
         return Ok(apiResponse);
     }

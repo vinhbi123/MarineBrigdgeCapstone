@@ -35,7 +35,7 @@ public static class ConfigureServices
         IConfiguration configuration)
     {
         services
-            .AddMediator(options =>
+            .AddMediator( options =>
             {
                 options.Namespace = "ShipCapstone.Application.Controllers";
                 options.ServiceLifetime = ServiceLifetime.Scoped;
@@ -48,6 +48,7 @@ public static class ConfigureServices
         services.AddScoped<IRedisService, RedisService>();
         services.AddScoped<IUploadService, UploadService>();
         services.AddScoped<IOAuthService, OAuthService>();
+        services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped(typeof(ValidationUtil<>));
         services.AddScoped<IValidator<LoginCommand>, LoginCommandValidator>();
         services.AddScoped<IValidator<SendOtpCommand>, SendOtpCommandValidator>();
