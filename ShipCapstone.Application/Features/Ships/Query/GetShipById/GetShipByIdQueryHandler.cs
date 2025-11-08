@@ -48,6 +48,7 @@ public class GetShipByIdQueryHandler : IRequestHandler<GetShipByIdQuery, ApiResp
             BuildYear = ship.BuildYear,
             Longitude = ship.Longitude,
             Latitude = ship.Latitude,
+            CaptainId = ship.CaptainId,
             CreatedDate = ship.CreatedDate,
             LastModifiedDate = ship.LastModifiedDate
         };

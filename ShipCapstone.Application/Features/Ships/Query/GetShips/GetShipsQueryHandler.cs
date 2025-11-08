@@ -40,6 +40,7 @@ public class GetShipsQueryHandler : IRequestHandler<GetShipsQuery, ApiResponse>
                 BuildYear = x.BuildYear,
                 Longitude = x.Longitude,
                 Latitude = x.Latitude,
+                CaptainId = x.CaptainId,
                 CreatedDate = x.CreatedDate,
                 LastModifiedDate = x.LastModifiedDate
             },

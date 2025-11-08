@@ -2,6 +2,7 @@ using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using ShipCapstone.Application.Common.Utils;
 using ShipCapstone.Application.Common.Validators;
+using ShipCapstone.Application.Features.Ships.Command.AssignCaptainToShip;
 using ShipCapstone.Application.Features.Ships.Command.CreateShip;
 using ShipCapstone.Application.Features.Ships.Command.UpdateShip;
 using ShipCapstone.Application.Features.Ships.Query.GetShipById;
@@ -20,13 +21,16 @@ public class ShipController : BaseController<ShipController>
 {
     private readonly ValidationUtil<CreateShipCommand> _createShipValidationUtil;
     private readonly ValidationUtil<UpdateShipCommand> _updateShipValidationUtil;
+    private readonly ValidationUtil<AssignCaptainToShipCommand> _assignShipValidationUtil;
     
     public ShipController(ILogger logger, IMediator mediator,
         ValidationUtil<CreateShipCommand> createShipValidationUtil,
-        ValidationUtil<UpdateShipCommand> updateShipValidationUtil) : base(logger, mediator)
+        ValidationUtil<UpdateShipCommand> updateShipValidationUtil,
+        ValidationUtil<AssignCaptainToShipCommand> assignShipValidationUtil) : base(logger, mediator)
     {
         _createShipValidationUtil = createShipValidationUtil ?? throw new ArgumentNullException(nameof(createShipValidationUtil));
         _updateShipValidationUtil = updateShipValidationUtil ?? throw new ArgumentNullException(nameof(updateShipValidationUtil));
+        _assignShipValidationUtil = assignShipValidationUtil ?? throw new ArgumentNullException(nameof(assignShipValidationUtil));
     }
 
     [CustomAuthorize(ERole.User)]
@@ -113,6 +117,30 @@ public class ShipController : BaseController<ShipController>
             ShipId = id
         };
         var apiResponse = await _mediator.Send(query);
+        return Ok(apiResponse);
+    }
+    
+    [CustomAuthorize(ERole.User)]
+    [HttpPost(ApiEndPointConstant.Ships.CaptainByShipId)]
+    [ProducesResponseType<ApiResponse<GetShipByIdResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> AssignCaptainToShip([FromRoute] Guid id, [FromBody] AssignCaptainToShipRequest request)
+    {
+        var command = new AssignCaptainToShipCommand()
+        {
+            Id = id,
+            Email = request.Email
+        };
+        var (isValid, response) = await _assignShipValidationUtil.ValidateAsync(command);
+        if (!isValid)
+        {
+            return BadRequest(response);
+        }
+        var apiResponse = await _mediator.Send(command);
         return Ok(apiResponse);
     }
 }

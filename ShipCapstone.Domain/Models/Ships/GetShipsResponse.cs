@@ -9,6 +9,7 @@ public record GetShipsResponse
     public int? BuildYear { get; set; }
     public string? Longitude { get; set; }
     public string? Latitude { get; set; }
+    public Guid? CaptainId { get; set; }
     public DateTime CreatedDate { get; set; }
     public DateTime? LastModifiedDate { get; set; }
 }
