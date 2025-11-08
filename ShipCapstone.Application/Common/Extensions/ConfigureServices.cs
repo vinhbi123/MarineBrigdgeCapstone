@@ -10,6 +10,7 @@ using ShipCapstone.Application.Features.Boatyards.Command.CreateBoatyard;
 using ShipCapstone.Application.Features.Boatyards.Command.UpdateBoatyard;
 using ShipCapstone.Application.Features.BoatyardServices.Command.CreateBoatyardService;
 using ShipCapstone.Application.Features.BoatyardServices.Command.UpdateBoatyardService;
+using ShipCapstone.Application.Features.Captains.Command.RegisterCaptain;
 using ShipCapstone.Application.Features.Categories.Command.CreateCategory;
 using ShipCapstone.Application.Features.Categories.Command.UpdateCategory;
 using ShipCapstone.Application.Features.DockSlots.Command.CreateDockSlot;
@@ -20,6 +21,7 @@ using ShipCapstone.Application.Features.ModifierOptions.Command.CreateModifierOp
 using ShipCapstone.Application.Features.ModifierOptions.Command.UpdateModifierOption;
 using ShipCapstone.Application.Features.Ports.Command.CreatePort;
 using ShipCapstone.Application.Features.Ports.Command.UpdatePort;
+using ShipCapstone.Application.Features.Ships.Command.AssignCaptainToShip;
 using ShipCapstone.Application.Features.Ships.Command.CreateShip;
 using ShipCapstone.Application.Features.Ships.Command.UpdateShip;
 using ShipCapstone.Application.Features.Suppliers.Command.CreateSupplier;
@@ -70,6 +72,8 @@ public static class ConfigureServices
         services.AddScoped<IValidator<UpdateDockSlotCommand>, UpdateDockSlotCommandValidator>();
         services.AddScoped<IValidator<CreateBoatyardServiceCommand>, CreateBoatyardServiceCommandValidator>();
         services.AddScoped<IValidator<UpdateBoatyardServiceCommand>, UpdateBoatyardServiceCommandValidator>();
+        services.AddScoped<IValidator<AssignCaptainToShipCommand>, AssignCaptainToShipCommandValidator>();
+        services.AddScoped<IValidator<RegisterCaptainCommand>, RegisterCaptainCommandValidator>();
         services.AddHttpContextAccessor();
         services.Configure<ApiBehaviorOptions>(options =>
         {

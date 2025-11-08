@@ -19,6 +19,7 @@ public class ApiEndPointConstant
     {
         public const string ShipEndpoint = ApiEndpoint + "/ships";
         public const string ShipById = ShipEndpoint + "/{id}";
+        public const string CaptainByShipId = ShipEndpoint + "/{id}/captains";
     }
 
     public static class Suppliers
@@ -65,6 +66,11 @@ public class ApiEndPointConstant
     {
         public const string BoatyardServiceEndpoint = ApiEndpoint + "/boatyard-services";
         public const string BoatyardServiceById = BoatyardServiceEndpoint + "/{id}";
+    }
+    
+    public static class Captains
+    {
+        public const string CaptainEndpoint = ApiEndpoint + "/captains";
     }
     
 }
