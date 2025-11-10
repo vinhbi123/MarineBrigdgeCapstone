@@ -4,6 +4,7 @@ using ShipCapstone.Application.Common.Utils;
 using ShipCapstone.Application.Common.Validators;
 using ShipCapstone.Application.Features.Ships.Command.AssignCaptainToShip;
 using ShipCapstone.Application.Features.Ships.Command.CreateShip;
+using ShipCapstone.Application.Features.Ships.Command.DeleteCaptainToShip;
 using ShipCapstone.Application.Features.Ships.Command.UpdateShip;
 using ShipCapstone.Application.Features.Ships.Query.GetShipById;
 using ShipCapstone.Application.Features.Ships.Query.GetShips;
@@ -140,6 +141,24 @@ public class ShipController : BaseController<ShipController>
         {
             return BadRequest(response);
         }
+        var apiResponse = await _mediator.Send(command);
+        return Ok(apiResponse);
+    }
+    
+    [CustomAuthorize(ERole.User)]
+    [HttpDelete(ApiEndPointConstant.Ships.CaptainByShipId)]
+    [ProducesResponseType<ApiResponse<GetShipByIdResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> DeleteCaptainToShip([FromRoute] Guid id)
+    {
+        var command = new DeleteCaptainToShipCommand()
+        {
+            Id = id
+        };
         var apiResponse = await _mediator.Send(command);
         return Ok(apiResponse);
     }
