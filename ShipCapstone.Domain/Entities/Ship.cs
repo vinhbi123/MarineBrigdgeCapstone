@@ -17,4 +17,5 @@ public class Ship : EntityAuditBase<Guid>
     public virtual ICollection<Order>? Orders { get; set; } = new List<Order>();
     public virtual ICollection<Booking>? Bookings { get; set; } = new List<Booking>();
     public virtual ICollection<ShipPortHistory>? ShipPortHistories { get; set; } = new List<ShipPortHistory>();
+    public virtual ICollection<ReportProblem>? ReportProblems { get; set; } = new List<ReportProblem>();
 }

@@ -1,10 +1,12 @@
 using ShipCapstone.Domain.Entities.Common;
+using ShipCapstone.Domain.Enums;
 
 namespace ShipCapstone.Domain.Entities;
 
 public class Order : EntityAuditBase<Guid>
 {
     public decimal TotalAmount { get; set; }
+    public EOrderStatus Status { get; set; }
     public Guid ShipId { get; set; }
     
     public virtual Ship Ship { get; set; }
