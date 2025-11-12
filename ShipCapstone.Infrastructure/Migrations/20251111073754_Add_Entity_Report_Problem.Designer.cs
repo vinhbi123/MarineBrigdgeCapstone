@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShipCapstone.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using ShipCapstone.Infrastructure.Persistence;
 namespace ShipCapstone.Infrastructure.Migrations
 {
     [DbContext(typeof(ShipCapstoneContext))]
-    partial class ShipCapstoneContextModelSnapshot : ModelSnapshot
+    [Migration("20251111073754_Add_Entity_Report_Problem")]
+    partial class Add_Entity_Report_Problem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
