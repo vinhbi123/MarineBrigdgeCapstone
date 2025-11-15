@@ -1,4 +1,4 @@
-﻿﻿namespace ShipCapstone.Domain.Enums;
+﻿namespace ShipCapstone.Domain.Enums;
 
 public enum EReportProblemStatus
 {
