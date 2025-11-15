@@ -9,7 +9,7 @@ public class Port : EntityAuditBase<Guid>
     public string? City { get; set; }
     public string? Longitude { get; set; }
     public string? Latitude { get; set; }
-
+    
     public virtual ICollection<ShipPortHistory>? ShipPortHistories { get; set; } = new List<ShipPortHistory>();
     public virtual ICollection<ReportProblem>? ReportProblems { get; set; } = new List<ReportProblem>();
 }
