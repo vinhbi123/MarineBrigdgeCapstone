@@ -36,7 +36,6 @@
       <Folder Include="Features\Accounts\Query\" />
       <Folder Include="Features\Authentication\Query\" />
       <Folder Include="Features\Captains\Query\" />
-      <Folder Include="Features\Products\Query\" />
     </ItemGroup>
 
 </Project>
