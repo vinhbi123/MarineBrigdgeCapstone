@@ -41,13 +41,26 @@ public class ProductsController : BaseController<ProductsController>
 
         var apiResponse = await _mediator.Send(command);
 
-        // trả Location tới GET product by id nếu apiResponse.Data = createdId
         if (apiResponse?.Data is Guid createdId)
         {
             return CreatedAtAction(nameof(GetProductById), new { id = createdId }, apiResponse);
         }
 
-        // fallback
         return StatusCode(StatusCodes.Status201Created, apiResponse);
+    }
+    [HttpPatch("{id:guid}")]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateProduct([FromRoute] Guid id,
+     [FromBody] UpdateProductCommand command,
+     [FromServices] ValidationUtil<UpdateProductCommand> validationUtil)
+    {
+        command.ProductId = id;
+        var (isValid, response) = await validationUtil.ValidateAsync(command);
+        if (!isValid) return BadRequest(response);
+
+        var apiResponse = await _mediator.Send(command);
+        return Ok(apiResponse);
     }
 }
