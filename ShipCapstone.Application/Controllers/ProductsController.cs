@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ShipCapstone.Application.Common.Utils;
 using ShipCapstone.Application.Common.Validators;
 using ShipCapstone.Application.Features.Products.Command.CreateProduct;
+using ShipCapstone.Application.Features.Products.Command.DeleteProduct;
 using ShipCapstone.Application.Features.Products.Command.UpdateProduct;
 using ShipCapstone.Application.Features.Products.Query.GetProductById;
 using ShipCapstone.Domain.Models.Common;
@@ -60,6 +61,22 @@ public class ProductsController : BaseController<ProductsController>
         var (isValid, response) = await validationUtil.ValidateAsync(command);
         if (!isValid) return BadRequest(response);
 
+        var apiResponse = await _mediator.Send(command);
+        return Ok(apiResponse);
+    }
+    /// <summary>
+    /// Delete product by id
+    /// DELETE /api/v1/products/{id}
+    /// </summary>
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteProduct([FromRoute] Guid id)
+    {
+        var command = new DeleteProductCommand { ProductId = id };
         var apiResponse = await _mediator.Send(command);
         return Ok(apiResponse);
     }
