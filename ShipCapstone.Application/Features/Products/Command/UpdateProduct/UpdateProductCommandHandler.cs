@@ -1,6 +1,5 @@
 ﻿using Mediator;
-using Microsoft.EntityFrameworkCore;
-using ShipCapstone.Application.Common.Exceptions;
+using ShipCapstone.Application.Services.Interfaces;
 using ShipCapstone.Domain.Entities;
 using ShipCapstone.Domain.Models.Common;
 using ShipCapstone.Infrastructure.Persistence;
@@ -12,140 +11,61 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
 {
     private readonly IUnitOfWork<ShipCapstoneContext> _unitOfWork;
     private readonly ILogger _logger;
+    private readonly IClaimService _claimService;
 
-    public UpdateProductCommandHandler(IUnitOfWork<ShipCapstoneContext> unitOfWork, ILogger logger)
+    public UpdateProductCommandHandler(IUnitOfWork<ShipCapstoneContext> unitOfWork, ILogger logger,
+        IClaimService claimService)
     {
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _claimService = claimService ?? throw new ArgumentNullException(nameof(claimService));
     }
+
 
     public async ValueTask<ApiResponse> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
-        var productRepo = _unitOfWork.GetRepository<Product>();
+        var accountId = _claimService.GetCurrentUserId;
+        if (accountId == Guid.Empty)
+        {
+            throw new BadHttpRequestException("Người dùng không hợp lệ");
+        }
 
-        var product = await productRepo.SingleOrDefaultAsync(
-            predicate: p => p.Id == request.ProductId,
-            include: q => q.Include(p => p.ProductVariants).Include(p => p.ProductImages)
+        var product = await _unitOfWork.GetRepository<Product>().SingleOrDefaultAsync(
+            predicate: x => x.Id == request.ProductId && x.SupplierId == accountId
         );
 
         if (product == null)
-            throw new NotFoundException("Không tìm thấy sản phẩm");
-
-        // validate category
-        var category = await _unitOfWork.GetRepository<Category>()
-            .SingleOrDefaultAsync(predicate: c => c.Id == request.CategoryId);
-        if (category == null)
-            throw new NotFoundException("Không tìm thấy category");
-
-        product.Name = request.Name;
-        product.Description = request.Description;
-        product.CategoryId = request.CategoryId;
-        product.SupplierId = category.SupplierId; 
-        product.LastModifiedDate = DateTime.UtcNow;
-
-        var variantRepo = _unitOfWork.GetRepository<ProductVariant>();
-        var existingVariants = product.ProductVariants?.ToList() ?? new List<ProductVariant>();
-
-        if (request.IsHasVariant)
         {
-            var incomingWithId = request.Variants?.Where(v => v.Id.HasValue).ToDictionary(v => v.Id!.Value) ?? new Dictionary<Guid, UpdateProductVariantRequest>();
-            var incomingWithoutId = request.Variants?.Where(v => !v.Id.HasValue).ToList() ?? new List<UpdateProductVariantRequest>();
-
-            foreach (var exist in existingVariants)
-            {
-                if (incomingWithId.TryGetValue(exist.Id, out var incoming))
-                {
-                    exist.Name = incoming.Name;
-                    exist.Price = incoming.Price;
-                    variantRepo.Update(exist);
-                }
-            }
-
-            // Create new variants
-            foreach (var inc in incomingWithoutId)
-            {
-                var newVar = new ProductVariant
-                {
-                    Id = Guid.CreateVersion7(),
-                    ProductId = product.Id,
-                    Name = inc.Name,
-                    Price = inc.Price
-                };
-                await variantRepo.InsertAsync(newVar);
-            }
-
-            var incomingIds = request.Variants?.Where(v => v.Id.HasValue).Select(v => v.Id!.Value).ToHashSet() ?? new HashSet<Guid>();
-            var toDelete = existingVariants.Where(ev => !incomingIds.Contains(ev.Id)).ToList();
-            foreach (var del in toDelete)
-            {
-                await _unitOfWork.GetRepository<ProductVariant>().DeleteAsync(del);
-            }
-        }
-        else
-        {
-            // client says no variants -> delete all existing, optionally create a default one from Price
-            foreach (var ev in existingVariants)
-            {
-                await _unitOfWork.GetRepository<ProductVariant>().DeleteAsync(ev);
-            }
-
-            if (request.Price.HasValue)
-            {
-                var defaultVar = new ProductVariant
-                {
-                    Id = Guid.CreateVersion7(),
-                    ProductId = product.Id,
-                    Name = product.Name,
-                    Price = request.Price.Value
-                };
-                await variantRepo.InsertAsync(defaultVar);
-            }
+            throw new BadHttpRequestException("Sản phẩm không tồn tại hoặc bạn không có quyền cập nhật sản phẩm này");
         }
 
-        
-        var imageRepo = _unitOfWork.GetRepository<ProductImage>();
-        var existingImages = product.ProductImages?.ToList() ?? new List<ProductImage>();
+        product.Name = request.Name ?? product.Name;
+        product.Description = request.Description ?? product.Description;
 
-        var incomingImgWithId = request.Images?.Where(i => i.Id.HasValue).ToDictionary(i => i.Id!.Value) ?? new Dictionary<Guid, UpdateProductImageRequest>();
-        var incomingImgWithoutId = request.Images?.Where(i => !i.Id.HasValue).ToList() ?? new List<UpdateProductImageRequest>();
-
-        foreach (var exist in existingImages)
+        if (request.CategoryId != null && request.CategoryId != product.CategoryId)
         {
-            if (incomingImgWithId.TryGetValue(exist.Id, out var incoming))
+            var category = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync(
+                predicate: x => x.Id == request.CategoryId && x.SupplierId == accountId
+            );
+            if (category == null)
             {
-                exist.Url = incoming.Url;
-                imageRepo.Update(exist);
+                throw new BadHttpRequestException("Danh mục không tồn tại hoặc bạn không có quyền sử dụng danh mục này");
             }
+            product.CategoryId = category.Id;
         }
+        _unitOfWork.GetRepository<Product>().UpdateAsync(product);
 
-        foreach (var inc in incomingImgWithoutId)
+        var isSuccess = await _unitOfWork.CommitAsync() > 0;
+
+        if (!isSuccess)
         {
-            var newImg = new ProductImage
-            {
-                Id = Guid.CreateVersion7(),
-                ProductId = product.Id,
-                Url = inc.Url
-            };
-            await imageRepo.InsertAsync(newImg);
+            throw new Exception("Cập nhật sản phẩm thất bại");
         }
 
-        var incomingImgIds = request.Images?.Where(i => i.Id.HasValue).Select(i => i.Id!.Value).ToHashSet() ?? new HashSet<Guid>();
-        var imgsToDelete = existingImages.Where(ei => !incomingImgIds.Contains(ei.Id)).ToList();
-        foreach (var del in imgsToDelete)
-        {
-            await _unitOfWork.GetRepository<ProductImage>().DeleteAsync(del);
-        }
-
-        productRepo.Update(product);
-
-        var saved = await _unitOfWork.CommitAsync() > 0;
-        if (!saved)
-            throw new Exception("Cập nhật sản phẩm thất bại");
-
-        return new ApiResponse
+        return new ApiResponse()
         {
             Status = StatusCodes.Status200OK,
-            Message = "Cập nhật sản phẩm thành công",
+            Message = "Cập nhật sản phẩm thành công",
             Data = product.Id
         };
     }

@@ -67,10 +67,24 @@ public class ApiEndPointConstant
         public const string BoatyardServiceEndpoint = ApiEndpoint + "/boatyard-services";
         public const string BoatyardServiceById = BoatyardServiceEndpoint + "/{id}";
     }
-    
+
     public static class Captains
     {
         public const string CaptainEndpoint = ApiEndpoint + "/captains";
     }
-    
+
+    public static class Products
+    {
+        public const string ProductEndpoint = ApiEndpoint + "/products";
+        public const string ProductById = ProductEndpoint + "/{id}";
+        public const string ProductWithVariants = ProductById + "/product-variants";
+    }
+
+    public static class ProductVariants
+    {
+        public const string ProductVariantEndpoint = ApiEndpoint + "/product-variants";
+        public const string ProductVariantById = ProductVariantEndpoint + "/{id}";
+    }
+
+
 }
