@@ -1,4 +1,4 @@
-﻿using Mediator;
+using Mediator;
 using ShipCapstone.Application.Common.Exceptions;
 using ShipCapstone.Application.Services.Interfaces;
 using ShipCapstone.Domain.Entities;
@@ -13,14 +13,14 @@ public class UpdateProductVariantCommandHandler : IRequestHandler<UpdateProductV
     private readonly IUnitOfWork<ShipCapstoneContext> _unitOfWork;
     private readonly ILogger _logger;
     private readonly IClaimService _claimService;
-
+    
     public UpdateProductVariantCommandHandler(IUnitOfWork<ShipCapstoneContext> unitOfWork, ILogger logger, IClaimService claimService)
     {
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _claimService = claimService ?? throw new ArgumentNullException(nameof(claimService));
     }
-
+    
     public async ValueTask<ApiResponse> Handle(UpdateProductVariantCommand request, CancellationToken cancellationToken)
     {
         var accountId = _claimService.GetCurrentUserId;
@@ -37,18 +37,18 @@ public class UpdateProductVariantCommandHandler : IRequestHandler<UpdateProductV
         {
             throw new NotFoundException("Biến thể sản phẩm không tồn tại hoặc bạn không có quyền chỉnh sửa biến thể sản phẩm này.");
         }
-
+        
         productVariant.Name = request.Name ?? productVariant.Name;
         productVariant.Price = request.Price ?? productVariant.Price;
-
+        
         _unitOfWork.GetRepository<ProductVariant>().UpdateAsync(productVariant);
-
+        
         var isSuccess = await _unitOfWork.CommitAsync() > 0;
         if (!isSuccess)
         {
             throw new Exception("Cập nhật biến thể sản phẩm thất bại.");
         }
-
+        
         return new ApiResponse()
         {
             Status = StatusCodes.Status200OK,

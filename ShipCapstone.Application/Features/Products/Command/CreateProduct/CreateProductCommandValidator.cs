@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 
 namespace ShipCapstone.Application.Features.Products.Command.CreateProduct;
 
@@ -40,7 +40,7 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
                 .NotNull().WithMessage("Giá sản phẩm không được để trống.")
                 .GreaterThanOrEqualTo(0).WithMessage("Giá sản phẩm phải lớn hơn hoặc bằng 0.");
         });
-        RuleForEach(x => x.ProductImages).SetValidator(new CreateProductImageForCreateProductRequestValidator());
+        //RuleForEach(x => x.ProductImages).SetValidator(new CreateProductImageForCreateProductRequestValidator());
     }
 }
 
@@ -62,10 +62,10 @@ public class
                 return _allowedImageExtensions.Contains(extension);
             }).WithMessage("Hình ảnh không hợp lý với các định dạng: " +
                            string.Join(", ", _allowedImageExtensions));
-        When(x => x.SortOrder != null, () =>
-        {
-            RuleFor(x => x.SortOrder)
-                .GreaterThanOrEqualTo(0).WithMessage("Thứ tự sắp xếp phải lớn hơn hoặc bằng 0.");
-        });
+        //When(x => x.SortOrder != null, () =>
+        //{
+        //    RuleFor(x => x.SortOrder)
+        //        .GreaterThanOrEqualTo(0).WithMessage("Thứ tự sắp xếp phải lớn hơn hoặc bằng 0.");
+        //});
     }
 }

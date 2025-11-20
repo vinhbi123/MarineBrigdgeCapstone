@@ -1,4 +1,4 @@
-﻿namespace ShipCapstone.Domain.Models.Products;
+namespace ShipCapstone.Domain.Models.Products;
 
 public record GetProductsResponse
 {
@@ -13,4 +13,4 @@ public record GetProductsResponse
     public string ImageUrl { get; set; }
     public DateTime CreatedDate { get; set; }
     public DateTime? LastModifiedDate { get; set; }
-}   
+}
