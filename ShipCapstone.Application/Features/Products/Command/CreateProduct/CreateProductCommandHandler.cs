@@ -1,5 +1,6 @@
 ﻿using Mediator;
 using ShipCapstone.Application.Common.Exceptions;
+using ShipCapstone.Application.Services.Interfaces;
 using ShipCapstone.Domain.Entities;
 using ShipCapstone.Domain.Models.Common;
 using ShipCapstone.Infrastructure.Persistence;
@@ -11,92 +12,118 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
 {
     private readonly IUnitOfWork<ShipCapstoneContext> _unitOfWork;
     private readonly ILogger _logger;
+    private readonly IClaimService _claimService;
+    private readonly IUploadService _uploadService;
 
-    public CreateProductCommandHandler(IUnitOfWork<ShipCapstoneContext> unitOfWork, ILogger logger)
+    public CreateProductCommandHandler(
+        IUnitOfWork<ShipCapstoneContext> unitOfWork,
+        ILogger logger,
+        IClaimService claimService, IUploadService uploadService)
     {
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _claimService = claimService ?? throw new ArgumentNullException(nameof(claimService));
+        _uploadService = uploadService ?? throw new ArgumentNullException(nameof(uploadService));
     }
 
     public async ValueTask<ApiResponse> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
-        // validate category exists
-        var category = await _unitOfWork.GetRepository<Category>()
-            .SingleOrDefaultAsync(predicate: c => c.Id == request.CategoryId);
+        var accountId = _claimService.GetCurrentUserId;
+
+        var category = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync(
+            predicate: x => x.Id == request.CategoryId && x.SupplierId == accountId
+        );
         if (category == null)
-            throw new NotFoundException("Không tìm thấy category");
+        {
+            throw new NotFoundException("Danh mục không tồn tại");
+        }
 
-        // optional: validate supplier exists
-        var supplier = await _unitOfWork.GetRepository<Supplier>()
-            .SingleOrDefaultAsync(predicate: s => s.Id == request.SupplierId);
-        if (supplier == null)
-            throw new NotFoundException("Không tìm thấy supplier");
-
-        var product = new Product
+        var product = new Product()
         {
             Id = Guid.CreateVersion7(),
             Name = request.Name,
             Description = request.Description,
-            CategoryId = request.CategoryId,
-            SupplierId = request.SupplierId,
-            // keep audit fields handled by EF / base class
+            CategoryId = category.Id,
+            SupplierId = accountId,
         };
 
-        // insert product first to get its Id
-        await _unitOfWork.GetRepository<Product>().InsertAsync(product);
-
-        // handle variants
-        if (request.IsHasVariant && request.Variants != null && request.Variants.Count > 0)
+        if (request.IsHasVariant)
         {
-            var variantRepo = _unitOfWork.GetRepository<ProductVariant>();
-            foreach (var v in request.Variants)
+            if (request.ProductVariants == null || !request.ProductVariants.Any())
             {
-                var variant = new ProductVariant
-                {
-                    Id = Guid.CreateVersion7(),
-                    ProductId = product.Id,
-                    Name = v.Name,
-                    Price = v.Price
-                };
-                await variantRepo.InsertAsync(variant);
+                throw new BadHttpRequestException("Sản phẩm có biến thể phải có ít nhất một biến thể");
             }
+
+            product.IsHasVariant = true;
+            product.ProductVariants = request.ProductVariants.Select(variant => new ProductVariant
+            {
+                Id = Guid.CreateVersion7(),
+                Name = variant.Name,
+                Price = variant.Price,
+                ProductId = product.Id,
+                Inventories = new List<Inventory>()
+                {
+                    new Inventory()
+                    {
+                        Id = Guid.CreateVersion7(),
+                        Quantity = 0,
+                        ModifierOptionId = null
+                    }
+                }
+            }).ToList();
         }
         else
         {
-            // no variants: if Price provided, create a default variant to store price
-            if (request.Price.HasValue)
+            if (request.Price == null)
             {
-                var variantRepo = _unitOfWork.GetRepository<ProductVariant>();
-                var defaultVariant = new ProductVariant
+                throw new BadHttpRequestException("Sản phẩm không có biến thể phải có giá");
+            }
+
+            product.IsHasVariant = false;
+            product.ProductVariants = new List<ProductVariant>
+            {
+                new ProductVariant
                 {
                     Id = Guid.CreateVersion7(),
-                    ProductId = product.Id,
                     Name = product.Name,
-                    Price = request.Price.Value
-                };
-                await variantRepo.InsertAsync(defaultVariant);
-            }
-        }
-
-        // handle images
-        if (request.Images != null && request.Images.Count > 0)
-        {
-            var imageRepo = _unitOfWork.GetRepository<ProductImage>();
-            foreach (var img in request.Images)
-            {
-                var pi = new ProductImage
-                {
-                    Id = Guid.CreateVersion7(),
+                    Price = request.Price.Value,
                     ProductId = product.Id,
-                    Url = img.Url
-                };
-                await imageRepo.InsertAsync(pi);
-            }
+                    Inventories = new List<Inventory>()
+                    {
+                        new Inventory()
+                        {
+                            Id = Guid.CreateVersion7(),
+                            Quantity = 0,
+                            ModifierOptionId = null
+                        }
+                    }
+                }
+            };
         }
 
-        var saved = await _unitOfWork.CommitAsync() > 0;
-        if (!saved)
-            throw new Exception("Tạo sản phẩm thất bại");
+        var productImages = new List<ProductImage>();
+        var productImageUploadTasks = request.ProductImages.Select(async productImageUpload =>
+        {
+            var uploadResult = await _uploadService.UploadImageAsync(productImageUpload.Image);
+            productImages.Add(new ProductImage
+            {
+                Id = Guid.CreateVersion7(),
+                ImageUrl = uploadResult,
+                SortOrder = productImageUpload.SortOrder,
+                ProductId = product.Id
+            });
+        });
+        await Task.WhenAll(productImageUploadTasks);
+        product.ProductImages = productImages;
+
+        await _unitOfWork.GetRepository<Product>().InsertAsync(product);
+
+        var isSuccess = await _unitOfWork.CommitAsync() > 0;
+
+        if (!isSuccess)
+        {
+            throw new Exception("Một lỗi đã xảy ra trong quá trình tạo sản phẩm");
+        }
 
         return new ApiResponse
         {

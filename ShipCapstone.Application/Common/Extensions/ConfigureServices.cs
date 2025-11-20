@@ -21,6 +21,10 @@ using ShipCapstone.Application.Features.ModifierOptions.Command.CreateModifierOp
 using ShipCapstone.Application.Features.ModifierOptions.Command.UpdateModifierOption;
 using ShipCapstone.Application.Features.Ports.Command.CreatePort;
 using ShipCapstone.Application.Features.Ports.Command.UpdatePort;
+using ShipCapstone.Application.Features.Products.Command.CreateProduct;
+using ShipCapstone.Application.Features.Products.Command.UpdateProduct;
+using ShipCapstone.Application.Features.ProductVariants.Command.CreateProductVariant;
+using ShipCapstone.Application.Features.ProductVariants.Command.UpdateProductVariant;
 using ShipCapstone.Application.Features.Ships.Command.AssignCaptainToShip;
 using ShipCapstone.Application.Features.Ships.Command.CreateShip;
 using ShipCapstone.Application.Features.Ships.Command.UpdateShip;
@@ -74,6 +78,10 @@ public static class ConfigureServices
         services.AddScoped<IValidator<UpdateBoatyardServiceCommand>, UpdateBoatyardServiceCommandValidator>();
         services.AddScoped<IValidator<AssignCaptainToShipCommand>, AssignCaptainToShipCommandValidator>();
         services.AddScoped<IValidator<RegisterCaptainCommand>, RegisterCaptainCommandValidator>();
+        services.AddScoped<IValidator<CreateProductVariantCommand>, CreateProductVariantCommandValidator>();
+        services.AddScoped<IValidator<UpdateProductVariantCommand>, UpdateProductVariantCommandValidator>();
+        services.AddScoped<IValidator<CreateProductVariantCommand>, CreateProductVariantCommandValidator>();
+        services.AddScoped<IValidator<UpdateProductVariantCommand>, UpdateProductVariantCommandValidator>();
         services.AddHttpContextAccessor();
         services.Configure<ApiBehaviorOptions>(options =>
         {

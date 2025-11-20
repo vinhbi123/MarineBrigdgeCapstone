@@ -7,50 +7,65 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
     public CreateProductCommandValidator()
     {
         RuleFor(x => x.Name)
-            .NotNull().WithMessage("Tên sản phẩm không được để trống")
-            .NotEmpty().WithMessage("Tên sản phẩm không được để trống")
-            .MaximumLength(200).WithMessage("Tên sản phẩm không được vượt quá 200 ký tự");
-
+            .NotEmpty().WithMessage("Tên sản phẩm không được để trống.")
+            .NotNull().WithMessage("Tên sản phẩm không được để trống.")
+            .MaximumLength(255).WithMessage("Tên sản phẩm không được vượt quá 255 ký tự.");
+        When(x => x.Description != null, () =>
+        {
+            RuleFor(x => x.Description)
+                .NotEmpty().WithMessage("Mô tả sản phẩm không được để trống.")
+                .MaximumLength(500).WithMessage("Mô tả sản phẩm không được vượt quá 500 ký tự.");
+        });
         RuleFor(x => x.CategoryId)
-            .NotEmpty().WithMessage("CategoryId không được để trống");
-
-        RuleFor(x => x.SupplierId)
-            .NotEmpty().WithMessage("SupplierId không được để trống");
-
+            .NotNull().WithMessage("Danh mục sản phẩm không được để trống.");
+        When(x => x.IsHasVariant, () =>
+        {
+            RuleFor(x => x.ProductVariants)
+                .NotNull().WithMessage("Sản phẩm có biến thể phải có ít nhất một biến thể.")
+                .Must(variants => variants != null && variants.Count > 0)
+                .WithMessage("Sản phẩm có biến thể phải có ít nhất một biến thể.");
+            RuleForEach(x => x.ProductVariants).ChildRules(variant =>
+            {
+                variant.RuleFor(v => v.Name)
+                    .NotEmpty().WithMessage("Tên biến thể không được để trống.")
+                    .NotNull().WithMessage("Tên biến thể không được để trống.")
+                    .MaximumLength(255).WithMessage("Tên biến thể không được vượt quá 255 ký tự.");
+                variant.RuleFor(v => v.Price)
+                    .GreaterThanOrEqualTo(0).WithMessage("Giá biến thể phải lớn hơn hoặc bằng 0.");
+            });
+        });
         When(x => !x.IsHasVariant, () =>
         {
             RuleFor(x => x.Price)
-                .NotNull().WithMessage("Price không được để trống khi sản phẩm không có variant")
-                .GreaterThan(0).WithMessage("Price phải lớn hơn 0");
+                .NotNull().WithMessage("Giá sản phẩm không được để trống.")
+                .GreaterThanOrEqualTo(0).WithMessage("Giá sản phẩm phải lớn hơn hoặc bằng 0.");
         });
+        RuleForEach(x => x.ProductImages).SetValidator(new CreateProductImageForCreateProductRequestValidator());
+    }
+}
 
-        When(x => x.IsHasVariant, () =>
-        {
-            RuleFor(x => x.Variants)
-                .NotNull().WithMessage("Variants không được để trống khi IsHasVariant = true")
-                .Must(v => v != null && v.Count > 0).WithMessage("Phải có ít nhất 1 variant");
-
-            RuleForEach(x => x.Variants).ChildRules(v =>
+public class
+    CreateProductImageForCreateProductRequestValidator : AbstractValidator<CreateProductImageForCreateProductRequest>
+{
+    private static readonly string[] _allowedImageExtensions = new[]
+    {
+        ".jpeg", ".png", ".jpg", ".gif", ".bmp", ".webp"
+    };
+    public CreateProductImageForCreateProductRequestValidator()
+    {
+        RuleFor(x => x.Image)
+            .Cascade(CascadeMode.Stop)
+            .Must(file =>
             {
-                v.RuleFor(r => r.Name)
-                    .NotNull().WithMessage("Tên variant không được để trống")
-                    .NotEmpty().WithMessage("Tên variant không được để trống");
+                var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
 
-                v.RuleFor(r => r.Price)
-                    .GreaterThan(0).WithMessage("Giá variant phải lớn hơn 0");
-            });
-        });
-
-        When(x => x.Images != null && x.Images.Count > 0, () =>
+                return _allowedImageExtensions.Contains(extension);
+            }).WithMessage("Hình ảnh không hợp lý với các định dạng: " +
+                           string.Join(", ", _allowedImageExtensions));
+        When(x => x.SortOrder != null, () =>
         {
-            RuleForEach(x => x.Images).ChildRules(img =>
-            {
-                img.RuleFor(i => i.Url)
-                    .NotNull().WithMessage("Url ảnh không được để trống")
-                    .NotEmpty().WithMessage("Url ảnh không được để trống");
-            });
+            RuleFor(x => x.SortOrder)
+                .GreaterThanOrEqualTo(0).WithMessage("Thứ tự sắp xếp phải lớn hơn hoặc bằng 0.");
         });
-
-        RuleFor(x => x.Sku).MaximumLength(100).When(x => !string.IsNullOrWhiteSpace(x.Sku));
     }
 }
