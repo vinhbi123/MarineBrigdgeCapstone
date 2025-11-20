@@ -634,7 +634,7 @@ namespace ShipCapstone.Infrastructure.Migrations
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<bool>("IsHasVariant")
-                       .HasColumnType("bit");
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("datetime2");

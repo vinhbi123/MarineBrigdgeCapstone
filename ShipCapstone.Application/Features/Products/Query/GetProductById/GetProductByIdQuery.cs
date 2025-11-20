@@ -1,4 +1,4 @@
-﻿using Mediator;
+using Mediator;
 using ShipCapstone.Domain.Models.Common;
 
 namespace ShipCapstone.Application.Features.Products.Query.GetProductById;

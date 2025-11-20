@@ -1,4 +1,4 @@
-﻿using Mediator;
+using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using ShipCapstone.Application.Common.Utils;
 using ShipCapstone.Application.Common.Validators;
@@ -32,8 +32,8 @@ public class ProductController : BaseController<ProductController>
     [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CreateProduct([FromForm] CreateProductVariantCommand command,
-        [FromServices] ValidationUtil<CreateProductVariantCommand> validationUtil)
+    public async Task<IActionResult> CreateProduct([FromForm] CreateProductCommand command,
+        [FromServices] ValidationUtil<CreateProductCommand> validationUtil)
     {
         var (isValid, response) = await validationUtil.ValidateAsync(command);
         if (!isValid)
@@ -60,7 +60,7 @@ public class ProductController : BaseController<ProductController>
             SortBy = sortBy,
             IsAsc = isAsc
         };
-
+        
         var apiResponse = await _mediator.Send(query);
         return Ok(apiResponse);
     }
@@ -75,7 +75,7 @@ public class ProductController : BaseController<ProductController>
         {
             ProductId = id
         };
-
+        
         var apiResponse = await _mediator.Send(query);
         return Ok(apiResponse);
     }
@@ -89,16 +89,16 @@ public class ProductController : BaseController<ProductController>
     [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateProduct([FromRoute] Guid id, [FromForm] UpdateProductRequest request,
-        [FromServices] ValidationUtil<UpdateProductVariantCommand> validationUtil)
+        [FromServices] ValidationUtil<UpdateProductCommand> validationUtil)
     {
-        var command = new UpdateProductVariantCommand()
+        var command = new UpdateProductCommand()
         {
             ProductId = id,
             Name = request.Name,
             Description = request.Description,
             CategoryId = request.CategoryId
         };
-
+        
         var (isValid, response) = await validationUtil.ValidateAsync(command);
         if (!isValid)
         {
@@ -125,13 +125,13 @@ public class ProductController : BaseController<ProductController>
             Name = request.Name,
             Price = request.Price
         };
-
+        
         var (isValid, response) = await validationUtil.ValidateAsync(command);
         if (!isValid)
         {
             return BadRequest(response);
         }
-
+        
         var apiResponse = await _mediator.Send(command);
         return CreatedAtAction(nameof(CreateProductVariant), apiResponse);
     }

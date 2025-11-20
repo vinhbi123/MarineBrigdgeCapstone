@@ -1,4 +1,4 @@
-﻿using Mediator;
+using Mediator;
 using ShipCapstone.Application.Services.Interfaces;
 using ShipCapstone.Domain.Entities;
 using ShipCapstone.Domain.Models.Common;
@@ -12,7 +12,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
     private readonly IUnitOfWork<ShipCapstoneContext> _unitOfWork;
     private readonly ILogger _logger;
     private readonly IClaimService _claimService;
-
+    
     public UpdateProductCommandHandler(IUnitOfWork<ShipCapstoneContext> unitOfWork, ILogger logger,
         IClaimService claimService)
     {
@@ -20,8 +20,8 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _claimService = claimService ?? throw new ArgumentNullException(nameof(claimService));
     }
-
-
+    
+    
     public async ValueTask<ApiResponse> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
         var accountId = _claimService.GetCurrentUserId;
@@ -33,12 +33,12 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
         var product = await _unitOfWork.GetRepository<Product>().SingleOrDefaultAsync(
             predicate: x => x.Id == request.ProductId && x.SupplierId == accountId
         );
-
+        
         if (product == null)
         {
             throw new BadHttpRequestException("Sản phẩm không tồn tại hoặc bạn không có quyền cập nhật sản phẩm này");
         }
-
+        
         product.Name = request.Name ?? product.Name;
         product.Description = request.Description ?? product.Description;
 
@@ -54,9 +54,9 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
             product.CategoryId = category.Id;
         }
         _unitOfWork.GetRepository<Product>().UpdateAsync(product);
-
+        
         var isSuccess = await _unitOfWork.CommitAsync() > 0;
-
+        
         if (!isSuccess)
         {
             throw new Exception("Cập nhật sản phẩm thất bại");

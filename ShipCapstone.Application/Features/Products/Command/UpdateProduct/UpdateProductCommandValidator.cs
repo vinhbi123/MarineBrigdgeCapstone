@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using ShipCapstone.Application.Features.Ports.Command.UpdatePort;
 
 namespace ShipCapstone.Application.Features.Products.Command.UpdateProduct;
@@ -17,7 +17,7 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
                 .NotEmpty().WithMessage("Tên sản phẩm không được để trống.")
                 .MaximumLength(255).WithMessage("Tên sản phẩm không được vượt quá 255 ký tự.");
         });
-        When(x => x.Description != null, () =>
+        When(x => x.Description != null, () => 
         {
             RuleFor(x => x.Description)
                 .NotEmpty().WithMessage("Mô tả sản phẩm không được để trống.")

@@ -1,4 +1,4 @@
-﻿namespace ShipCapstone.Domain.Models.Products;
+namespace ShipCapstone.Domain.Models.Products;
 
 public record GetProductByIdResponse
 {

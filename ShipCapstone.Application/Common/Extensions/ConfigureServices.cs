@@ -78,8 +78,8 @@ public static class ConfigureServices
         services.AddScoped<IValidator<UpdateBoatyardServiceCommand>, UpdateBoatyardServiceCommandValidator>();
         services.AddScoped<IValidator<AssignCaptainToShipCommand>, AssignCaptainToShipCommandValidator>();
         services.AddScoped<IValidator<RegisterCaptainCommand>, RegisterCaptainCommandValidator>();
-        services.AddScoped<IValidator<CreateProductVariantCommand>, CreateProductVariantCommandValidator>();
-        services.AddScoped<IValidator<UpdateProductVariantCommand>, UpdateProductVariantCommandValidator>();
+        services.AddScoped<IValidator<CreateProductCommand>, CreateProductCommandValidator>();
+        services.AddScoped<IValidator<UpdateProductCommand>, UpdateProductCommandValidator>();
         services.AddScoped<IValidator<CreateProductVariantCommand>, CreateProductVariantCommandValidator>();
         services.AddScoped<IValidator<UpdateProductVariantCommand>, UpdateProductVariantCommandValidator>();
         services.AddHttpContextAccessor();
