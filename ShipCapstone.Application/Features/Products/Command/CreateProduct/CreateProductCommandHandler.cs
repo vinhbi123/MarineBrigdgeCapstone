@@ -31,7 +31,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         var accountId = _claimService.GetCurrentUserId;
 
         var category = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync(
-            predicate: x => x.Id == request.CategoryId && x.SupplierId == accountId
+            predicate: x => x.Id == request.CategoryId && x.Supplier.AccountId == accountId
         );
         if (category == null)
         {
