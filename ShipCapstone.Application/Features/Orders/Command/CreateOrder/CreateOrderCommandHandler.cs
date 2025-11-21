@@ -59,12 +59,11 @@
                         ProductVariantId = productVariant.Id,
                         OrderId = order.Id
                     };
-                    totalAmount += productVariant.Price;
-                    orderItems.Add(orderItem);
+                totalAmount += productVariant.Price;
+                orderItems.Add(orderItem);
                 };
                 await _unitOfWork.GetRepository<OrderItem>().InsertRangeAsync(orderItems);
                 order.TotalAmount = totalAmount;
-                _unitOfWork.GetRepository<Order>().UpdateAsync(order);
                 var isSuccess = await _unitOfWork.CommitAsync() > 0;
                 if (!isSuccess)
                 {
