@@ -6,8 +6,11 @@ using ShipCapstone.Application.Features.Authentication.Command.Login;
 using ShipCapstone.Application.Features.Authentication.Command.Oauth;
 using ShipCapstone.Application.Features.Authentication.Command.SendOtp;
 using ShipCapstone.Domain.Constants;
+using ShipCapstone.Domain.Models.Profile;
 using ShipCapstone.Domain.Models.Authentication;
 using ShipCapstone.Domain.Models.Common;
+using ShipCapstone.Application.Features.Accounts.Query.AllUser;
+using ShipCapstone.Application.Features.Accounts.Query.Profile;
 
 namespace ShipCapstone.Application.Controllers;
 
@@ -85,4 +88,15 @@ public class AuthenticationController : BaseController<AuthenticationController>
         var apiResponse = await _mediator.Send(command);
         return Ok(apiResponse);
     }
+ [HttpGet(ApiEndPointConstant.Authentication.Profile)]
+    [ProducesResponseType<ApiResponse<GetProfileResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Profile()
+    {
+        var query = new ProfileQuery();
+        var apiResponse = await _mediator.Send(query);
+        return Ok(apiResponse);
+    }
 }
+    

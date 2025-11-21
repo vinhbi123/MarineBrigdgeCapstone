@@ -13,6 +13,7 @@ public class ApiEndPointConstant
         public const string Register = AuthenticationEndpoint + "/register";
         public const string Otp = AuthenticationEndpoint + "/otp";
         public const string OAuth = AuthenticationEndpoint + "/oauth";
+        public const string Profile = AuthenticationEndpoint + "/profile";
     }
 
     public static class Ships
@@ -79,11 +80,19 @@ public class ApiEndPointConstant
         public const string ProductById = ProductEndpoint + "/{id}";
         public const string ProductWithVariants = ProductById + "/product-variants";
     }
-    
+
     public static class ProductVariants
     {
         public const string ProductVariantEndpoint = ApiEndpoint + "/product-variants";
         public const string ProductVariantById = ProductVariantEndpoint + "/{id}";
     }
-    
+    public static class Accout
+    {
+        public const string AccountEndpoint = ApiEndpoint + "/accounts";
+    }
+    public static class Order
+    {
+        public const string OrderEndpoint = ApiEndpoint + "/orders";
+    }
+
 }

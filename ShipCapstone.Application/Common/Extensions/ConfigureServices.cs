@@ -19,6 +19,7 @@ using ShipCapstone.Application.Features.ModifierGroups.Command.CreateModifierGro
 using ShipCapstone.Application.Features.ModifierGroups.Command.UpdateModifierGroup;
 using ShipCapstone.Application.Features.ModifierOptions.Command.CreateModifierOption;
 using ShipCapstone.Application.Features.ModifierOptions.Command.UpdateModifierOption;
+using ShipCapstone.Application.Features.Orders.Command.CreateOrder;
 using ShipCapstone.Application.Features.Ports.Command.CreatePort;
 using ShipCapstone.Application.Features.Ports.Command.UpdatePort;
 using ShipCapstone.Application.Features.Products.Command.CreateProduct;
@@ -56,6 +57,7 @@ public static class ConfigureServices
         services.AddScoped<IOAuthService, OAuthService>();
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped(typeof(ValidationUtil<>));
+        services.AddScoped<IValidator<CreateOrderCommand>, CreateOrderCommandValidator>();
         services.AddScoped<IValidator<LoginCommand>, LoginCommandValidator>();
         services.AddScoped<IValidator<SendOtpCommand>, SendOtpCommandValidator>();
         services.AddScoped<IValidator<RegisterCommand>, RegisterCommandValidator>();
