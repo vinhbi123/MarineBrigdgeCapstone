@@ -38,10 +38,10 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
                include: o => o.Include(o => o.Ship)
                     .Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.ProductVariant)) ?? throw new NotFoundException("Không tìm thấy đơn hàng");
-            /*if (order.Ship.AccountId != account.Id)   
+            if (order.Ship.AccountId != account.Id)   
             {
                 throw new BadHttpRequestException("Đơn hàng không phải của tài khoản này");
-            }*/
+            }
             paymentObject = order;
         }
 
