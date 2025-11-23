@@ -9,4 +9,5 @@ public class CreatePaymentRequest
     public object PaymentObject { get; set; }
     public EPaymentType Type { get; set; }
     public string Address { get; set; }
+    public long TransactionCode { get; set; }
 }
