@@ -19,6 +19,7 @@ using ShipCapstone.Application.Features.ModifierGroups.Command.CreateModifierGro
 using ShipCapstone.Application.Features.ModifierGroups.Command.UpdateModifierGroup;
 using ShipCapstone.Application.Features.ModifierOptions.Command.CreateModifierOption;
 using ShipCapstone.Application.Features.ModifierOptions.Command.UpdateModifierOption;
+using ShipCapstone.Application.Features.Payments.Command;
 using ShipCapstone.Application.Features.Orders.Command.CreateOrder;
 using ShipCapstone.Application.Features.Ports.Command.CreatePort;
 using ShipCapstone.Application.Features.Ports.Command.UpdatePort;
@@ -74,6 +75,7 @@ public static class ConfigureServices
         services.AddScoped<IValidator<UpdatePortCommand>, UpdatePortCommandValidator>();
         services.AddScoped<IValidator<CreateBoatyardCommand>, CreateBoatyardCommandValidator>();
         services.AddScoped<IValidator<UpdateBoatyardCommand>, UpdateBoatyardCommandValidator>();
+        services.AddScoped<IValidator<CreatePaymentCommand>, CreatePaymentCommandValidator>();
         services.AddScoped<IValidator<CreateDockSlotCommand>, CreateDockSlotCommandValidator>();
         services.AddScoped<IValidator<UpdateDockSlotCommand>, UpdateDockSlotCommandValidator>();
         services.AddScoped<IValidator<CreateBoatyardServiceCommand>, CreateBoatyardServiceCommandValidator>();

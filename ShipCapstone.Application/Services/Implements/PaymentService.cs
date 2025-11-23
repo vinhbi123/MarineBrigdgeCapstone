@@ -24,8 +24,7 @@ public class PaymentService : IPaymentService
     public async Task<CreatePaymentResult> CreatePaymentUrl(CreatePaymentRequest request)
     {
         CreatePaymentResult url = null;
-        Random random = new Random();
-        var orderCode = DateTime.Now.Ticks % 10000000000000L * 10 + random.Next(0, 10);
+        
         var expiredAt = DateTimeOffset.UtcNow.AddMinutes(10).ToUnixTimeSeconds();
         var description = "";
         int amount = 0;
@@ -48,21 +47,21 @@ public class PaymentService : IPaymentService
             items = null;
             amount = (int)booking.TotalAmount;
         }
-        description = $"Thanh toan {orderCode}";
+        description = $"Thanh toan {request.TransactionCode}";
         var signatureData = new Dictionary<string, object>
         {
             { "amount", amount },
             { "cancelUrl", _payOSSettings.ReturnUrlFail },
             { "description", description },
             { "expiredAt", expiredAt },
-            { "orderCode", orderCode },
+            { "orderCode", request.TransactionCode },
             { "returnUrl", _payOSSettings.ReturnUrl }
         };
         var data = string.Join("&", signatureData.Select(p => $"{p.Key}={p.Value}"));
         var signature = ComputeHmacSha256(data, _payOSSettings.ChecksumKey);
 
         var paymentData = new PaymentData(
-            orderCode: orderCode,
+            orderCode: request.TransactionCode,
             amount: amount,
             description: description,
             items: items,

@@ -35,11 +35,13 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
         {
             var order = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
                 predicate: o => o.Id.Equals(request.Id),
-                include: o => o.Include(o => o.Ship)) ?? throw new NotFoundException("Không tìm thấy đơn hàng");
-            if (order.Ship.AccountId != account.Id)
+               include: o => o.Include(o => o.Ship)
+                    .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.ProductVariant)) ?? throw new NotFoundException("Không tìm thấy đơn hàng");
+            /*if (order.Ship.AccountId != account.Id)   
             {
                 throw new BadHttpRequestException("Đơn hàng không phải của tài khoản này");
-            }
+            }*/
             paymentObject = order;
         }
 
@@ -60,13 +62,16 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
         {
             throw new BadHttpRequestException("Kiểu thanh toán không hợp lệ");
         }
+            Random random = new Random();
+        var transactionCode = DateTime.Now.Ticks % 10000000000000L * 10 + random.Next(0, 10);   
 
         CreatePaymentRequest paymentRequest = new CreatePaymentRequest()
         {
             Account = account,
             PaymentObject = paymentObject,
             Address = request.Address,
-            Type = request.Type
+            Type = request.Type,
+            TransactionCode = transactionCode
         };
 
         var url = await _paymentService.CreatePaymentUrl(paymentRequest);
@@ -75,6 +80,7 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
             Id = Guid.CreateVersion7(),
             Status = ETransactionStatus.Pending,
             CreatedDate = TimeUtil.GetCurrentSEATime(),
+            TransactionCode = transactionCode.ToString()
         };
         if (request.Type == EPaymentType.Supplier)
         {
