@@ -35,17 +35,24 @@ namespace ShipCapstone.Application.Controllers
             var apiResponse = await _mediator.Send(command);
             return CreatedAtAction(nameof(SendOtp), apiResponse);
         }
-    
-     [HttpGet(ApiEndPointConstant.Order.OrderEndpoint + "/{id}")]
+
+        [HttpGet(ApiEndPointConstant.Order.OrderEndpoint + "/{id}")]
         [ProducesResponseType<ApiResponse<GetOrderResponse>>(StatusCodes.Status200OK)]
         [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
         [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
-            var query = new GetOrderByIdQuery { Id = id };
+            var query = new GetAllOrderQuery { Id = id };
+            var apiResponse = await _mediator.Send(query);
+            return Ok(apiResponse);
+        }
+ 
+    [HttpGet(ApiEndPointConstant.Order.GetAllOrder)]
+        [ProducesResponseType<ApiResponse>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAll([FromQuery] GetAllOrdersQuery query)
+        {
             var apiResponse = await _mediator.Send(query);
             return Ok(apiResponse);
         }
     }
 }
-

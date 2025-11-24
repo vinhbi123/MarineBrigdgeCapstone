@@ -94,6 +94,7 @@ public class ApiEndPointConstant
     {
         public const string OrderEndpoint = ApiEndpoint + "/orders";
         public const string OrderById = OrderEndpoint + "/{id}";
+        public const string GetAllOrder = OrderEndpoint;
     }
     public static class Payments
     {

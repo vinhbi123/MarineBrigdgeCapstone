@@ -8,7 +8,7 @@ using ShipCapstone.Infrastructure.Repositories.Interface;
 
 namespace ShipCapstone.Application.Features.Orders.Query
 {
-    public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, ApiResponse>
+    public class GetOrderByIdQueryHandler : IRequestHandler<GetAllOrderQuery, ApiResponse>
     {
         private readonly IUnitOfWork<ShipCapstoneContext> _unitOfWork;
 
@@ -17,7 +17,7 @@ namespace ShipCapstone.Application.Features.Orders.Query
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
-        public async ValueTask<ApiResponse> Handle(GetOrderByIdQuery request, CancellationToken cancellationToken)
+        public async ValueTask<ApiResponse> Handle(GetAllOrderQuery request, CancellationToken cancellationToken)
         {
             var order = await _unitOfWork.GetRepository<Order>()
                 .SingleOrDefaultAsync<Order>(            
