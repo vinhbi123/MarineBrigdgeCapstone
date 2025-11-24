@@ -9,4 +9,4 @@ public class ProductModifierGroup : EntityBase<Guid>
     
     public virtual Product Product { get; set; }
     public virtual ModifierGroup ModifierGroup { get; set; }
-}
+}   

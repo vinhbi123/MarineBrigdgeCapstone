@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ShipCapstone.Application.Common.Utils;
 using ShipCapstone.Application.Features.Authentication.Command.SendOtp;
 using ShipCapstone.Application.Features.Orders.Command.CreateOrder;
+using ShipCapstone.Application.Features.Orders.Query;
 using ShipCapstone.Domain.Constants;
 using ShipCapstone.Domain.Models.Common;
 using ShipCapstone.Domain.Models.Orders;
@@ -34,5 +35,17 @@ namespace ShipCapstone.Application.Controllers
             var apiResponse = await _mediator.Send(command);
             return CreatedAtAction(nameof(SendOtp), apiResponse);
         }
+    
+     [HttpGet(ApiEndPointConstant.Order.OrderEndpoint + "/{id}")]
+        [ProducesResponseType<ApiResponse<GetOrderResponse>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetById([FromRoute] Guid id)
+        {
+            var query = new GetOrderByIdQuery { Id = id };
+            var apiResponse = await _mediator.Send(query);
+            return Ok(apiResponse);
+        }
     }
 }
+
