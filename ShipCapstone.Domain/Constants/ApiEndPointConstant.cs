@@ -100,5 +100,9 @@ public class ApiEndPointConstant
     {
         public const string PaymentEndpoint = ApiEndpoint + "/payments";
     }
+    public static class Booking
+    {
+        public const string CreateBooking = "/create";
+    }
 
 }
