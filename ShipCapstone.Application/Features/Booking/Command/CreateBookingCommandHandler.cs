@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
+using BookingEntity = ShipCapstone.Domain.Entities.Booking;
 namespace ShipCapstone.Application.Features.Bookings.Command.CreateBooking
 {
     public class CreateBookingCommandHandler : IRequestHandler<CreateBookingCommand, ApiResponse>
@@ -54,7 +54,7 @@ namespace ShipCapstone.Application.Features.Bookings.Command.CreateBooking
                 ?? throw new NotFoundException("Không tìm thấy DockSlot");
 
             // Tạo booking
-            var booking = new Booking
+            var booking = new BookingEntity
             {
                 Id = Guid.NewGuid(),
                 ShipId = ship.Id,
@@ -65,7 +65,7 @@ namespace ShipCapstone.Application.Features.Bookings.Command.CreateBooking
                 Status = EBookingStatus.Pending
             };
 
-            await _unitOfWork.GetRepository<Booking>().InsertAsync(booking);
+            await _unitOfWork.GetRepository<BookingEntity>().InsertAsync(booking);
 
             decimal totalAmount = 0;
 
