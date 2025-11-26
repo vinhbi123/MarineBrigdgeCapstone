@@ -520,14 +520,17 @@ namespace ShipCapstone.Infrastructure.Migrations
                     b.Property<Guid?>("AccountId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("BoatyardId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("ShipId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<Guid?>("ShipId")
+                       .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -540,6 +543,8 @@ namespace ShipCapstone.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
+
+                    b.HasIndex("BoatyardId");   
 
                     b.HasIndex("ShipId");
 
@@ -1162,11 +1167,17 @@ namespace ShipCapstone.Infrastructure.Migrations
                         .WithMany("Orders")
                         .HasForeignKey("AccountId");
 
+                    b.HasOne("ShipCapstone.Domain.Entities.Boatyard", "Boatyard")
+                       .WithMany("Orders")
+                       .HasForeignKey("BoatyardId")
+                       .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("ShipCapstone.Domain.Entities.Ship", "Ship")
                         .WithMany("Orders")
                         .HasForeignKey("ShipId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Boatyard");
 
                     b.Navigation("Ship");
                 });
@@ -1371,6 +1382,8 @@ namespace ShipCapstone.Infrastructure.Migrations
                     b.Navigation("BoatyardServices");
 
                     b.Navigation("DockSlots");
+
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("ShipCapstone.Domain.Entities.BoatyardService", b =>
