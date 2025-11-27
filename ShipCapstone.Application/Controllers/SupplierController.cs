@@ -1,11 +1,13 @@
 using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using ShipCapstone.Application.Common.Utils;
+using ShipCapstone.Application.Features.Products.Query.GetProductsBySupplierId;
 using ShipCapstone.Application.Features.Suppliers.Command.CreateSupplier;
 using ShipCapstone.Application.Features.Suppliers.Query.GetSuppliers;
 using ShipCapstone.Domain.Constants;
 using ShipCapstone.Domain.Models.Authentication;
 using ShipCapstone.Domain.Models.Common;
+using ShipCapstone.Domain.Models.Products;
 using ShipCapstone.Domain.Models.Suppliers;
 using ShipCapstone.Infrastructure.Paginate.Interface;
 
@@ -55,7 +57,29 @@ public class SupplierController : BaseController<SupplierController>
             IsAsc = isAsc,
             Name = name
         };
-        
+
+        var apiResponse = await _mediator.Send(query);
+        return Ok(apiResponse);
+    }
+
+    [HttpGet(ApiEndPointConstant.Suppliers.SupplierWithProducts)]
+    [ProducesResponseType<ApiResponse<IPaginate<GetProductsBySupplierIdResponse>>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetProductsBySupplierId([FromRoute] Guid id,
+        [FromQuery] int page = 1, [FromQuery] int size = 30,
+        [FromQuery] string? sortBy = null, [FromQuery] bool isAsc = false, [FromQuery] string? name = null)
+    {
+        var query = new GetProductsBySupplierIdQuery()
+        {
+            SupplierId = id,
+            Page = page,
+            Size = size,
+            SortBy = sortBy,
+            IsAsc = isAsc,
+            Name = name
+        };
+
         var apiResponse = await _mediator.Send(query);
         return Ok(apiResponse);
     }

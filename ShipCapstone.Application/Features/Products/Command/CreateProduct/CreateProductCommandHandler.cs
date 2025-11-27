@@ -30,9 +30,16 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
     {
         var accountId = _claimService.GetCurrentUserId;
 
+        var supplier = await _unitOfWork.GetRepository<Supplier>().SingleOrDefaultAsync(
+           predicate: x => x.AccountId == accountId
+       );
+        if (supplier == null)
+        {
+            throw new NotFoundException("Nhà cung cấp không tồn tại");
+        }
+
         var category = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync(
-            predicate: x => x.Id == request.CategoryId && x.SupplierId == accountId
-        );
+            predicate: x => x.Id == request.CategoryId && x.Supplier.AccountId == accountId);
         if (category == null)
         {
             throw new NotFoundException("Danh mục không tồn tại");
@@ -44,7 +51,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             Name = request.Name,
             Description = request.Description,
             CategoryId = category.Id,
-            SupplierId = accountId,
+            SupplierId = supplier.Id,
         };
 
         if (request.IsHasVariant)
