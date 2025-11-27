@@ -60,6 +60,7 @@ namespace ShipCapstone.Application.Features.Bookings.Command.CreateBooking
             await _unitOfWork.GetRepository<BookingEntity>().InsertAsync(booking);
 
             decimal totalAmount = 0;
+            Guid? boatyaltId = null;
 
             if (request.Services.Any())
             {
@@ -68,6 +69,14 @@ namespace ShipCapstone.Application.Features.Bookings.Command.CreateBooking
                     var service = await _unitOfWork.GetRepository<BoatyardService>()
                         .SingleOrDefaultAsync(predicate: s => s.Id == serviceId && s.IsActive)
                         ?? throw new NotFoundException($"Service {serviceId} không tồn tại.");
+                    if (boatyaltId == null)
+                    {
+                        boatyaltId = service.BoatyardId;
+                    }
+                    else if (boatyaltId != service.BoatyardId)
+                    {
+                        throw new BadHttpRequestException("Chỉ được đặt cùng 1 xưởng");
+                    }
 
                     totalAmount += service.Price;
 

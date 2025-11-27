@@ -103,7 +103,7 @@ public class ApiEndPointConstant
     }
     public static class Bookings
     {
-        public const string BookingEndPoint = "/bookings";
+        public const string BookingEndPoint = ApiEndpoint + "/bookings";
         public const string BookingById = BookingEndPoint + "/{id}";
     }
 
