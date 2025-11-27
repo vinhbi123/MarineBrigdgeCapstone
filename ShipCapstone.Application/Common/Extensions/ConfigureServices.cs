@@ -21,7 +21,7 @@ using ShipCapstone.Application.Features.ModifierGroups.Command.UpdateModifierGro
 using ShipCapstone.Application.Features.ModifierOptions.Command.CreateModifierOption;
 using ShipCapstone.Application.Features.ModifierOptions.Command.UpdateModifierOption;
 using ShipCapstone.Application.Features.Orders.Command.CreateOrder;
-using ShipCapstone.Application.Features.Payments.Command;
+using ShipCapstone.Application.Features.Payments.Command.CreatePayment;
 using ShipCapstone.Application.Features.Ports.Command.CreatePort;
 using ShipCapstone.Application.Features.Ports.Command.UpdatePort;
 using ShipCapstone.Application.Features.Products.Command.CreateProduct;

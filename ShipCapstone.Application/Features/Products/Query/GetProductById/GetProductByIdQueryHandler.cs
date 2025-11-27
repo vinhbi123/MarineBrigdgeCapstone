@@ -12,15 +12,15 @@ public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, A
 {
     private readonly IUnitOfWork<ShipCapstoneContext> _unitOfWork;
     private readonly ILogger _logger;
-    
+
     public GetProductByIdQueryHandler(
-        IUnitOfWork<ShipCapstoneContext> unitOfWork, 
+        IUnitOfWork<ShipCapstoneContext> unitOfWork,
         ILogger logger)
     {
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
-    
+
     public async ValueTask<ApiResponse> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
     {
         var product = await _unitOfWork.GetRepository<Product>().SingleOrDefaultAsync(

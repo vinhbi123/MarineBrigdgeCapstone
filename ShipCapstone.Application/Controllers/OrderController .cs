@@ -46,8 +46,8 @@ namespace ShipCapstone.Application.Controllers
             var apiResponse = await _mediator.Send(query);
             return Ok(apiResponse);
         }
- 
-    [HttpGet(ApiEndPointConstant.Order.GetAllOrder)]
+
+        [HttpGet(ApiEndPointConstant.Order.GetAllOrder)]
         [ProducesResponseType<ApiResponse>(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll([FromQuery] GetAllOrdersQuery query)
         {

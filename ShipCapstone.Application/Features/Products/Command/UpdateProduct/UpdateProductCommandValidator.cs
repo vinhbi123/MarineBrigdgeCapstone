@@ -17,7 +17,7 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
                 .NotEmpty().WithMessage("Tên sản phẩm không được để trống.")
                 .MaximumLength(255).WithMessage("Tên sản phẩm không được vượt quá 255 ký tự.");
         });
-        When(x => x.Description != null, () => 
+        When(x => x.Description != null, () =>
         {
             RuleFor(x => x.Description)
                 .NotEmpty().WithMessage("Mô tả sản phẩm không được để trống.")
@@ -29,4 +29,4 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
                 .NotEqual(Guid.Empty).WithMessage("Id danh mục sản phẩm không hợp lệ.");
         });
     }
-}
+}   

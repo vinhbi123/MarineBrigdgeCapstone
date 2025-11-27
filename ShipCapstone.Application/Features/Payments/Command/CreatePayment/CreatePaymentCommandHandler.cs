@@ -10,7 +10,7 @@ using ShipCapstone.Infrastructure.Persistence;
 using ShipCapstone.Infrastructure.Repositories.Interface;
 using ShipCapstone.Infrastructure.Utils;
 
-namespace ShipCapstone.Application.Features.Payments.Command;
+namespace ShipCapstone.Application.Features.Payments.Command.CreatePayment;
 
 public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand, ApiResponse>
 {

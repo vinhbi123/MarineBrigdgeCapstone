@@ -3,7 +3,7 @@ using ShipCapstone.Domain.Entities;
 using ShipCapstone.Domain.Enums;
 using ShipCapstone.Domain.Models.Common;
 
-namespace ShipCapstone.Application.Features.Payments.Command;
+namespace ShipCapstone.Application.Features.Payments.Command.CreatePayment;
 
 public class CreatePaymentCommand : IRequest<ApiResponse>
 {

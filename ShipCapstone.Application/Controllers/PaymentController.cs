@@ -1,7 +1,7 @@
 ﻿using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using ShipCapstone.Application.Common.Utils;
-using ShipCapstone.Application.Features.Payments.Command;
+using ShipCapstone.Application.Features.Payments.Command.CreatePayment;
 using ShipCapstone.Domain.Constants;
 using ShipCapstone.Domain.Models.Common;
 
