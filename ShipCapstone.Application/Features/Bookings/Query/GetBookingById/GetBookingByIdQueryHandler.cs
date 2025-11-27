@@ -29,6 +29,8 @@ public class GetBookingByIdQueryHandler : IRequestHandler<GetBookingByIdQuery, A
         var booking = await _unitOfWork.GetRepository<Booking>().SingleOrDefaultAsync(
             predicate: b => b.Id == request.Id,
             include: b => b.Include(b => b.Ship)
+            .ThenInclude(b => b.Account)
+                .Include(b => b.DockSlot)
                 .Include(b => b.BookingServices)
                 .ThenInclude(bs => bs.BoatyardService)
                 .ThenInclude(bs => bs.Boatyard)) ?? throw new NotFoundException("Không tìm thấy đơn đặt dịch vụ");
@@ -59,7 +61,18 @@ public class GetBookingByIdQueryHandler : IRequestHandler<GetBookingByIdQuery, A
             StartTime = booking.StartTime,
             EndTime = booking.EndTime,
             ShipId = booking.ShipId,
-            DockSlotId = booking.DockSlotId
+            ShipName = booking.Ship.Name,
+            ShipOwnerName = booking.Ship.Account.FullName,
+            ShipOwnerPhoneNumber = booking.Ship.Account.PhoneNumber,
+            DockSlotId = booking.DockSlotId,
+            DockSlotName = booking.DockSlot.Name,
+            Services = booking.BookingServices.Select(bs => new BookingServiceDetailResponse
+            {
+                Id = bs.Id,
+                TypeService = bs.BoatyardService.TypeService,
+                Price = bs.BoatyardService.Price
+            }).ToList()
+
         };
 
         return new ApiResponse()

@@ -7,6 +7,8 @@ public class Boatyard : EntityAuditBase<Guid>
     public string Name { get; set; }
     public string? Longitude { get; set; }
     public string? Latitude { get; set; }
+    public string? BankName { get; set; }
+    public string? BankNo { get; set; }
     public Guid AccountId { get; set; }
     public virtual ICollection<Order>? Orders { get; set; } = new List<Order>();
     public virtual Account Account { get; set; }
