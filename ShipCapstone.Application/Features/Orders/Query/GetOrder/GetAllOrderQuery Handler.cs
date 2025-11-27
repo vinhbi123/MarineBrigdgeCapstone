@@ -40,7 +40,7 @@ namespace ShipCapstone.Application.Features.Orders.Query.GetOrder
                 },
                 predicate: o =>
                 (role != ERole.Supplier || (o.Status != EOrderStatus.Pending &&
-                                                o.OrderItems.Any(oi => oi.ProductVariant.Product.SupplierId == account.Id))) &&
+                                                                        o.OrderItems.Any(oi => oi.ProductVariant.Product.SupplierId == account.Supplier.Id))) &&
                     (role != ERole.Boatyard || o.BoatyardId == account.Boatyard.Id) &&
                     (role != ERole.User || o.Ship.AccountId == userId) &&
                     (!request.ShipId.HasValue || o.ShipId == request.ShipId) &&

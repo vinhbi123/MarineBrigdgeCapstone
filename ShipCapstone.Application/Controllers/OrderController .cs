@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ShipCapstone.Application.Common.Utils;
 using ShipCapstone.Application.Features.Authentication.Command.SendOtp;
+using ShipCapstone.Application.Features.Orders.Command.UpdateOrder;
 using ShipCapstone.Application.Features.Orders.Command.CreateOrder;
 using ShipCapstone.Application.Features.Orders.Query.GetOrder;
 using ShipCapstone.Application.Features.Orders.Query.GetOrderById;
@@ -54,6 +55,23 @@ namespace ShipCapstone.Application.Controllers
         public async Task<IActionResult> GetAll([FromQuery] GetAllOrdersQuery query)
         {
             var apiResponse = await _mediator.Send(query);
+            return Ok(apiResponse);
+        }
+
+        [HttpPut(ApiEndPointConstant.Orders.OrderById)]
+        [ProducesResponseType<ApiResponse<Guid>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateOrder([FromRoute] Guid id, [FromBody] UpdateOrderRequest request)
+        {
+            var command = new UpdateOrderCommand
+            {
+                Id = id,
+                Status = request.Status,
+                OrderItems = request.OrderItems
+            };
+            var apiResponse = await _mediator.Send(command);
             return Ok(apiResponse);
         }
     }
