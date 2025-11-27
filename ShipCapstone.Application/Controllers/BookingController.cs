@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using ShipCapstone.Application.Common.Utils;
 using ShipCapstone.Application.Features.Bookings.Command.CreateBooking;
-using ShipCapstone.Application.Features.Bookings.Query.GetAllBooking;
 using ShipCapstone.Application.Features.Bookings.Query.GetBooking;
 using ShipCapstone.Application.Features.Bookings.Query.GetBookingById;
 using ShipCapstone.Domain.Constants;

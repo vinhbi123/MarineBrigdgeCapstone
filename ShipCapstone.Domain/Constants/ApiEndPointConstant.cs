@@ -110,4 +110,9 @@ public class ApiEndPointConstant
         public const string BookingById = BookingEndPoint + "/{id}";
     }
 
+    public static class Revenue
+    {
+        public const string RevenueEndPoint = ApiEndpoint + "/revenues";
+    }
+
 }
