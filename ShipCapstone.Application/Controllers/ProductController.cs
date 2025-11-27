@@ -60,7 +60,7 @@ public class ProductController : BaseController<ProductController>
             SortBy = sortBy,
             IsAsc = isAsc
         };
-        
+
         var apiResponse = await _mediator.Send(query);
         return Ok(apiResponse);
     }
@@ -75,7 +75,7 @@ public class ProductController : BaseController<ProductController>
         {
             ProductId = id
         };
-        
+
         var apiResponse = await _mediator.Send(query);
         return Ok(apiResponse);
     }
@@ -98,7 +98,7 @@ public class ProductController : BaseController<ProductController>
             Description = request.Description,
             CategoryId = request.CategoryId
         };
-        
+
         var (isValid, response) = await validationUtil.ValidateAsync(command);
         if (!isValid)
         {
@@ -125,13 +125,13 @@ public class ProductController : BaseController<ProductController>
             Name = request.Name,
             Price = request.Price
         };
-        
+
         var (isValid, response) = await validationUtil.ValidateAsync(command);
         if (!isValid)
         {
             return BadRequest(response);
         }
-        
+
         var apiResponse = await _mediator.Send(command);
         return CreatedAtAction(nameof(CreateProductVariant), apiResponse);
     }

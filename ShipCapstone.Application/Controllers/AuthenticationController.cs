@@ -9,11 +9,10 @@ using ShipCapstone.Domain.Constants;
 using ShipCapstone.Domain.Models.Profile;
 using ShipCapstone.Domain.Models.Authentication;
 using ShipCapstone.Domain.Models.Common;
-using ShipCapstone.Application.Features.Accounts.Query.AllUser;
 using ShipCapstone.Application.Features.Accounts.Query.Profile;
 
 namespace ShipCapstone.Application.Controllers;
-
+    
 [ApiController]
 [Route(ApiEndPointConstant.Authentication.AuthenticationEndpoint)]
 public class AuthenticationController : BaseController<AuthenticationController>

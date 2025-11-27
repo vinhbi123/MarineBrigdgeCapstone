@@ -14,7 +14,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
     private readonly ILogger _logger;
     private readonly IClaimService _claimService;
     private readonly IUploadService _uploadService;
-    
+
     public CreateProductCommandHandler(
         IUnitOfWork<ShipCapstoneContext> unitOfWork,
         ILogger logger,
@@ -25,13 +25,13 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         _claimService = claimService ?? throw new ArgumentNullException(nameof(claimService));
         _uploadService = uploadService ?? throw new ArgumentNullException(nameof(uploadService));
     }
-    
+
     public async ValueTask<ApiResponse> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         var accountId = _claimService.GetCurrentUserId;
 
         var category = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync(
-            predicate: x => x.Id == request.CategoryId && x.Supplier.AccountId == accountId
+            predicate: x => x.Id == request.CategoryId && x.SupplierId == accountId
         );
         if (category == null)
         {
@@ -74,7 +74,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         }
         else
         {
-            if (request.Price == null)  
+            if (request.Price == null)
             {
                 throw new BadHttpRequestException("Sản phẩm không có biến thể phải có giá");
             }
@@ -100,7 +100,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
                 }
             };
         }
-        
+
         var productImages = new List<ProductImage>();
         var productImageUploadTasks = request.ProductImages.Select(async productImageUpload =>
         {
@@ -109,13 +109,12 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             {
                 Id = Guid.CreateVersion7(),
                 ImageUrl = uploadResult,
-                //SortOrder = productImageUpload.SortOrder,
                 ProductId = product.Id
             });
         });
         await Task.WhenAll(productImageUploadTasks);
         product.ProductImages = productImages;
-        
+
         await _unitOfWork.GetRepository<Product>().InsertAsync(product);
 
         var isSuccess = await _unitOfWork.CommitAsync() > 0;

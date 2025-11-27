@@ -4,6 +4,10 @@ namespace ShipCapstone.Application.Features.Products.Command.CreateProduct;
 
 public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
 {
+    private static readonly string[] _allowedImageExtensions = new[]
+    {
+        ".jpeg", ".png", ".jpg", ".gif", ".bmp", ".webp"
+    };
     public CreateProductCommandValidator()
     {
         RuleFor(x => x.Name)
@@ -40,20 +44,7 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
                 .NotNull().WithMessage("Giá sản phẩm không được để trống.")
                 .GreaterThanOrEqualTo(0).WithMessage("Giá sản phẩm phải lớn hơn hoặc bằng 0.");
         });
-        //RuleForEach(x => x.ProductImages).SetValidator(new CreateProductImageForCreateProductRequestValidator());
-    }
-}
-
-public class
-    CreateProductImageForCreateProductRequestValidator : AbstractValidator<CreateProductImageForCreateProductRequest>
-{
-    private static readonly string[] _allowedImageExtensions = new[]
-    {
-        ".jpeg", ".png", ".jpg", ".gif", ".bmp", ".webp"
-    };
-    public CreateProductImageForCreateProductRequestValidator()
-    {
-        RuleFor(x => x.Image)
+        RuleForEach(x => x.ProductImages)
             .Cascade(CascadeMode.Stop)
             .Must(file =>
             {
@@ -62,10 +53,5 @@ public class
                 return _allowedImageExtensions.Contains(extension);
             }).WithMessage("Hình ảnh không hợp lý với các định dạng: " +
                            string.Join(", ", _allowedImageExtensions));
-        //When(x => x.SortOrder != null, () =>
-        //{
-        //    RuleFor(x => x.SortOrder)
-        //        .GreaterThanOrEqualTo(0).WithMessage("Thứ tự sắp xếp phải lớn hơn hoặc bằng 0.");
-        //});
     }
 }

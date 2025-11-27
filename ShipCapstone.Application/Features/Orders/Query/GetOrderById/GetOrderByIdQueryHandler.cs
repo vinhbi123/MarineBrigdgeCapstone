@@ -20,9 +20,9 @@ namespace ShipCapstone.Application.Features.Orders.Query
         public async ValueTask<ApiResponse> Handle(GetAllOrderQuery request, CancellationToken cancellationToken)
         {
             var order = await _unitOfWork.GetRepository<Order>()
-                .SingleOrDefaultAsync<Order>(            
-                    selector: o => o,                     
-                    predicate: o => o.Id == request.Id,  
+                .SingleOrDefaultAsync<Order>(
+                    selector: o => o,
+                    predicate: o => o.Id == request.Id,
                     orderBy: null,
                     include: null
                 );

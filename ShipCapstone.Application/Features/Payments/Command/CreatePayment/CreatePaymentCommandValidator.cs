@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace ShipCapstone.Application.Features.Payments.Command;
+namespace ShipCapstone.Application.Features.Payments.Command.CreatePayment;
 
 public class CreatePaymentCommandValidator : AbstractValidator<CreatePaymentCommand>
 {
