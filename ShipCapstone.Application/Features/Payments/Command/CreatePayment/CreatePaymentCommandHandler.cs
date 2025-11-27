@@ -87,12 +87,14 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
             var order = (Order)paymentObject;
             transaction.OrderId = order.Id;
             transaction.Amount = order.TotalAmount;
+            transaction.Type = EPaymentType.Supplier;
         }
         else if (request.Type == EPaymentType.Boatyard)
         {
             var booking = (Booking)paymentObject;
             transaction.BookingId = booking.Id;
             transaction.Amount = booking.TotalAmount;
+            transaction.Type = EPaymentType.Boatyard;
         }
         await _unitOfWork.GetRepository<Transaction>().InsertAsync(transaction);
         bool isSuccess = await _unitOfWork.CommitAsync() > 0;

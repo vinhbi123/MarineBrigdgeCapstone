@@ -7,6 +7,7 @@ public class Transaction : EntityAuditBase<Guid>
 {
     public decimal Amount { get; set; }
     public string TransactionCode { get; set; }
+    public EPaymentType Type { get; set; }
     public ETransactionStatus Status { get; set; }
     public Guid? OrderId { get; set; }
     public Guid? BookingId { get; set; }

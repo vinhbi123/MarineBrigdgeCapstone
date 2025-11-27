@@ -6,29 +6,35 @@ using ShipCapstone.Domain.Models.Orders;
 using ShipCapstone.Infrastructure.Persistence;
 using ShipCapstone.Infrastructure.Repositories.Interface;
 using System.Linq;
+using ShipCapstone.Application.Services.Interfaces;
+using ShipCapstone.Domain.Enums;
 
 namespace ShipCapstone.Application.Features.Orders.Query
 {
     public class GetAllOrdersQueryHandler : IRequestHandler<GetAllOrdersQuery, ApiResponse>
     {
         private readonly IUnitOfWork<ShipCapstoneContext> _unitOfWork;
-
-        public GetAllOrdersQueryHandler(IUnitOfWork<ShipCapstoneContext> unitOfWork)
+        private readonly IClaimService _claimService;
+        public GetAllOrdersQueryHandler(IUnitOfWork<ShipCapstoneContext> unitOfWork, IClaimService claimService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _claimService = claimService ?? throw new ArgumentNullException(nameof(claimService));
         }
 
         public async ValueTask<ApiResponse> Handle(GetAllOrdersQuery request, CancellationToken cancellationToken)
         {
+            var role = Enum.Parse<ERole>(_claimService.GetRole);
             var orders = await _unitOfWork.GetRepository<Order>().GetPagingListAsync(
                 selector: o => new GetAllOrderResponse
                 {
                     Id = o.Id,
                     ShipId = o.ShipId,
+                    BoatyardId = o.BoatyardId,
                     TotalAmount = o.TotalAmount,
                     Status = o.Status
                 },
                 predicate: o =>
+                    (role != ERole.Supplier || o.Status != EOrderStatus.Pending) &&
                     (!request.ShipId.HasValue || o.ShipId == request.ShipId) &&
                     (string.IsNullOrEmpty(request.Status) || o.Status.ToString() == request.Status) &&
                     (string.IsNullOrEmpty(request.Search) || o.Id.ToString().Contains(request.Search)),
