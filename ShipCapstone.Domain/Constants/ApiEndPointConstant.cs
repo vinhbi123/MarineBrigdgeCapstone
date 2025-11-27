@@ -99,6 +99,7 @@ public class ApiEndPointConstant
     public static class Payments
     {
         public const string PaymentEndpoint = ApiEndpoint + "/payments";
+        public const string HandlePayment = PaymentEndpoint + "/handler";
     }
     public static class Booking
     {

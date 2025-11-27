@@ -1,7 +1,10 @@
 ﻿using Mediator;
 using Microsoft.AspNetCore.Mvc;
+using Net.payOS.Types;
+using Newtonsoft.Json;
 using ShipCapstone.Application.Common.Utils;
 using ShipCapstone.Application.Features.Payments.Command.CreatePayment;
+using ShipCapstone.Application.Features.Payments.Command.PaymentWebhook;
 using ShipCapstone.Domain.Constants;
 using ShipCapstone.Domain.Models.Common;
 
@@ -31,5 +34,24 @@ public class PaymentController : BaseController<PaymentController>
 
         var apiResponse = await _mediator.Send(command);
         return CreatedAtAction(nameof(CreateCategory), apiResponse);
+    }
+
+    [HttpPost(ApiEndPointConstant.Payments.HandlePayment)]
+    [ApiExplorerSettings(IgnoreApi = true)]
+    public async Task<IActionResult> HandlePayment([FromBody] WebhookType payload)
+    {
+        try
+        {
+            var command = new ConfirmWebhookCommand()
+            {
+                Payload = payload
+            };
+            var apiResponse = await _mediator.Send(command);
+            return Ok(apiResponse);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing the webhook.");
+        }
     }
 }

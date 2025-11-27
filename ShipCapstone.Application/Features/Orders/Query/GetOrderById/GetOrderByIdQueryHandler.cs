@@ -34,6 +34,7 @@ namespace ShipCapstone.Application.Features.Orders.Query
             {
                 Id = order.Id,
                 ShipId = order.ShipId,
+                BoatyardId = order.BoatyardId,
                 TotalAmount = order.TotalAmount,
                 Status = order.Status
             };

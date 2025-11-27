@@ -19,6 +19,12 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
                 v => v.ToString(),
                 v => (ETransactionStatus)Enum.Parse(typeof(ETransactionStatus), v)
             );
+        builder.Property(t => t.Type)
+           .IsRequired()
+           .HasConversion(
+               v => v.ToString(),
+               v => (EPaymentType)Enum.Parse(typeof(EPaymentType), v)
+           );
         builder.HasOne(t => t.Order)
             .WithMany(o => o.Transactions)
             .HasForeignKey(t => t.OrderId)
