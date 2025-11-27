@@ -24,14 +24,14 @@ public class PaymentService : IPaymentService
     public async Task<CreatePaymentResult> CreatePaymentUrl(CreatePaymentRequest request)
     {
         CreatePaymentResult url = null;
-        
+
         var expiredAt = DateTimeOffset.UtcNow.AddMinutes(10).ToUnixTimeSeconds();
         var description = "";
         int amount = 0;
         List<ItemData> items = new List<ItemData>();
         if (request.Type == EPaymentType.Supplier)
         {
-            var order = request.PaymentObject as Order 
+            var order = request.PaymentObject as Order
                         ?? throw new InvalidCastException("PaymentObject không phải là Order");
             foreach (var item in order.OrderItems)
             {
@@ -42,7 +42,7 @@ public class PaymentService : IPaymentService
         }
         else
         {
-            var booking = request.PaymentObject as Booking 
+            var booking = request.PaymentObject as Booking
                           ?? throw new InvalidCastException("PaymentObject không phải là Booking");
             items = null;
             amount = (int)booking.TotalAmount;
@@ -76,6 +76,14 @@ public class PaymentService : IPaymentService
         url = await _payOS.createPaymentLink(paymentData);
         return url;
     }
+
+    public string CreateUrlSepay(CreatePaymentSePayRequest request)
+    {
+        string qrLink = $"https://qr.sepay.vn/img?acc={request.BankNo}&bank={request.BankName}&amount={request.Revenue}&des={Uri.EscapeDataString(request.Description)}&template=compact&download=DOWNLOAD";
+
+        return qrLink;
+    }
+
     private string? ComputeHmacSha256(string data, string checksumKey)
     {
         using (var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(checksumKey)))

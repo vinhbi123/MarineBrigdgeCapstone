@@ -88,6 +88,14 @@ namespace ShipCapstone.Infrastructure.Migrations
                     b.Property<Guid>("AccountId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("BankName")
+                       .HasMaxLength(50)
+                       .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("BankNo")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -902,6 +910,14 @@ namespace ShipCapstone.Infrastructure.Migrations
 
                     b.Property<Guid>("AccountId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("BankName")
+                       .HasMaxLength(50)
+                       .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("BankNo")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");

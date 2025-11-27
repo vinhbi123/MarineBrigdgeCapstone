@@ -12,6 +12,8 @@ public class SupplierConfiguration : IEntityTypeConfiguration<Supplier>
         builder.Property(s => s.Name).IsRequired().HasMaxLength(255);
         builder.Property(s => s.Longitude).HasMaxLength(50);
         builder.Property(s => s.Latitude).HasMaxLength(50);
+        builder.Property(s => s.BankName).HasMaxLength(50);
+        builder.Property(s => s.BankNo).HasMaxLength(50);
         builder.HasOne(s => s.Account)
             .WithOne(a => a.Supplier)
             .HasForeignKey<Supplier>(s => s.AccountId)

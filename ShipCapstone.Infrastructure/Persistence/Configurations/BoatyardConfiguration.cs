@@ -12,6 +12,8 @@ public class BoatyardConfiguration : IEntityTypeConfiguration<Boatyard>
         builder.Property(b => b.Name).IsRequired().HasMaxLength(255);
         builder.Property(b => b.Longitude).HasMaxLength(50);
         builder.Property(b => b.Latitude).HasMaxLength(50);
+        builder.Property(b => b.BankName).HasMaxLength(50);
+        builder.Property(b => b.BankNo).HasMaxLength(50);
         builder.HasOne(b => b.Account)
             .WithOne(a => a.Boatyard)
             .HasForeignKey<Boatyard>(b => b.AccountId)

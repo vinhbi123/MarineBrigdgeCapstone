@@ -4,6 +4,7 @@ using ShipCapstone.Infrastructure.Persistence;
 using ShipCapstone.Application.Services.Interfaces;
 using ShipCapstone.Domain.Entities;
 using ShipCapstone.Domain.Enums;
+using ShipCapstone.Domain.Models.Booking;
 using ShipCapstone.Infrastructure.Repositories.Interface;
 
 namespace ShipCapstone.Application.Features.Bookings.Query.GetBooking
@@ -22,6 +23,21 @@ namespace ShipCapstone.Application.Features.Bookings.Query.GetBooking
             var role = Enum.Parse<ERole>(_claimService.GetRole);
             var userId = _claimService.GetCurrentUserId;
             var bookings = await _unitOfWork.GetRepository<Booking>().GetPagingListAsync(
+                selector: b => new GetAllBookingResponse()
+                {
+                    Id = b.Id,
+                    ShipId = b.ShipId,
+                    ShipName = b.Ship.Name,
+                    ShipOwnerName = b.Ship.Account.FullName,
+                    ShipOwnerPhoneNumber = b.Ship.Account.PhoneNumber,
+                    DockSlotId = b.DockSlotId,
+                    DockSlotName = b.DockSlot.Name,
+                    StartTime = b.StartTime,
+                    EndTime = b.EndTime,
+                    Type = b.Type,
+                    TotalAmount = b.TotalAmount,
+                    Status = b.Status
+                },
                 predicate: b => (role != ERole.Boatyard || b.Status != EBookingStatus.Pending) &&
                                 (role != ERole.User || b.Ship.AccountId == userId),
                 page: request.Page,

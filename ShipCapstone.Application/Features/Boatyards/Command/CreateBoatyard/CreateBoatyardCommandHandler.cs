@@ -58,6 +58,8 @@ public class CreateBoatyardCommandHandler : IRequestHandler<CreateBoatyardComman
             Name = request.Name,
             Latitude = request.Latitude,
             Longitude = request.Longitude,
+            BankName = request.BankName,
+            BankNo = request.BankNo,
             Account = new Account()
             {
                 Id = Guid.CreateVersion7(),
