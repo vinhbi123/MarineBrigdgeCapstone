@@ -6,7 +6,7 @@ using ShipCapstone.Domain.Models.Orders;
 using ShipCapstone.Infrastructure.Persistence;
 using ShipCapstone.Infrastructure.Repositories.Interface;
 
-namespace ShipCapstone.Application.Features.Orders.Query
+namespace ShipCapstone.Application.Features.Orders.Query.GetOrderById
 {
     public class GetOrderByIdQueryHandler : IRequestHandler<GetAllOrderQuery, ApiResponse>
     {
