@@ -28,8 +28,10 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
     public async ValueTask<ApiResponse> Handle(CreatePaymentCommand request, CancellationToken cancellationToken)
     {
         var accountId = _claimService.GetCurrentUserId;
+        var role = Enum.Parse<ERole>(_claimService.GetRole);
         var account = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
-            predicate: a => a.Id.Equals(accountId)) ?? throw new NotFoundException("Không tìm thấy thông tin tài khoản");
+           predicate: a => a.Id.Equals(accountId),
+            include: a => a.Include(a => a.Boatyard)) ?? throw new NotFoundException("Không tìm thấy thông tin tài khoản");
         object? paymentObject = null;
         if (request.Type == EPaymentType.Supplier)
         {
@@ -38,9 +40,19 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
                include: o => o.Include(o => o.Ship)
                     .Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.ProductVariant)) ?? throw new NotFoundException("Không tìm thấy đơn hàng");
-            if (order.Ship.AccountId != account.Id)   
+            if (role == ERole.User)
             {
-                throw new BadHttpRequestException("Đơn hàng không phải của tài khoản này");
+                if (order.Ship.AccountId != account.Id)
+                {
+                    throw new BadHttpRequestException("Đơn hàng không phải của tài khoản này");
+                }
+            }
+            else if (role == ERole.Boatyard)
+            {
+                if (order.BoatyardId != account.Boatyard.Id)
+                {
+                    throw new BadHttpRequestException("Đơn hàng không phải của xưởng này");
+                }
             }
             paymentObject = order;
         }
