@@ -8,11 +8,13 @@ using ShipCapstone.Application.Features.Boatyards.Query.GetBoatyardById;
 using ShipCapstone.Application.Features.Boatyards.Query.GetBoatyardDetail;
 using ShipCapstone.Application.Features.Boatyards.Query.GetBoatyards;
 using ShipCapstone.Application.Features.BoatyardServices.Query.GetBoatyardServicesByBoatyardId;
+using ShipCapstone.Application.Features.DockSlots.Query.GetDockSlotByBoatyardId;
 using ShipCapstone.Domain.Constants;
 using ShipCapstone.Domain.Enums;
 using ShipCapstone.Domain.Models.Boatyards;
 using ShipCapstone.Domain.Models.BoatyardServices;
 using ShipCapstone.Domain.Models.Common;
+using ShipCapstone.Domain.Models.DockSlots;
 using ShipCapstone.Infrastructure.Paginate.Interface;
 
 namespace ShipCapstone.Application.Controllers;
@@ -135,4 +137,24 @@ public class BoatyardController : BaseController<BoatyardController>
         return Ok(apiResponse);
     }
 
+    [HttpGet(ApiEndPointConstant.Boatyards.BoatyardWithDockSlots)]
+    [ProducesResponseType<ApiResponse<GetDockSlotByBoatyardIdResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetDockSlotsByBoatyardId([FromRoute] Guid id, [FromQuery] int page = 1,
+        [FromQuery] int size = 30, string? sortBy = null, bool isAsc = false)
+    {
+        var query = new GetDockSlotByBoatyardIdQuery()
+        {
+            BoatyardId = id,
+            Page = page,
+            Size = size,
+            SortBy = sortBy,
+            IsAsc = isAsc
+        };
+
+        var apiResponse = await _mediator.Send(query);
+        return Ok(apiResponse);
+    }
 }

@@ -26,6 +26,8 @@ public class ApiEndPointConstant
     public static class Suppliers
     {
         public const string SupplierEndpoint = ApiEndpoint + "/suppliers";
+        public const string SupplierById = SupplierEndpoint + "/{id}";
+        public const string SupplierWithProducts = SupplierById + "/products";
     }
     public static class Categories
     {
@@ -55,8 +57,9 @@ public class ApiEndPointConstant
         public const string BoatyardById = BoatyardEndpoint + "/{id}";
         public const string BoatyardDetail = BoatyardEndpoint + "/detail";
         public const string BoatyardWithBoatyardServices = BoatyardById + "/boatyard-services";
+        public const string BoatyardWithDockSlots = BoatyardById + "/dock-slots";
     }
-    
+
     public static class DockSlots
     {
         public const string DockSlotEndpoint = ApiEndpoint + "/dock-slots";
