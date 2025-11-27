@@ -47,7 +47,7 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, ApiResp
                 LastModifiedDate = x.LastModifiedDate
             },
             predicate: x => (string.IsNullOrEmpty(request.Name) || x.Name.Contains(request.Name))
-                            && (parsedRole != ERole.Supplier || x.SupplierId == _claimService.GetCurrentUserId),
+                           && (parsedRole != ERole.Supplier || x.Category.Supplier.AccountId == _claimService.GetCurrentUserId),
             page: request.Page,
             size: request.Size,
             sortBy: request.SortBy ?? nameof(Product.CreatedDate),
