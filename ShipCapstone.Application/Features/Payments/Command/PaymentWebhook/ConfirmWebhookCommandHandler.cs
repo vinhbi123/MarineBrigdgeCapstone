@@ -1,6 +1,5 @@
 ﻿using Mediator;
 using ShipCapstone.Application.Common.Exceptions;
-using ShipCapstone.Application.Services.Interfaces;
 using ShipCapstone.Domain.Entities;
 using ShipCapstone.Domain.Enums;
 using ShipCapstone.Domain.Models.Common;
@@ -12,12 +11,10 @@ namespace ShipCapstone.Application.Features.Payments.Command.PaymentWebhook;
 
 public class ConfirmWebhookCommandHandler : IRequestHandler<ConfirmWebhookCommand, ApiResponse>
 {
-    private readonly IPaymentService _paymentService;
     private readonly IUnitOfWork<ShipCapstoneContext> _unitOfWork;
 
-    public ConfirmWebhookCommandHandler(IPaymentService paymentService, IUnitOfWork<ShipCapstoneContext> unitOfWork)
+    public ConfirmWebhookCommandHandler(IUnitOfWork<ShipCapstoneContext> unitOfWork)
     {
-        _paymentService = paymentService ?? throw new ArgumentNullException(nameof(paymentService));
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
     }
     public async ValueTask<ApiResponse> Handle(ConfirmWebhookCommand request, CancellationToken cancellationToken)

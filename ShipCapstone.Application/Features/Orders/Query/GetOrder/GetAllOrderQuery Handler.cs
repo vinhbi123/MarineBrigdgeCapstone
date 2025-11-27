@@ -9,7 +9,7 @@ using System.Linq;
 using ShipCapstone.Application.Services.Interfaces;
 using ShipCapstone.Domain.Enums;
 
-namespace ShipCapstone.Application.Features.Orders.Query
+namespace ShipCapstone.Application.Features.Orders.Query.GetOrder
 {
     public class GetAllOrdersQueryHandler : IRequestHandler<GetAllOrdersQuery, ApiResponse>
     {
@@ -24,6 +24,7 @@ namespace ShipCapstone.Application.Features.Orders.Query
         public async ValueTask<ApiResponse> Handle(GetAllOrdersQuery request, CancellationToken cancellationToken)
         {
             var role = Enum.Parse<ERole>(_claimService.GetRole);
+            var userId = _claimService.GetCurrentUserId;
             var orders = await _unitOfWork.GetRepository<Order>().GetPagingListAsync(
                 selector: o => new GetAllOrderResponse
                 {
@@ -35,6 +36,7 @@ namespace ShipCapstone.Application.Features.Orders.Query
                 },
                 predicate: o =>
                     (role != ERole.Supplier || o.Status != EOrderStatus.Pending) &&
+                    (role != ERole.User || o.Ship.AccountId == userId) &&
                     (!request.ShipId.HasValue || o.ShipId == request.ShipId) &&
                     (string.IsNullOrEmpty(request.Status) || o.Status.ToString() == request.Status) &&
                     (string.IsNullOrEmpty(request.Search) || o.Id.ToString().Contains(request.Search)),
@@ -42,7 +44,7 @@ namespace ShipCapstone.Application.Features.Orders.Query
                 size: request.PageSize,
                 sortBy: request.SortBy ?? nameof(Order.CreatedDate),
                 isAsc: request.IsAsc
-            ) ?? throw new NotFoundException("Không tìm thấy đơn hàng.");
+              );
 
             return new ApiResponse
             {

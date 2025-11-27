@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using ShipCapstone.Application.Common.Utils;
 using ShipCapstone.Application.Features.Authentication.Command.SendOtp;
 using ShipCapstone.Application.Features.Orders.Command.CreateOrder;
+using ShipCapstone.Application.Features.Orders.Query.GetOrder;
+using ShipCapstone.Application.Features.Orders.Query.GetOrderById;
 using ShipCapstone.Application.Features.Orders.Query;
 using ShipCapstone.Domain.Constants;
 using ShipCapstone.Domain.Models.Common;
@@ -18,7 +20,7 @@ namespace ShipCapstone.Application.Controllers
             _createOrderValidationUtil = createOrderValidationUtil;
         }
 
-        [HttpPost(ApiEndPointConstant.Order.OrderEndpoint)]
+        [HttpPost(ApiEndPointConstant.Orders.OrderEndpoint)]
         [ProducesResponseType<ApiResponse<CreateOrderResponse>>(StatusCodes.Status201Created)]
         [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
@@ -36,7 +38,7 @@ namespace ShipCapstone.Application.Controllers
             return CreatedAtAction(nameof(SendOtp), apiResponse);
         }
 
-        [HttpGet(ApiEndPointConstant.Order.OrderEndpoint + "/{id}")]
+        [HttpGet(ApiEndPointConstant.Orders.OrderById)]
         [ProducesResponseType<ApiResponse<GetOrderResponse>>(StatusCodes.Status200OK)]
         [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
         [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
@@ -47,7 +49,7 @@ namespace ShipCapstone.Application.Controllers
             return Ok(apiResponse);
         }
 
-        [HttpGet(ApiEndPointConstant.Order.GetAllOrder)]
+        [HttpGet(ApiEndPointConstant.Orders.OrderEndpoint)]
         [ProducesResponseType<ApiResponse>(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll([FromQuery] GetAllOrdersQuery query)
         {

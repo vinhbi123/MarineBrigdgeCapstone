@@ -1,9 +1,6 @@
 ﻿using Mediator;
 using ShipCapstone.Domain.Enums;
-using ShipCapstone.Domain.Models.Booking;
 using ShipCapstone.Domain.Models.Common;
-using System;
-using System.Collections.Generic;
 
 namespace ShipCapstone.Application.Features.Bookings.Command.CreateBooking
 {

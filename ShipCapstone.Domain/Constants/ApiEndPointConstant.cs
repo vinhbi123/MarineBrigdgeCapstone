@@ -86,11 +86,11 @@ public class ApiEndPointConstant
         public const string ProductVariantEndpoint = ApiEndpoint + "/product-variants";
         public const string ProductVariantById = ProductVariantEndpoint + "/{id}";
     }
-    public static class Accout
+    public static class Accouts
     {
         public const string AccountEndpoint = ApiEndpoint + "/accounts";
     }
-    public static class Order
+    public static class Orders
     {
         public const string OrderEndpoint = ApiEndpoint + "/orders";
         public const string OrderById = OrderEndpoint + "/{id}";
@@ -101,9 +101,10 @@ public class ApiEndPointConstant
         public const string PaymentEndpoint = ApiEndpoint + "/payments";
         public const string HandlePayment = PaymentEndpoint + "/handler";
     }
-    public static class Booking
+    public static class Bookings
     {
-        public const string CreateBooking = "/create";
+        public const string BookingEndPoint = "/bookings";
+        public const string BookingById = BookingEndPoint + "/{id}";
     }
 
 }

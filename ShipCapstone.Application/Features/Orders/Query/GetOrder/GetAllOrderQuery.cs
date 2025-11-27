@@ -1,7 +1,7 @@
 ﻿using Mediator;
 using ShipCapstone.Domain.Models.Common;
 
-namespace ShipCapstone.Application.Features.Orders.Query
+namespace ShipCapstone.Application.Features.Orders.Query.GetOrder
 {
     public class GetAllOrdersQuery : IRequest<ApiResponse>
     {

@@ -13,7 +13,7 @@ namespace ShipCapstone.Application.Controllers
         {
         }
 
-        [HttpGet(ApiEndPointConstant.Accout.AccountEndpoint)]
+        [HttpGet(ApiEndPointConstant.Accouts.AccountEndpoint)]
         [ProducesResponseType<ApiResponse<ICollection<GetProfileResponse>>>(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllAccount([FromQuery] int page = 1, [FromQuery] int size = 30, [FromQuery] string? sortBy = null, [FromQuery] bool isAsc = false, [FromQuery] string? name = null)
         {

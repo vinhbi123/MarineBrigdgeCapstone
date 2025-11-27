@@ -8,11 +8,7 @@ using ShipCapstone.Domain.Models.Booking;
 using ShipCapstone.Domain.Models.Common;
 using ShipCapstone.Infrastructure.Persistence;
 using ShipCapstone.Infrastructure.Repositories.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+
 using BookingEntity = ShipCapstone.Domain.Entities.Booking;
 namespace ShipCapstone.Application.Features.Bookings.Command.CreateBooking
 {
@@ -29,7 +25,6 @@ namespace ShipCapstone.Application.Features.Bookings.Command.CreateBooking
 
         public async ValueTask<ApiResponse> Handle(CreateBookingCommand request, CancellationToken cancellationToken)
         {
-            // Lấy account hiện tại
             var accountId = _claimService.GetCurrentUserId;
             if (accountId == Guid.Empty)
                 throw new BadHttpRequestException("Không tìm thấy tài khoản.");
@@ -40,7 +35,6 @@ namespace ShipCapstone.Application.Features.Bookings.Command.CreateBooking
                     include: a => a.Include(a => a.Ships))
                 ?? throw new NotFoundException("Không tìm thấy tài khoản.");
 
-            // Kiểm tra ship
             var ship = await _unitOfWork.GetRepository<Ship>()
                 .SingleOrDefaultAsync(predicate: s => s.Id == request.ShipId)
                 ?? throw new NotFoundException("Không tìm thấy tàu");
@@ -48,12 +42,10 @@ namespace ShipCapstone.Application.Features.Bookings.Command.CreateBooking
             if (ship.AccountId != accountId)
                 throw new BadHttpRequestException("Tàu này không thuộc về bạn.");
 
-            // Kiểm tra dock slot
             var dockSlot = await _unitOfWork.GetRepository<DockSlot>()
                 .SingleOrDefaultAsync(predicate: d => d.Id == request.DockSlotId)
                 ?? throw new NotFoundException("Không tìm thấy DockSlot");
 
-            // Tạo booking
             var booking = new BookingEntity
             {
                 Id = Guid.NewGuid(),
@@ -69,7 +61,6 @@ namespace ShipCapstone.Application.Features.Bookings.Command.CreateBooking
 
             decimal totalAmount = 0;
 
-            // Thêm dịch vụ nếu có
             if (request.Services.Any())
             {
                 foreach (var serviceId in request.Services)
@@ -80,7 +71,6 @@ namespace ShipCapstone.Application.Features.Bookings.Command.CreateBooking
 
                     totalAmount += service.Price;
 
-                    // Thêm quan hệ BookingService nếu có bảng trung gian
                     booking.BookingServices.Add(new BookingService
                     {
                         Id = Guid.NewGuid(),
@@ -92,12 +82,10 @@ namespace ShipCapstone.Application.Features.Bookings.Command.CreateBooking
 
             booking.TotalAmount = totalAmount;
 
-            // Commit UnitOfWork
             var isSuccess = await _unitOfWork.CommitAsync() > 0;
             if (!isSuccess)
                 throw new Exception("Có lỗi khi tạo booking.");
 
-            // Trả về response
             var response = new CreateBookingResponse
             {
                 Id = booking.Id,
