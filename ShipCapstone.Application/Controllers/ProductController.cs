@@ -8,10 +8,13 @@ using ShipCapstone.Application.Features.Products.Query.GetProductById;
 using ShipCapstone.Application.Features.Products.Query.GetProducts;
 using ShipCapstone.Application.Features.ProductVariants.Command.CreateProductVariant;
 using ShipCapstone.Application.Features.ProductVariants.Command.UpdateProductVariant;
+using ShipCapstone.Application.Features.Reviews.Command.CreateReview;
+using ShipCapstone.Application.Features.Reviews.Query.GetAllReview;
 using ShipCapstone.Domain.Constants;
 using ShipCapstone.Domain.Enums;
 using ShipCapstone.Domain.Models.Common;
 using ShipCapstone.Domain.Models.Products;
+using ShipCapstone.Domain.Models.Review;
 using ShipCapstone.Infrastructure.Paginate.Interface;
 
 namespace ShipCapstone.Application.Controllers;
@@ -20,8 +23,10 @@ namespace ShipCapstone.Application.Controllers;
 [Route(ApiEndPointConstant.Products.ProductEndpoint)]
 public class ProductController : BaseController<ProductController>
 {
-    public ProductController(ILogger logger, IMediator mediator) : base(logger, mediator)
+    private readonly ValidationUtil<CreateReviewCommand> _createReviewValidationUtil;
+    public ProductController(ILogger logger, IMediator mediator, ValidationUtil<CreateReviewCommand> createReviewValidationUtil) : base(logger, mediator)
     {
+        _createReviewValidationUtil = createReviewValidationUtil ?? throw new ArgumentNullException(nameof(createReviewValidationUtil));
     }
 
     [CustomAuthorize(ERole.Supplier)]
@@ -135,5 +140,48 @@ public class ProductController : BaseController<ProductController>
         var apiResponse = await _mediator.Send(command);
         return CreatedAtAction(nameof(CreateProductVariant), apiResponse);
     }
+
+    [HttpPost(ApiEndPointConstant.Products.ProductWithReviews)]
+    [ProducesResponseType<ApiResponse<CreateReviewResponse>>(StatusCodes.Status201Created)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> CreateReview([FromRoute] Guid id, [FromBody] CreateReviewRequest request)
+    {
+        var command = new CreateReviewCommand()
+        {
+            Id = id,
+            Rating = request.Rating,
+            Comment = request.Comment
+        };
+        var (isValid, response) = await _createReviewValidationUtil.ValidateAsync(command);
+        if (!isValid)
+        {
+            return BadRequest(response);
+        }
+
+        var apiResponse = await _mediator.Send(command);
+        return CreatedAtAction(nameof(CreateReview), apiResponse);
+    }
+
+    [HttpGet(ApiEndPointConstant.Products.ProductWithReviews)]
+    [ProducesResponseType<ApiResponse<IPaginate<GetReviewResponse>>>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetReviews([FromRoute] Guid id, [FromQuery] int page = 1, [FromQuery] int size = 10,
+        [FromQuery] string? name = null, [FromQuery] string? sortBy = null, [FromQuery] bool isAsc = false)
+    {
+        var query = new GetAllReviewQuery()
+        {
+            Id = id,
+            Page = page,
+            Size = size,
+            SortBy = sortBy,
+            IsAsc = isAsc
+        };
+
+        var apiResponse = await _mediator.Send(query);
+        return Ok(apiResponse);
+    }
+
+}
 
 }

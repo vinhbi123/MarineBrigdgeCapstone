@@ -28,6 +28,7 @@ using ShipCapstone.Application.Features.Products.Command.CreateProduct;
 using ShipCapstone.Application.Features.Products.Command.UpdateProduct;
 using ShipCapstone.Application.Features.ProductVariants.Command.CreateProductVariant;
 using ShipCapstone.Application.Features.ProductVariants.Command.UpdateProductVariant;
+using ShipCapstone.Application.Features.Reviews.Command.CreateReview;
 using ShipCapstone.Application.Features.Ships.Command.AssignCaptainToShip;
 using ShipCapstone.Application.Features.Ships.Command.CreateShip;
 using ShipCapstone.Application.Features.Ships.Command.UpdateShip;
@@ -88,6 +89,7 @@ public static class ConfigureServices
         services.AddScoped<IValidator<CreateProductVariantCommand>, CreateProductVariantCommandValidator>();
         services.AddScoped<IValidator<UpdateProductVariantCommand>, UpdateProductVariantCommandValidator>();
         services.AddScoped<IValidator<CreateBookingCommand>, CreateBookingCommandValidator>();
+        services.AddScoped<IValidator<CreateReviewCommand>, CreateReviewCommandValidator>();
         services.AddHttpContextAccessor();
         services.Configure<ApiBehaviorOptions>(options =>
         {
