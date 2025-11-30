@@ -15,5 +15,16 @@ namespace ShipCapstone.Domain.Models.Orders
         public Guid? BoatyardId { get; set; }
         public decimal TotalAmount { get; set; }
         public EOrderStatus Status { get; set; }
+        public List<GetOrderItemsResponse>? OrderItems { get; set; }
+    }
+
+    public class GetOrderItemsResponse
+    {
+        public Guid Id { get; set; }
+        public Guid ProductVariantId { get; set; }
+        public string? ProductVariantName { get; set; }
+        public string? ProductOptionName { get; set; }
+        public decimal Price { get; set; }
+        public int Quantity { get; set; }
     }
 }
