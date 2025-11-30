@@ -1,6 +1,9 @@
 ﻿using Mediator;
+using Microsoft.EntityFrameworkCore;
 using ShipCapstone.Application.Common.Exceptions;
 using ShipCapstone.Domain.Entities;
+using ShipCapstone.Application.Services.Interfaces;
+using ShipCapstone.Domain.Enums;
 using ShipCapstone.Domain.Models.Common;
 using ShipCapstone.Domain.Models.Orders;
 using ShipCapstone.Infrastructure.Persistence;
@@ -11,39 +14,62 @@ namespace ShipCapstone.Application.Features.Orders.Query.GetOrderById
     public class GetOrderByIdQueryHandler : IRequestHandler<GetAllOrderQuery, ApiResponse>
     {
         private readonly IUnitOfWork<ShipCapstoneContext> _unitOfWork;
+        private readonly IClaimService _claimService;
 
-        public GetOrderByIdQueryHandler(IUnitOfWork<ShipCapstoneContext> unitOfWork)
+        public GetOrderByIdQueryHandler(IUnitOfWork<ShipCapstoneContext> unitOfWork, IClaimService claimService)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _claimService = claimService ?? throw new ArgumentNullException(nameof(claimService));
         }
 
         public async ValueTask<ApiResponse> Handle(GetAllOrderQuery request, CancellationToken cancellationToken)
         {
-            var order = await _unitOfWork.GetRepository<Order>()
-                .SingleOrDefaultAsync<Order>(
-                    selector: o => o,
-                    predicate: o => o.Id == request.Id,
-                    orderBy: null,
-                    include: null
-                );
+            var accountId = _claimService.GetCurrentUserId;
+            var role = Enum.Parse<ERole>(_claimService.GetRole);
+            var order = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
+                predicate: o => o.Id == request.Id,
+                include: o => o.Include(o => o.Boatyard)
+                    .Include(o => o.Ship)
+                    .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.ProductVariant)) ?? throw new NotFoundException("Không tìm thấy đơn hàng");
+            if (role == ERole.User)
+            {
+                if (order.Ship.AccountId != accountId)
+                {
+                    throw new BadHttpRequestException("Đơn hàng không phải của khách hàng này");
+                }
+            }
+            else if (role == ERole.Boatyard)
+            {
+                if (order.Boatyard.AccountId != accountId)
+                {
+                    throw new BadHttpRequestException("Đơn hàng không phải của xưởng này");
+                }
+            }
 
-            if (order == null)
-                throw new NotFoundException("Không tìm thấy đơn hàng.");
-
-            var data = new GetOrderResponse
+            var response = new GetOrderResponse
             {
                 Id = order.Id,
                 ShipId = order.ShipId,
                 BoatyardId = order.BoatyardId,
                 TotalAmount = order.TotalAmount,
-                Status = order.Status
+                Status = order.Status,
+                OrderItems = order.OrderItems.Select(oi => new GetOrderItemsResponse
+                {
+                    Id = oi.Id,
+                    ProductVariantId = oi.ProductVariantId,
+                    Quantity = oi.Quantity,
+                    Price = oi.Price,
+                    ProductOptionName = oi.ProductOptionName,
+                    ProductVariantName = oi.ProductVariant.Name
+                }).ToList()
             };
 
             return new ApiResponse
             {
                 Status = StatusCodes.Status200OK,
                 Message = "Lấy chi tiết đơn hàng thành công",
-                Data = data
+                Data = response
             };
         }
     }

@@ -77,7 +77,7 @@ namespace ShipCapstone.Application.Features.Orders.Command.CreateOrder
                     ProductVariantId = productVariant.Id,
                     OrderId = order.Id
                 };
-                totalAmount += productVariant.Price;
+                totalAmount += productVariant.Price * item.Quantity;
                 orderItems.Add(orderItem);
             }
             ;

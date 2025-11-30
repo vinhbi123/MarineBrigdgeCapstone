@@ -82,6 +82,7 @@ public class ApiEndPointConstant
         public const string ProductEndpoint = ApiEndpoint + "/products";
         public const string ProductById = ProductEndpoint + "/{id}";
         public const string ProductWithVariants = ProductById + "/product-variants";
+        public const string ProductWithReviews = ProductById + "/reviews";
     }
 
     public static class ProductVariants
