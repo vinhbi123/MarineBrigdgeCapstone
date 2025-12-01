@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Net.payOS.Types;
 using Newtonsoft.Json;
 using ShipCapstone.Application.Common.Utils;
+using ShipCapstone.Application.Features.Revenues.Command.HandleTransactionRevenue;
 using ShipCapstone.Application.Features.Payments.Command.CreatePayment;
 using ShipCapstone.Application.Features.Payments.Command.PaymentWebhook;
 using ShipCapstone.Domain.Constants;
@@ -53,5 +54,13 @@ public class PaymentController : BaseController<PaymentController>
         {
             return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing the webhook.");
         }
+    }
+    [HttpPost(ApiEndPointConstant.Payments.HandlerPaymentSepay)]
+    [ApiExplorerSettings(IgnoreApi = true)]
+    [ProducesResponseType<ApiResponse<string>>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> HandleRevenue([FromBody] HandleTransactionRevenueCommand command)
+    {
+        var apiResponse = await _mediator.Send(command);
+        return Ok(apiResponse);
     }
 }
