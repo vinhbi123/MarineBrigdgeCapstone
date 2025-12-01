@@ -116,5 +116,14 @@ public class ApiEndPointConstant
     {
         public const string RevenueEndPoint = ApiEndpoint + "/revenues";
     }
+    public static class Report
+    {
+        public const string ReportProblemEndpoint = ApiEndpoint + "/report-problems";
 
+        public const string GetAll = ReportProblemEndpoint + "/all";
+        public const string GetById = ReportProblemEndpoint + "/{id}";
+        public const string Create = ReportProblemEndpoint;
+        public const string Update = ReportProblemEndpoint + "/{id}";
+        public const string Delete = ReportProblemEndpoint + "/{id}";
+    }
 }
