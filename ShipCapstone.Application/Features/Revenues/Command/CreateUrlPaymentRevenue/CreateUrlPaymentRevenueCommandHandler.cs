@@ -40,7 +40,7 @@ public class CreateUrlPaymentRevenueCommandHandler : IRequestHandler<CreateUrlPa
             var totalAmountOrder = orders.Sum(o => o.TotalAmount);
             var revenue = totalAmountOrder;
             var revenueNumber = Math.Round(revenue, 0);
-            referenceCode = $"TXN-{DateTime.UtcNow:yyyyMMddHHmmss}-{supplier.Id.ToString().Substring(0, 6)}";
+            referenceCode = $"SEVQR Chuyen tien TXN-{DateTime.UtcNow:yyMMddHHmm}-{supplier.Id.ToString().Substring(0, 2)}";
             string description = $"{referenceCode} - TT doanh thu {supplier.Name} tu {request.StartDate} den {request.EndDate}";
             CreatePaymentSePayRequest paymentSePayRequest = new CreatePaymentSePayRequest()
             {

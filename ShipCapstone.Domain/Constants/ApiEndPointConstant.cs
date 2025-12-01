@@ -104,6 +104,7 @@ public class ApiEndPointConstant
     {
         public const string PaymentEndpoint = ApiEndpoint + "/payments";
         public const string HandlePayment = PaymentEndpoint + "/handler";
+        public const string HandlerPaymentSepay = PaymentEndpoint + "/handle-sepay";
     }
     public static class Bookings
     {
