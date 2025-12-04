@@ -43,7 +43,7 @@ namespace ShipCapstone.Application.Features.ReportProblems.Query
             if (report.Ship == null || report.Ship.AccountId != accountId)
                 throw new BadHttpRequestException("Bạn không có quyền xem báo cáo này.");
 
-            var data = new ReportProblemResponse
+            var data = new GetAllReportProblemResponse
             {
                 Id = report.Id,
                 PortId = report.PortId,

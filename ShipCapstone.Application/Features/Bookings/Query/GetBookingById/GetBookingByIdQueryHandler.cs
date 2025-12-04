@@ -59,6 +59,8 @@ public class GetBookingByIdQueryHandler : IRequestHandler<GetBookingByIdQuery, A
             TotalAmount = booking.TotalAmount,
             Type = booking.Type,
             StartTime = booking.StartTime,
+            Latitude = booking.Ship.Latitude,
+            Longitude = booking.Ship.Longitude,
             EndTime = booking.EndTime,
             ShipId = booking.ShipId,
             ShipName = booking.Ship.Name,

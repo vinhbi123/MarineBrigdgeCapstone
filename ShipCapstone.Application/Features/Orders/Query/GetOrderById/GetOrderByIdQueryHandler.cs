@@ -58,6 +58,8 @@ namespace ShipCapstone.Application.Features.Orders.Query.GetOrderById
                 ShipId = order.ShipId,
                 ShipName = order.Ship?.Name,
                 BoatyardId = order.BoatyardId,
+                Longitude = order.Boatyard != null ? order.Boatyard.Longitude : order.Ship?.Longitude,
+                Latitude = order.Boatyard != null ? order.Boatyard.Latitude : order.Ship?.Latitude,
                 BoatyardName = order.Boatyard?.Name,
                 Phone = order.BoatyardId != null ? order.Boatyard?.Account.PhoneNumber : order.Ship?.Captain.PhoneNumber,
                 TotalAmount = order.TotalAmount,

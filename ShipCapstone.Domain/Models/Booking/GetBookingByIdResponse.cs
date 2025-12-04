@@ -8,6 +8,8 @@ public class GetBookingByIdResponse
     public EBookingStatus Status { get; set; }
     public decimal TotalAmount { get; set; }
     public EBookingType Type { get; set; }
+    public string? Longitude { get; set; }
+    public string? Latitude { get; set; }
     public DateTime StartTime { get; set; }
     public DateTime? EndTime { get; set; }
     public Guid ShipId { get; set; }
