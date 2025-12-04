@@ -37,12 +37,15 @@ namespace ShipCapstone.Application.Controllers
         [HttpGet(ApiEndPointConstant.Bookings.BookingEndPoint)]
         [ProducesResponseType<ApiResponse<IPaginate<GetAllBookingResponse>>>(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllBooking([FromQuery] int page = 1, [FromQuery] int size = 30,
+           [FromQuery] DateOnly? startDate = null, [FromQuery] DateOnly? endDate = null,
            [FromQuery] string? sortBy = null, [FromQuery] bool isAsc = false)
         {
             var query = new GetAllBookingQuery()
             {
                 Page = page,
                 Size = size,
+                StartDate = startDate,
+                EndDate = endDate,
                 SortBy = sortBy,
                 IsAsc = isAsc
             };

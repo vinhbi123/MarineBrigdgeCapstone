@@ -21,6 +21,7 @@ public class ApiEndPointConstant
         public const string ShipEndpoint = ApiEndpoint + "/ships";
         public const string ShipById = ShipEndpoint + "/{id}";
         public const string CaptainByShipId = ShipEndpoint + "/{id}/captains";
+        public const string ReportProblemByShip = ShipEndpoint + "/{id}/report-problems";
     }
 
     public static class Suppliers
@@ -117,14 +118,10 @@ public class ApiEndPointConstant
     {
         public const string RevenueEndPoint = ApiEndpoint + "/revenues";
     }
-    public static class Report
+
+    public static class ReportProblems
     {
         public const string ReportProblemEndpoint = ApiEndpoint + "/report-problems";
-
-        public const string GetAll = ReportProblemEndpoint + "/all";
-        public const string GetById = ReportProblemEndpoint + "/{id}";
-        public const string Create = ReportProblemEndpoint;
-        public const string Update = ReportProblemEndpoint + "/{id}";
-        public const string Delete = ReportProblemEndpoint + "/{id}";
+        public const string ReportProblemById = ReportProblemEndpoint + "/{id}";
     }
 }

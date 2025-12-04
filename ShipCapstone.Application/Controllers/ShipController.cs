@@ -2,6 +2,7 @@ using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using ShipCapstone.Application.Common.Utils;
 using ShipCapstone.Application.Common.Validators;
+using ShipCapstone.Application.Features.ReportProblems.Query.GetAllReportProblem;
 using ShipCapstone.Application.Features.Ships.Command.AssignCaptainToShip;
 using ShipCapstone.Application.Features.Ships.Command.CreateShip;
 using ShipCapstone.Application.Features.Ships.Command.DeleteCaptainToShip;
@@ -11,6 +12,7 @@ using ShipCapstone.Application.Features.Ships.Query.GetShips;
 using ShipCapstone.Domain.Constants;
 using ShipCapstone.Domain.Enums;
 using ShipCapstone.Domain.Models.Common;
+using ShipCapstone.Domain.Models.ReportProblems;
 using ShipCapstone.Domain.Models.Ships;
 using ShipCapstone.Infrastructure.Paginate.Interface;
 
@@ -144,7 +146,7 @@ public class ShipController : BaseController<ShipController>
         var apiResponse = await _mediator.Send(command);
         return Ok(apiResponse);
     }
-    
+
     [CustomAuthorize(ERole.User)]
     [HttpDelete(ApiEndPointConstant.Ships.CaptainByShipId)]
     [ProducesResponseType<ApiResponse<GetShipByIdResponse>>(StatusCodes.Status200OK)]
@@ -160,6 +162,28 @@ public class ShipController : BaseController<ShipController>
             Id = id
         };
         var apiResponse = await _mediator.Send(command);
+        return Ok(apiResponse);
+    }
+
+    [CustomAuthorize(ERole.User)]
+    [HttpGet(ApiEndPointConstant.Ships.ReportProblemByShip)]
+    [ProducesResponseType<ApiResponse<IPaginate<GetAllReportProblemResponse>>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetAllReportProblemByShip([FromRoute] Guid id, [FromQuery] int page = 1, [FromQuery] int size = 30,
+        [FromQuery] string? sortBy = null, [FromQuery] bool isAsc = false)
+    {
+        var query = new GetAllReportProblemQuery()
+        {
+            Id = id,
+            Page = page,
+            Size = size,
+            SortBy = sortBy,
+            IsAsc = isAsc
+        };
+        var apiResponse = await _mediator.Send(query);
         return Ok(apiResponse);
     }
 }
