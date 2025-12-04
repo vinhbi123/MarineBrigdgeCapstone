@@ -29,9 +29,14 @@ namespace ShipCapstone.Application.Features.Orders.Query.GetOrderById
             var order = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
                 predicate: o => o.Id == request.Id,
                 include: o => o.Include(o => o.Boatyard)
+                    .ThenInclude(b => b.Account)
                     .Include(o => o.Ship)
+                     .ThenInclude(s => s.Captain)
                     .Include(o => o.OrderItems)
-                    .ThenInclude(oi => oi.ProductVariant)) ?? throw new NotFoundException("Không tìm thấy đơn hàng");
+                    .ThenInclude(oi => oi.ProductVariant)
+                    .ThenInclude(pv => pv.Product)
+                    .ThenInclude(p => p.Category)
+                    .ThenInclude(c => c.Supplier)) ?? throw new NotFoundException("Không tìm thấy đơn hàng");
             if (role == ERole.User)
             {
                 if (order.Ship.AccountId != accountId)
@@ -51,12 +56,17 @@ namespace ShipCapstone.Application.Features.Orders.Query.GetOrderById
             {
                 Id = order.Id,
                 ShipId = order.ShipId,
+                ShipName = order.Ship?.Name,
                 BoatyardId = order.BoatyardId,
+                BoatyardName = order.Boatyard?.Name,
+                Phone = order.BoatyardId != null ? order.Boatyard?.Account.PhoneNumber : order.Ship?.Captain.PhoneNumber,
                 TotalAmount = order.TotalAmount,
                 Status = order.Status,
                 OrderItems = order.OrderItems.Select(oi => new GetOrderItemsResponse
                 {
                     Id = oi.Id,
+                    SupplierId = oi.ProductVariant.Product.SupplierId,
+                    SupplierName = oi.ProductVariant.Product.Category.Supplier.Name,
                     ProductVariantId = oi.ProductVariantId,
                     Quantity = oi.Quantity,
                     Price = oi.Price,

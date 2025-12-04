@@ -93,6 +93,7 @@ public class ApiEndPointConstant
     public static class Accouts
     {
         public const string AccountEndpoint = ApiEndpoint + "/accounts";
+        public const string ChangePassword = AccountEndpoint + "/password";
     }
     public static class Orders
     {

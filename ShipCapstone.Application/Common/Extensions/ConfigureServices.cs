@@ -3,6 +3,7 @@ using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using ShipCapstone.Application.Common.Behaviours;
 using ShipCapstone.Application.Common.Utils;
+using ShipCapstone.Application.Features.Accounts.Command.ChangePassword;
 using ShipCapstone.Application.Features.Accounts.Command.Register;
 using ShipCapstone.Application.Features.Authentication.Command.Login;
 using ShipCapstone.Application.Features.Authentication.Command.SendOtp;
@@ -90,6 +91,7 @@ public static class ConfigureServices
         services.AddScoped<IValidator<UpdateProductVariantCommand>, UpdateProductVariantCommandValidator>();
         services.AddScoped<IValidator<CreateBookingCommand>, CreateBookingCommandValidator>();
         services.AddScoped<IValidator<CreateReviewCommand>, CreateReviewCommandValidator>();
+        services.AddScoped<IValidator<ChangePasswordCommand>, ChangePasswordCommandValidator>();
         services.AddHttpContextAccessor();
         services.Configure<ApiBehaviorOptions>(options =>
         {
