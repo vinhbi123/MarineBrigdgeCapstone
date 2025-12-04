@@ -1,5 +1,7 @@
 ﻿using Mediator;
 using Microsoft.AspNetCore.Mvc;
+using ShipCapstone.Application.Common.Utils;
+using ShipCapstone.Application.Features.Accounts.Command.ChangePassword;
 using ShipCapstone.Application.Features.Accounts.Query.AllUser;
 using ShipCapstone.Domain.Constants;
 using ShipCapstone.Domain.Models.Common;
@@ -9,8 +11,10 @@ namespace ShipCapstone.Application.Controllers
 {
     public class AccoutController : BaseController<AccoutController>
     {
-        public AccoutController(ILogger logger, IMediator mediator) : base(logger, mediator)
+        private readonly ValidationUtil<ChangePasswordCommand> _changePasswordValidationUtil;
+        public AccoutController(ILogger logger, IMediator mediator, ValidationUtil<ChangePasswordCommand> changePasswordValidationUtil) : base(logger, mediator)
         {
+            _changePasswordValidationUtil = changePasswordValidationUtil ?? throw new ArgumentNullException(nameof(changePasswordValidationUtil));
         }
 
         [HttpGet(ApiEndPointConstant.Accouts.AccountEndpoint)]
@@ -26,6 +30,22 @@ namespace ShipCapstone.Application.Controllers
                 Name = name
             };
             var apiResponse = await _mediator.Send(query);
+            return Ok(apiResponse);
+        }
+
+        [HttpPatch(ApiEndPointConstant.Accouts.ChangePassword)]
+        [ProducesResponseType<ApiResponse<Guid>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand command)
+        {
+            var (isValid, response) = await _changePasswordValidationUtil.ValidateAsync(command);
+            if (!isValid)
+            {
+                return BadRequest(response);
+            }
+            var apiResponse = await _mediator.Send(command);
             return Ok(apiResponse);
         }
     }

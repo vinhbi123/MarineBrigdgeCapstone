@@ -34,7 +34,10 @@ namespace ShipCapstone.Application.Features.Orders.Query.GetOrder
                 {
                     Id = o.Id,
                     ShipId = o.ShipId,
+                    ShipName = o.Ship.Name,
                     BoatyardId = o.BoatyardId,
+                    BoatyardName = o.Boatyard.Name,
+                    Phone = o.BoatyardId != null ? o.Boatyard.Account.PhoneNumber : o.Ship.Captain.PhoneNumber,
                     TotalAmount = o.TotalAmount,
                     Status = o.Status
                 },

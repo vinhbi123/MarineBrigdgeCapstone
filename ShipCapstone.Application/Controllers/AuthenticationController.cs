@@ -6,6 +6,7 @@ using ShipCapstone.Application.Features.Authentication.Command.Login;
 using ShipCapstone.Application.Features.Authentication.Command.Oauth;
 using ShipCapstone.Application.Features.Authentication.Command.SendOtp;
 using ShipCapstone.Domain.Constants;
+using ShipCapstone.Application.Features.Authentication.Command.UpdateProfile;
 using ShipCapstone.Domain.Models.Profile;
 using ShipCapstone.Domain.Models.Authentication;
 using ShipCapstone.Domain.Models.Common;
@@ -87,7 +88,7 @@ public class AuthenticationController : BaseController<AuthenticationController>
         var apiResponse = await _mediator.Send(command);
         return Ok(apiResponse);
     }
- [HttpGet(ApiEndPointConstant.Authentication.Profile)]
+    [HttpGet(ApiEndPointConstant.Authentication.Profile)]
     [ProducesResponseType<ApiResponse<GetProfileResponse>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
@@ -97,5 +98,15 @@ public class AuthenticationController : BaseController<AuthenticationController>
         var apiResponse = await _mediator.Send(query);
         return Ok(apiResponse);
     }
+
+    [HttpPatch(ApiEndPointConstant.Authentication.Profile)]
+    [ProducesResponseType<ApiResponse<GetProfileResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> UpdateProfile([FromForm] UpdateProfileCommand command)
+    {
+        var apiResponse = await _mediator.Send(command);
+        return Ok(apiResponse);
+    }
 }
-    
