@@ -15,4 +15,5 @@ public class Boatyard : EntityAuditBase<Guid>
     public virtual ICollection<Order>? Orders { get; set; } = new List<Order>();
     public virtual ICollection<DockSlot> DockSlots { get; set; } = new List<DockSlot>();
     public virtual ICollection<BoatyardService>? BoatyardServices { get; set; } = new List<BoatyardService>();
+    public virtual ICollection<Transaction>? Transactions { get; set; } = new List<Transaction>();
 }

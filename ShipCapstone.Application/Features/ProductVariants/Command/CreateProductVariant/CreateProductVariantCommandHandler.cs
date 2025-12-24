@@ -55,7 +55,7 @@ public class CreateProductVariantCommandHandler : IRequestHandler<CreateProductV
         if (request.ModifierOptionIds != null)
         {
             var modifierOptions = await _unitOfWork.GetRepository<ModifierOption>().GetListAsync(
-                predicate: x => request.ModifierOptionIds.Contains(x.Id) && x.ModifierGroup.SupplierId == accountId
+                predicate: x => request.ModifierOptionIds.Contains(x.Id) && x.ModifierGroup.SupplierId == supplier.Id
             );
             
             if(modifierOptions.Count != request.ModifierOptionIds.Count)

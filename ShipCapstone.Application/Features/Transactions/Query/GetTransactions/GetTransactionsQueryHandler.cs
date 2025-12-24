@@ -64,10 +64,13 @@ public class GetTransactionsQueryHandler : IRequestHandler<GetTransactionsQuery,
                     CreatedDate = t.CreatedDate,
                     LastModifiedDate = t.LastModifiedDate
                 },
-                predicate: t => (t.Booking.BookingServices.Any(bs => bs.BoatyardService.BoatyardId == boatyard.Id) || t.Order.BoatyardId == boatyard.Id)
-                                && (t.Status.Equals(ETransactionStatus.Approved) || t.Type.Equals(EPaymentType.Revenue)),
+                predicate: t => t.Order.BoatyardId == boatyard.Id
+                                && t.Status.Equals(ETransactionStatus.Approved) 
+                                && t.Type.Equals(EPaymentType.Revenue),
                 page: request.Page,
-                size: request.Size);
+                size: request.Size,
+                sortBy: request.SortBy ?? nameof(Transaction.CreatedDate),
+                isAsc: request.IsAsc);
         }
         else if (account.Role.Equals(ERole.Admin))
         {
@@ -84,7 +87,9 @@ public class GetTransactionsQueryHandler : IRequestHandler<GetTransactionsQuery,
                 },
                 predicate: t => !t.Status.Equals(ETransactionStatus.Pending) && !t.Status.Equals(ETransactionStatus.Rejected),
                 page: request.Page,
-                size: request.Size);
+                size: request.Size,
+                sortBy: request.SortBy ?? nameof(Transaction.CreatedDate),
+                isAsc: request.IsAsc);
         }
         else
         {
@@ -101,9 +106,12 @@ public class GetTransactionsQueryHandler : IRequestHandler<GetTransactionsQuery,
                     CreatedDate = t.CreatedDate,
                     LastModifiedDate = t.LastModifiedDate
                 },
-                predicate: t => t.Order.OrderItems.Any(oi => oi.ProductVariant.Product.SupplierId == supplier.Id) && (t.Status.Equals(ETransactionStatus.Approved) || t.Type.Equals(EPaymentType.Revenue)),
+                predicate: t => t.Status.Equals(ETransactionStatus.Approved) 
+                                && t.Type.Equals(EPaymentType.Revenue),
                 page: request.Page,
-                size: request.Size);
+                size: request.Size,
+                sortBy: request.SortBy ?? nameof(Transaction.CreatedDate),
+                isAsc: request.IsAsc);
         }
 
         return new ApiResponse()
