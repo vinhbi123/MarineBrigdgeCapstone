@@ -27,7 +27,7 @@ public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand, Api
         var account = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
             predicate: a => a.Id == accountId,
             include: a => a.Include(a => a.Boatyard)) ?? throw new NotFoundException("Không tìm thấy tài khoản");
-
+        
         var order = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
             predicate: o => o.Id == request.Id,
             include: o => o.Include(o => o.Ship)) ?? throw new NotFoundException("Không tìm thấy đơn hàng");
@@ -36,7 +36,7 @@ public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand, Api
         {
             throw new BadHttpRequestException("Bạn không có quyền chỉnh sửa trạng thái đơn hàng");
         }
-
+        
         if (role == ERole.User)
         {
             if (order.Ship.AccountId != accountId)
@@ -55,13 +55,13 @@ public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand, Api
             {
                 throw new BadHttpRequestException("Đơn hàng này không thuộc boathouse của bạn");
             }
-
+            
             if (order.Status != EOrderStatus.Pending)
             {
                 throw new BadHttpRequestException("Bạn chỉ có thể cập nhật đơn hàng khi chưa thanh toán");
             }
         }
-
+        
         if (request.OrderItems != null)
         {
             foreach (var itemRequest in request.OrderItems)
@@ -73,7 +73,7 @@ public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand, Api
                 _unitOfWork.GetRepository<OrderItem>().UpdateAsync(item);
             }
         }
-
+                
         order.Status = request.Status ?? order.Status;
         order.TotalAmount = totalAmount == 0 ? order.TotalAmount : totalAmount;
         _unitOfWork.GetRepository<Order>().UpdateAsync(order);

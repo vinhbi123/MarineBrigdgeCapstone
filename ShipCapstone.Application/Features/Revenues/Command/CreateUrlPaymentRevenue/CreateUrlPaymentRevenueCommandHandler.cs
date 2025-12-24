@@ -95,7 +95,7 @@ public class CreateUrlPaymentRevenueCommandHandler : IRequestHandler<CreateUrlPa
                 Type = EPaymentType.Revenue
             };
         }
-
+        
         await _unitOfWork.GetRepository<Transaction>().InsertAsync(transaction);
         bool isSuccess = await _unitOfWork.CommitAsync() > 0;
 
@@ -103,7 +103,7 @@ public class CreateUrlPaymentRevenueCommandHandler : IRequestHandler<CreateUrlPa
         {
             throw new Exception("Có lỗi xảy ra trong quá trình tạo mã thanh toán doanh số");
         }
-
+        
         return new ApiResponse()
         {
             Status = StatusCodes.Status200OK,

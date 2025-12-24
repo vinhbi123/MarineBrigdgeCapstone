@@ -22,7 +22,7 @@ public class ReportProblemController : BaseController<ReportProblemController>
     {
         _createReportProblemValidationUtil = createReportProblemValidationUtil ?? throw new ArgumentNullException(nameof(createReportProblemValidationUtil));
     }
-
+    
     [CustomAuthorize(ERole.Captain)]
     [HttpPost(ApiEndPointConstant.ReportProblems.ReportProblemEndpoint)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status201Created)]
@@ -42,7 +42,7 @@ public class ReportProblemController : BaseController<ReportProblemController>
         var apiResponse = await _mediator.Send(command);
         return CreatedAtAction(nameof(CreateReportProblem), apiResponse);
     }
-
+    
     [CustomAuthorize(ERole.Captain)]
     [HttpGet(ApiEndPointConstant.ReportProblems.ReportProblemEndpoint)]
     [ProducesResponseType<ApiResponse<IPaginate<GetAllReportProblemResponse>>>(StatusCodes.Status200OK)]
@@ -63,7 +63,7 @@ public class ReportProblemController : BaseController<ReportProblemController>
         var apiResponse = await _mediator.Send(query);
         return Ok(apiResponse);
     }
-
+    
     [CustomAuthorize(ERole.Captain, ERole.User)]
     [HttpGet(ApiEndPointConstant.ReportProblems.ReportProblemById)]
     [ProducesResponseType<ApiResponse<GetAllReportProblemResponse>>(StatusCodes.Status200OK)]
@@ -80,7 +80,7 @@ public class ReportProblemController : BaseController<ReportProblemController>
         var apiResponse = await _mediator.Send(query);
         return Ok(apiResponse);
     }
-
+    
     [CustomAuthorize(ERole.User)]
     [HttpPatch(ApiEndPointConstant.ReportProblems.ReportProblemById)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status200OK)]
@@ -99,7 +99,7 @@ public class ReportProblemController : BaseController<ReportProblemController>
         var apiResponse = await _mediator.Send(command);
         return Ok(apiResponse);
     }
-
+    
     [CustomAuthorize(ERole.Captain)]
     [HttpDelete(ApiEndPointConstant.ReportProblems.ReportProblemById)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status200OK)]

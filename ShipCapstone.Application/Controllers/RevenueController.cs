@@ -13,7 +13,7 @@ public class RevenueController : BaseController<RevenueController>
     public RevenueController(ILogger logger, IMediator mediator) : base(logger, mediator)
     {
     }
-
+    
     [HttpPost(ApiEndPointConstant.Revenue.RevenueEndPoint)]
     [ProducesResponseType<ApiResponse<string>>(StatusCodes.Status201Created)]
     public async Task<IActionResult> CreateServiceAppointment([FromBody] CreateUrlPaymentRevenueCommand command)
@@ -21,7 +21,7 @@ public class RevenueController : BaseController<RevenueController>
         var apiResponse = await _mediator.Send(command);
         return Ok(apiResponse);
     }
-
+    
     [HttpGet(ApiEndPointConstant.Revenue.RevenueEndPoint)]
     [ProducesResponseType<ApiResponse<List<GetRevenueResponse>>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllRevenue([FromQuery] DateOnly? startDate, [FromQuery] DateOnly? endDate)

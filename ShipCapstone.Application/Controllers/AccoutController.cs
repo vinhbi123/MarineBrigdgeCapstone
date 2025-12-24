@@ -32,7 +32,7 @@ namespace ShipCapstone.Application.Controllers
             var apiResponse = await _mediator.Send(query);
             return Ok(apiResponse);
         }
-
+        
         [HttpPatch(ApiEndPointConstant.Accouts.ChangePassword)]
         [ProducesResponseType<ApiResponse<Guid>>(StatusCodes.Status200OK)]
         [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]

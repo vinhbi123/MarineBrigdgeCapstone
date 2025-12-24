@@ -57,11 +57,11 @@ public class SupplierController : BaseController<SupplierController>
             IsAsc = isAsc,
             Name = name
         };
-
+        
         var apiResponse = await _mediator.Send(query);
         return Ok(apiResponse);
     }
-
+    
     [HttpGet(ApiEndPointConstant.Suppliers.SupplierWithProducts)]
     [ProducesResponseType<ApiResponse<IPaginate<GetProductsBySupplierIdResponse>>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
@@ -79,7 +79,7 @@ public class SupplierController : BaseController<SupplierController>
             IsAsc = isAsc,
             Name = name
         };
-
+        
         var apiResponse = await _mediator.Send(query);
         return Ok(apiResponse);
     }

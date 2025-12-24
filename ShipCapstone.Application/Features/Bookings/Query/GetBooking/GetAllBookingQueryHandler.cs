@@ -38,15 +38,15 @@ namespace ShipCapstone.Application.Features.Bookings.Query.GetBooking
                     TotalAmount = b.TotalAmount,
                     Status = b.Status
                 },
-                predicate: b => (role != ERole.Boatyard || b.Status != EBookingStatus.Pending) &&
-                                (role != ERole.User || b.Ship.AccountId == userId) &&
+                predicate: b => (role != ERole.Boatyard || b.Status != EBookingStatus.Pending) && 
+                                (role != ERole.User || b.Ship.AccountId == userId) && 
                                 (request.StartDate == null || DateOnly.FromDateTime(b.CreatedDate) >= request.StartDate) &&
                                 (request.EndDate == null || DateOnly.FromDateTime(b.CreatedDate) <= request.EndDate),
                 page: request.Page,
                 size: request.Size,
                 sortBy: request.SortBy ?? nameof(Booking.CreatedDate),
                 isAsc: request.IsAsc);
-
+            
             return new ApiResponse
             {
                 Status = 200,
