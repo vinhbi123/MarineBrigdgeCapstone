@@ -1,3 +1,4 @@
+using System.Data;
 using FluentValidation;
 
 namespace ShipCapstone.Application.Features.Products.Command.CreateProduct;
@@ -22,6 +23,14 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
         });
         RuleFor(x => x.CategoryId)
             .NotNull().WithMessage("Danh mục sản phẩm không được để trống.");
+        When(x => x.ModifierOptionIds != null, () =>
+        {
+            RuleForEach(x => x.ModifierOptionIds)
+                .NotEmpty().WithMessage("ID tùy chọn bổ sung không được để trống.")
+                .NotEqual(Guid.Empty).WithMessage("ID tùy chọn bổ sung không được để trống.");
+            RuleFor(x => x.ModifierOptionIds).Must(ids => ids != null && ids.Distinct().Count() == ids.Count)
+                .WithMessage("ID tùy chọn bổ sung không được trùng lặp.");
+        });
         When(x => x.IsHasVariant, () =>
         {
             RuleFor(x => x.ProductVariants)
@@ -36,6 +45,15 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
                     .MaximumLength(255).WithMessage("Tên biến thể không được vượt quá 255 ký tự.");
                 variant.RuleFor(v => v.Price)
                     .GreaterThanOrEqualTo(0).WithMessage("Giá biến thể phải lớn hơn hoặc bằng 0.");
+               
+                variant.RuleForEach(v => v.ModifierOptionIds)
+                    .NotEmpty().WithMessage("ID tùy chọn bổ sung của biến thể không được để trống.")
+                    .NotEqual(Guid.Empty).WithMessage("ID tùy chọn bổ sung của biến thể không được để trống.")
+                    .When(v => v.ModifierOptionIds != null);
+                variant.RuleFor(v => v.ModifierOptionIds)
+                    .Must(ids => ids != null && ids.Distinct().Count() == ids.Count)
+                    .WithMessage("ID tùy chọn bổ sung của biến thể không được trùng lặp.")
+                    .When(v => v.ModifierOptionIds != null);
             });
         });
         When(x => !x.IsHasVariant, () =>

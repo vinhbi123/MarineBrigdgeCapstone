@@ -26,22 +26,23 @@ public class ProductVariantController : BaseController<ProductVariantController>
     [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateProductVariant([FromRoute] Guid id,
-        [FromBody] UpdateProductVariantRequest request,
+        [FromBody] UpdateProductVariantRequest request, 
         [FromServices] ValidationUtil<UpdateProductVariantCommand> validationUtil)
     {
         var command = new UpdateProductVariantCommand
         {
             ProductVariantId = id,
             Name = request.Name,
-            Price = request.Price
+            Price = request.Price,
+            IsActive = request.IsActive
         };
-
+        
         var (isValid, response) = await validationUtil.ValidateAsync(command);
         if (!isValid)
         {
             return BadRequest(response);
         }
-
+        
         var apiResponse = await _mediator.Send(command);
         return Ok(apiResponse);
     }

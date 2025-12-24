@@ -10,4 +10,5 @@ public class GetProductsQuery : IRequest<ApiResponse>
     public string? SortBy { get; set; }
     public bool IsAsc { get; set; }
     public string? Name { get; set; }
+    public Guid? SupplierId { get; set; }
 }
