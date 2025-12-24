@@ -55,7 +55,7 @@ public class ProductController : BaseController<ProductController>
     [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetProducts([FromQuery] int page = 1, [FromQuery] int size = 10,
-        [FromQuery] string? name = null, [FromQuery] string? sortBy = null, [FromQuery] bool isAsc = false)
+        [FromQuery] string? name = null, [FromQuery] string? sortBy = null, [FromQuery] bool isAsc = false, [FromQuery] Guid? supplierId = null)
     {
         var query = new GetProductsQuery()
         {
@@ -63,9 +63,10 @@ public class ProductController : BaseController<ProductController>
             Size = size,
             Name = name,
             SortBy = sortBy,
-            IsAsc = isAsc
+            IsAsc = isAsc,
+            SupplierId = supplierId
         };
-
+        
         var apiResponse = await _mediator.Send(query);
         return Ok(apiResponse);
     }
@@ -80,7 +81,7 @@ public class ProductController : BaseController<ProductController>
         {
             ProductId = id
         };
-
+        
         var apiResponse = await _mediator.Send(query);
         return Ok(apiResponse);
     }
@@ -101,9 +102,10 @@ public class ProductController : BaseController<ProductController>
             ProductId = id,
             Name = request.Name,
             Description = request.Description,
+            IsActive = request.IsActive,
             CategoryId = request.CategoryId
         };
-
+        
         var (isValid, response) = await validationUtil.ValidateAsync(command);
         if (!isValid)
         {
@@ -128,19 +130,20 @@ public class ProductController : BaseController<ProductController>
         {
             ProductId = id,
             Name = request.Name,
-            Price = request.Price
+            Price = request.Price,
+            ModifierOptionIds = request.ModifierOptionIds
         };
-
+        
         var (isValid, response) = await validationUtil.ValidateAsync(command);
         if (!isValid)
         {
             return BadRequest(response);
         }
-
+        
         var apiResponse = await _mediator.Send(command);
         return CreatedAtAction(nameof(CreateProductVariant), apiResponse);
     }
-
+    
     [HttpPost(ApiEndPointConstant.Products.ProductWithReviews)]
     [ProducesResponseType<ApiResponse<CreateReviewResponse>>(StatusCodes.Status201Created)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
@@ -163,7 +166,7 @@ public class ProductController : BaseController<ProductController>
         var apiResponse = await _mediator.Send(command);
         return CreatedAtAction(nameof(CreateReview), apiResponse);
     }
-
+    
     [HttpGet(ApiEndPointConstant.Products.ProductWithReviews)]
     [ProducesResponseType<ApiResponse<IPaginate<GetReviewResponse>>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetReviews([FromRoute] Guid id, [FromQuery] int page = 1, [FromQuery] int size = 10,
@@ -177,10 +180,9 @@ public class ProductController : BaseController<ProductController>
             SortBy = sortBy,
             IsAsc = isAsc
         };
-
+        
         var apiResponse = await _mediator.Send(query);
         return Ok(apiResponse);
     }
 
 }
-
