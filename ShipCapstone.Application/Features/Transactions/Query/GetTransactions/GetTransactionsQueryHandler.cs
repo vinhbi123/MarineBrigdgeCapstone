@@ -64,9 +64,8 @@ public class GetTransactionsQueryHandler : IRequestHandler<GetTransactionsQuery,
                     CreatedDate = t.CreatedDate,
                     LastModifiedDate = t.LastModifiedDate
                 },
-                predicate: t => t.Order.BoatyardId == boatyard.Id
-                                && t.Status.Equals(ETransactionStatus.Approved) 
-                                && t.Type.Equals(EPaymentType.Revenue),
+                predicate: t => (t.Order.BoatyardId == boatyard.Id || (t.Type.Equals(EPaymentType.Revenue) && t.BoatyardId == boatyard.Id))
+                                && t.Status.Equals(ETransactionStatus.Approved),
                 page: request.Page,
                 size: request.Size,
                 sortBy: request.SortBy ?? nameof(Transaction.CreatedDate),
@@ -106,7 +105,7 @@ public class GetTransactionsQueryHandler : IRequestHandler<GetTransactionsQuery,
                     CreatedDate = t.CreatedDate,
                     LastModifiedDate = t.LastModifiedDate
                 },
-                predicate: t => t.Status.Equals(ETransactionStatus.Approved) 
+                predicate: t => t.Status.Equals(ETransactionStatus.Approved) && t.SupplierId == supplier.Id
                                 && t.Type.Equals(EPaymentType.Revenue),
                 page: request.Page,
                 size: request.Size,
