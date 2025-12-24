@@ -21,6 +21,5 @@ namespace ShipCapstone.Domain.Models.Booking
         public EBookingType Type { get; set; }
         public decimal TotalAmount { get; set; }
         public EBookingStatus Status { get; set; }
-        public List<Guid> Services { get; set; } = new();
     }
 }

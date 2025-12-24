@@ -89,8 +89,8 @@ namespace ShipCapstone.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("BankName")
-                       .HasMaxLength(50)
-                       .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("BankNo")
                         .HasMaxLength(50)
@@ -404,36 +404,6 @@ namespace ShipCapstone.Infrastructure.Migrations
                     b.ToTable("DockSlot");
                 });
 
-            modelBuilder.Entity("ShipCapstone.Domain.Entities.Inventory", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("LastModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("ModifierOptionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ProductVariantId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ModifierOptionId");
-
-                    b.HasIndex("ProductVariantId");
-
-                    b.ToTable("Inventory");
-                });
-
             modelBuilder.Entity("ShipCapstone.Domain.Entities.ModifierGroup", b =>
                 {
                     b.Property<Guid>("Id")
@@ -538,7 +508,7 @@ namespace ShipCapstone.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("ShipId")
-                       .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -552,7 +522,7 @@ namespace ShipCapstone.Infrastructure.Migrations
 
                     b.HasIndex("AccountId");
 
-                    b.HasIndex("BoatyardId");   
+                    b.HasIndex("BoatyardId");
 
                     b.HasIndex("ShipId");
 
@@ -646,6 +616,9 @@ namespace ShipCapstone.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsHasVariant")
                         .HasColumnType("bit");
 
@@ -691,32 +664,14 @@ namespace ShipCapstone.Infrastructure.Migrations
                     b.ToTable("ProductImage");
                 });
 
-            modelBuilder.Entity("ShipCapstone.Domain.Entities.ProductModifierGroup", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ModifierGroupId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ModifierGroupId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductModifierGroup");
-                });
-
             modelBuilder.Entity("ShipCapstone.Domain.Entities.ProductVariant", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -735,6 +690,27 @@ namespace ShipCapstone.Infrastructure.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductVariant");
+                });
+
+            modelBuilder.Entity("ShipCapstone.Domain.Entities.ProductVariantOption", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ModifierOptionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProductVariantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ModifierOptionId");
+
+                    b.HasIndex("ProductVariantId");
+
+                    b.ToTable("ProductVariantOption");
                 });
 
             modelBuilder.Entity("ShipCapstone.Domain.Entities.ReportProblem", b =>
@@ -912,8 +888,8 @@ namespace ShipCapstone.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("BankName")
-                       .HasMaxLength(50)
-                       .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("BankNo")
                         .HasMaxLength(50)
@@ -977,8 +953,8 @@ namespace ShipCapstone.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Type")
-                      .IsRequired()
-                      .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -1130,24 +1106,6 @@ namespace ShipCapstone.Infrastructure.Migrations
                     b.Navigation("Boatyard");
                 });
 
-            modelBuilder.Entity("ShipCapstone.Domain.Entities.Inventory", b =>
-                {
-                    b.HasOne("ShipCapstone.Domain.Entities.ModifierOption", "ModifierOption")
-                        .WithMany("Inventories")
-                        .HasForeignKey("ModifierOptionId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ShipCapstone.Domain.Entities.ProductVariant", "ProductVariant")
-                        .WithMany("Inventories")
-                        .HasForeignKey("ProductVariantId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("ModifierOption");
-
-                    b.Navigation("ProductVariant");
-                });
-
             modelBuilder.Entity("ShipCapstone.Domain.Entities.ModifierGroup", b =>
                 {
                     b.HasOne("ShipCapstone.Domain.Entities.Supplier", "Supplier")
@@ -1188,9 +1146,9 @@ namespace ShipCapstone.Infrastructure.Migrations
                         .HasForeignKey("AccountId");
 
                     b.HasOne("ShipCapstone.Domain.Entities.Boatyard", "Boatyard")
-                       .WithMany("Orders")
-                       .HasForeignKey("BoatyardId")
-                       .OnDelete(DeleteBehavior.Restrict);
+                        .WithMany("Orders")
+                        .HasForeignKey("BoatyardId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ShipCapstone.Domain.Entities.Ship", "Ship")
                         .WithMany("Orders")
@@ -1243,25 +1201,6 @@ namespace ShipCapstone.Infrastructure.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("ShipCapstone.Domain.Entities.ProductModifierGroup", b =>
-                {
-                    b.HasOne("ShipCapstone.Domain.Entities.ModifierGroup", "ModifierGroup")
-                        .WithMany("ProductModifierGroups")
-                        .HasForeignKey("ModifierGroupId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ShipCapstone.Domain.Entities.Product", "Product")
-                        .WithMany("ProductModifierGroups")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("ModifierGroup");
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("ShipCapstone.Domain.Entities.ProductVariant", b =>
                 {
                     b.HasOne("ShipCapstone.Domain.Entities.Product", "Product")
@@ -1271,6 +1210,25 @@ namespace ShipCapstone.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("ShipCapstone.Domain.Entities.ProductVariantOption", b =>
+                {
+                    b.HasOne("ShipCapstone.Domain.Entities.ModifierOption", "ModifierOption")
+                        .WithMany("ProductVariantOptions")
+                        .HasForeignKey("ModifierOptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShipCapstone.Domain.Entities.ProductVariant", "ProductVariant")
+                        .WithMany("ProductVariantOptions")
+                        .HasForeignKey("ProductVariantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ModifierOption");
+
+                    b.Navigation("ProductVariant");
                 });
 
             modelBuilder.Entity("ShipCapstone.Domain.Entities.ReportProblem", b =>
@@ -1440,13 +1398,11 @@ namespace ShipCapstone.Infrastructure.Migrations
             modelBuilder.Entity("ShipCapstone.Domain.Entities.ModifierGroup", b =>
                 {
                     b.Navigation("ModifierOptions");
-
-                    b.Navigation("ProductModifierGroups");
                 });
 
             modelBuilder.Entity("ShipCapstone.Domain.Entities.ModifierOption", b =>
                 {
-                    b.Navigation("Inventories");
+                    b.Navigation("ProductVariantOptions");
                 });
 
             modelBuilder.Entity("ShipCapstone.Domain.Entities.Order", b =>
@@ -1469,8 +1425,6 @@ namespace ShipCapstone.Infrastructure.Migrations
                 {
                     b.Navigation("ProductImages");
 
-                    b.Navigation("ProductModifierGroups");
-
                     b.Navigation("ProductVariants");
 
                     b.Navigation("Reviews");
@@ -1480,9 +1434,9 @@ namespace ShipCapstone.Infrastructure.Migrations
                 {
                     b.Navigation("BookingReplacementProducts");
 
-                    b.Navigation("Inventories");
-
                     b.Navigation("OrderItems");
+
+                    b.Navigation("ProductVariantOptions");
                 });
 
             modelBuilder.Entity("ShipCapstone.Domain.Entities.Ship", b =>

@@ -16,5 +16,13 @@ public class CreateProductVariantCommandValidator : AbstractValidator<CreateProd
             .MaximumLength(255).WithMessage("Tên biến thể không được vượt quá 255 ký tự.");
         RuleFor(x => x.Price)
             .GreaterThanOrEqualTo(0).WithMessage("Giá biến thể phải lớn hơn hoặc bằng 0.");
+        When(x => x.ModifierOptionIds != null, () =>
+        {
+            RuleForEach(x => x.ModifierOptionIds)
+                .NotEmpty().WithMessage("ID tùy chọn bổ sung không được để trống.")
+                .NotEqual(Guid.Empty).WithMessage("ID tùy chọn bổ sung không được để trống.");
+            RuleFor(x => x.ModifierOptionIds).Must(ids => ids != null && ids.Distinct().Count() == ids.Count)
+                .WithMessage("ID tùy chọn bổ sung không được trùng lặp.");
+        });
     }
 }

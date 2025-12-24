@@ -35,9 +35,8 @@
     <ItemGroup>
       <Folder Include="Features\Accounts\Query\" />
       <Folder Include="Features\Authentication\Query\" />
-      <Folder Include="Features\Booking\Query\" />
       <Folder Include="Features\Captains\Query\" />
-      <Folder Include="Features\Orders\Query\NewFolder\" />
+      <Folder Include="Features\ProductVariantOptions\Query\" />
       <Folder Include="Features\ProductVariants\Query\" />
     </ItemGroup>
 

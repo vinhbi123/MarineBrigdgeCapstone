@@ -21,7 +21,6 @@ public class ShipCapstoneContext : DbContext
     public virtual DbSet<Category> Category { get; set; }
     public virtual DbSet<Complaint> Complaint { get; set; }
     public virtual DbSet<DockSlot> DockSlot { get; set; }
-    public virtual DbSet<Inventory> Inventory { get; set; }
     public virtual DbSet<ModifierGroup> ModifierGroup { get; set; }
     public virtual DbSet<ModifierOption> ModifierOption { get; set; }
     public virtual DbSet<Notification> Notification { get; set; }
@@ -30,7 +29,7 @@ public class ShipCapstoneContext : DbContext
     public virtual DbSet<Port> Port { get; set; }
     public virtual DbSet<Product> Product { get; set; }
     public virtual DbSet<ProductImage> ProductImage { get; set; }
-    public virtual DbSet<ProductModifierGroup> ProductModifierGroup { get; set; }
+    public virtual DbSet<ProductVariantOption> ProductVariantOption { get; set; }
     public virtual DbSet<ProductVariant> ProductVariant { get; set; }
     public virtual DbSet<Review> Review { get; set; }
     public virtual DbSet<Ship> Ship { get; set; }

@@ -1,8 +1,8 @@
 ﻿using Mediator;
 using Microsoft.EntityFrameworkCore;
 using ShipCapstone.Application.Common.Exceptions;
-using ShipCapstone.Domain.Entities;
 using ShipCapstone.Application.Services.Interfaces;
+using ShipCapstone.Domain.Entities;
 using ShipCapstone.Domain.Enums;
 using ShipCapstone.Domain.Models.Common;
 using ShipCapstone.Domain.Models.Orders;
@@ -31,7 +31,7 @@ namespace ShipCapstone.Application.Features.Orders.Query.GetOrderById
                 include: o => o.Include(o => o.Boatyard)
                     .ThenInclude(b => b.Account)
                     .Include(o => o.Ship)
-                     .ThenInclude(s => s.Captain)
+                    .ThenInclude(s => s.Captain)
                     .Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.ProductVariant)
                     .ThenInclude(pv => pv.Product)
@@ -76,7 +76,6 @@ namespace ShipCapstone.Application.Features.Orders.Query.GetOrderById
                     ProductVariantName = oi.ProductVariant.Name
                 }).ToList()
             };
-
             return new ApiResponse
             {
                 Status = StatusCodes.Status200OK,

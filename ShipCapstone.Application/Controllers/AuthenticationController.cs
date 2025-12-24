@@ -2,18 +2,18 @@ using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using ShipCapstone.Application.Common.Utils;
 using ShipCapstone.Application.Features.Accounts.Command.Register;
+using ShipCapstone.Application.Features.Accounts.Query.Profile;
 using ShipCapstone.Application.Features.Authentication.Command.Login;
 using ShipCapstone.Application.Features.Authentication.Command.Oauth;
 using ShipCapstone.Application.Features.Authentication.Command.SendOtp;
-using ShipCapstone.Domain.Constants;
 using ShipCapstone.Application.Features.Authentication.Command.UpdateProfile;
-using ShipCapstone.Domain.Models.Profile;
+using ShipCapstone.Domain.Constants;
 using ShipCapstone.Domain.Models.Authentication;
 using ShipCapstone.Domain.Models.Common;
-using ShipCapstone.Application.Features.Accounts.Query.Profile;
+using ShipCapstone.Domain.Models.Profile;
 
 namespace ShipCapstone.Application.Controllers;
-    
+
 [ApiController]
 [Route(ApiEndPointConstant.Authentication.AuthenticationEndpoint)]
 public class AuthenticationController : BaseController<AuthenticationController>
@@ -78,7 +78,7 @@ public class AuthenticationController : BaseController<AuthenticationController>
         var apiResponse = await _mediator.Send(command);
         return Ok(apiResponse);
     }
-    
+
     [HttpPost(ApiEndPointConstant.Authentication.OAuth)]
     [ProducesResponseType<ApiResponse<LoginResponse>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
@@ -98,7 +98,7 @@ public class AuthenticationController : BaseController<AuthenticationController>
         var apiResponse = await _mediator.Send(query);
         return Ok(apiResponse);
     }
-
+    
     [HttpPatch(ApiEndPointConstant.Authentication.Profile)]
     [ProducesResponseType<ApiResponse<GetProfileResponse>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]

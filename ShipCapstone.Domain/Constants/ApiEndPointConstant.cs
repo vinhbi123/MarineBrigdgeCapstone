@@ -60,7 +60,7 @@ public class ApiEndPointConstant
         public const string BoatyardWithBoatyardServices = BoatyardById + "/boatyard-services";
         public const string BoatyardWithDockSlots = BoatyardById + "/dock-slots";
     }
-
+    
     public static class DockSlots
     {
         public const string DockSlotEndpoint = ApiEndpoint + "/dock-slots";
@@ -85,11 +85,18 @@ public class ApiEndPointConstant
         public const string ProductWithVariants = ProductById + "/product-variants";
         public const string ProductWithReviews = ProductById + "/reviews";
     }
-
+    
     public static class ProductVariants
     {
         public const string ProductVariantEndpoint = ApiEndpoint + "/product-variants";
         public const string ProductVariantById = ProductVariantEndpoint + "/{id}";
+    }
+
+    public static class Payments
+    {
+        public const string PaymentEndpoint = ApiEndpoint + "/payments";
+        public const string HandlePayment = PaymentEndpoint + "/handler";
+        public const string HandlerPaymentSepay = PaymentEndpoint + "/handle-sepay";
     }
     public static class Accouts
     {
@@ -100,28 +107,31 @@ public class ApiEndPointConstant
     {
         public const string OrderEndpoint = ApiEndpoint + "/orders";
         public const string OrderById = OrderEndpoint + "/{id}";
-        public const string GetAllOrder = OrderEndpoint;
-    }
-    public static class Payments
-    {
-        public const string PaymentEndpoint = ApiEndpoint + "/payments";
-        public const string HandlePayment = PaymentEndpoint + "/handler";
-        public const string HandlerPaymentSepay = PaymentEndpoint + "/handle-sepay";
     }
     public static class Bookings
     {
         public const string BookingEndPoint = ApiEndpoint + "/bookings";
         public const string BookingById = BookingEndPoint + "/{id}";
     }
-
     public static class Revenue
     {
         public const string RevenueEndPoint = ApiEndpoint + "/revenues";
     }
-
+    
     public static class ReportProblems
     {
         public const string ReportProblemEndpoint = ApiEndpoint + "/report-problems";
         public const string ReportProblemById = ReportProblemEndpoint + "/{id}";
+    }
+   
+    public static class Transaction
+    {
+        public const string TransactionEndPoint = ApiEndpoint + "/transactions";
+    }
+
+    public static class ProductVariantOptions
+    {
+        public const string ProductVariantOptionEndpoint = ApiEndpoint + "/product-variant-options";
+        public const string ProductVariantOptionById = ProductVariantOptionEndpoint + "/{id}";
     }
 }

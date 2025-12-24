@@ -28,9 +28,9 @@ public class CreateReviewCommandHandler : IRequestHandler<CreateReviewCommand, A
         var product = await _unitOfWork.GetRepository<Product>().SingleOrDefaultAsync(
             predicate: p => p.Id == request.Id) ?? throw new NotFoundException("Không tìm thấy sản phẩm");
         var orderItemsExist = await _unitOfWork.GetRepository<OrderItem>().GetListAsync(
-            predicate: oi => oi.ProductVariant.ProductId == product.Id
+            predicate: oi => oi.ProductVariant.ProductId == product.Id 
                              && (oi.Order.Ship.AccountId == accountId || oi.Order.Boatyard.AccountId == accountId)
-                             && oi.Order.Status != EOrderStatus.Pending
+                             && oi.Order.Status != EOrderStatus.Pending 
                              && oi.Order.Status != EOrderStatus.Rejected);
         if (orderItemsExist == null || orderItemsExist.Count == 0)
         {

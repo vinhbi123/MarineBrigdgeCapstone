@@ -11,10 +11,12 @@ public class CreateProductCommand : IRequest<ApiResponse>
     public decimal? Price { get; set; }
     public bool IsHasVariant { get; set; }
     public List<CreateProductVariantForCreateProductRequest>? ProductVariants { get; set; }
+    public List<Guid>? ModifierOptionIds { get; set; }
     public List<IFormFile> ProductImages { get; set; }
 }
 public class CreateProductVariantForCreateProductRequest
 {
     public string Name { get; set; }
     public decimal Price { get; set; }
+    public List<Guid>? ModifierOptionIds { get; set; }
 }

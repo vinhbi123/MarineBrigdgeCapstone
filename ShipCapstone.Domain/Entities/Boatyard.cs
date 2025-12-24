@@ -10,8 +10,9 @@ public class Boatyard : EntityAuditBase<Guid>
     public string? BankName { get; set; }
     public string? BankNo { get; set; }
     public Guid AccountId { get; set; }
-    public virtual ICollection<Order>? Orders { get; set; } = new List<Order>();
+    
     public virtual Account Account { get; set; }
+    public virtual ICollection<Order>? Orders { get; set; } = new List<Order>();
     public virtual ICollection<DockSlot> DockSlots { get; set; } = new List<DockSlot>();
     public virtual ICollection<BoatyardService>? BoatyardServices { get; set; } = new List<BoatyardService>();
 }

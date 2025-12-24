@@ -12,7 +12,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
     private readonly IUnitOfWork<ShipCapstoneContext> _unitOfWork;
     private readonly ILogger _logger;
     private readonly IClaimService _claimService;
-
+    
     public UpdateProductCommandHandler(IUnitOfWork<ShipCapstoneContext> unitOfWork, ILogger logger,
         IClaimService claimService)
     {
@@ -20,8 +20,8 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _claimService = claimService ?? throw new ArgumentNullException(nameof(claimService));
     }
-
-
+    
+    
     public async ValueTask<ApiResponse> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
         var accountId = _claimService.GetCurrentUserId;
@@ -30,22 +30,30 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
             throw new BadHttpRequestException("Người dùng không hợp lệ");
         }
 
-        var product = await _unitOfWork.GetRepository<Product>().SingleOrDefaultAsync(
-            predicate: x => x.Id == request.ProductId && x.SupplierId == accountId
+        var supplier = await _unitOfWork.GetRepository<Supplier>().SingleOrDefaultAsync(
+            predicate: x => x.AccountId == accountId
         );
-
+        if (supplier == null)
+        {
+            throw new BadHttpRequestException("Nhà cung cấp không tồn tại");
+        }
+        
+        var product = await _unitOfWork.GetRepository<Product>().SingleOrDefaultAsync(
+            predicate: x => x.Id == request.ProductId && x.SupplierId == supplier.Id
+        );
+        
         if (product == null)
         {
             throw new BadHttpRequestException("Sản phẩm không tồn tại hoặc bạn không có quyền cập nhật sản phẩm này");
         }
-
+        
         product.Name = request.Name ?? product.Name;
         product.Description = request.Description ?? product.Description;
-
+        product.IsActive = request.IsActive ?? product.IsActive;
         if (request.CategoryId != null && request.CategoryId != product.CategoryId)
         {
             var category = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync(
-                predicate: x => x.Id == request.CategoryId && x.SupplierId == accountId
+                predicate: x => x.Id == request.CategoryId && x.SupplierId == supplier.Id
             );
             if (category == null)
             {
@@ -54,9 +62,9 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
             product.CategoryId = category.Id;
         }
         _unitOfWork.GetRepository<Product>().UpdateAsync(product);
-
+        
         var isSuccess = await _unitOfWork.CommitAsync() > 0;
-
+        
         if (!isSuccess)
         {
             throw new Exception("Cập nhật sản phẩm thất bại");

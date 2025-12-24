@@ -25,7 +25,7 @@ public class HandleTransactionRevenueCommandHandler : IRequestHandler<HandleTran
             throw new NotFoundException("Không tìm thấy mã TXN");
         var referenceCode = "SEVQR Chuyen tien " + match.Groups[1].Value;
         var transaction = await _unitOfWork.GetRepository<Transaction>().SingleOrDefaultAsync(
-            predicate: t => t.TransactionCode.Replace("-", "").Equals(referenceCode)) ?? throw new NotFoundException("Không tìm thấy giao dịch");
+            predicate: t => t.TransactionCode.Replace("-","").Equals(referenceCode)) ?? throw new NotFoundException("Không tìm thấy giao dịch");
 
         if (transaction.Status == ETransactionStatus.Approved)
         {
@@ -36,10 +36,10 @@ public class HandleTransactionRevenueCommandHandler : IRequestHandler<HandleTran
                 Data = true
             };
         }
-
+        
         transaction.Status = ETransactionStatus.Approved;
         transaction.LastModifiedDate = TimeUtil.GetCurrentSEATime();
-
+        
         _unitOfWork.GetRepository<Transaction>().UpdateAsync(transaction);
         var isSuccess = await _unitOfWork.CommitAsync() > 0;
         if (!isSuccess)

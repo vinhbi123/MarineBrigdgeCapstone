@@ -1,12 +1,10 @@
 ﻿using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using ShipCapstone.Application.Common.Utils;
-using ShipCapstone.Application.Features.Authentication.Command.SendOtp;
-using ShipCapstone.Application.Features.Orders.Command.UpdateOrder;
 using ShipCapstone.Application.Features.Orders.Command.CreateOrder;
+using ShipCapstone.Application.Features.Orders.Command.UpdateOrder;
 using ShipCapstone.Application.Features.Orders.Query.GetOrder;
 using ShipCapstone.Application.Features.Orders.Query.GetOrderById;
-using ShipCapstone.Application.Features.Orders.Query;
 using ShipCapstone.Domain.Constants;
 using ShipCapstone.Domain.Models.Common;
 using ShipCapstone.Domain.Models.Orders;
@@ -49,7 +47,7 @@ namespace ShipCapstone.Application.Controllers
             var apiResponse = await _mediator.Send(query);
             return Ok(apiResponse);
         }
-
+ 
         [HttpGet(ApiEndPointConstant.Orders.OrderEndpoint)]
         [ProducesResponseType<ApiResponse>(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll([FromQuery] GetAllOrdersQuery query)
@@ -57,7 +55,7 @@ namespace ShipCapstone.Application.Controllers
             var apiResponse = await _mediator.Send(query);
             return Ok(apiResponse);
         }
-
+        
         [HttpPut(ApiEndPointConstant.Orders.OrderById)]
         [ProducesResponseType<ApiResponse<Guid>>(StatusCodes.Status200OK)]
         [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]

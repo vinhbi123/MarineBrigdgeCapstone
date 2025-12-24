@@ -7,6 +7,7 @@ using ShipCapstone.Infrastructure.Persistence;
 using ShipCapstone.Infrastructure.Repositories.Interface;
 using ShipCapstone.Infrastructure.Utils;
 
+
 namespace ShipCapstone.Application.Features.Payments.Command.PaymentWebhook;
 
 public class ConfirmWebhookCommandHandler : IRequestHandler<ConfirmWebhookCommand, ApiResponse>
@@ -39,7 +40,7 @@ public class ConfirmWebhookCommandHandler : IRequestHandler<ConfirmWebhookComman
 
                 order.Status = EOrderStatus.Approved;
                 _unitOfWork.GetRepository<Order>().UpdateAsync(order);
-
+                
             }
             else if (transaction.Type == EPaymentType.Boatyard)
             {

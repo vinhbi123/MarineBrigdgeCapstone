@@ -10,6 +10,7 @@ public record GetProductByIdResponse
     public bool IsHasVariant { get; set; }
     public Guid SupplierId { get; set; }
     public string SupplierName { get; set; }
+    public bool IsActive { get; set; }
     public List<ProductImageResponse> ProductImages { get; set; }
     public List<ProductVariantResponseForGetProductById> ProductVariants { get; set; }
 }
@@ -24,4 +25,17 @@ public record ProductVariantResponseForGetProductById
     public Guid Id { get; set; }
     public string Name { get; set; }
     public decimal Price { get; set; }
+    public  bool IsActive { get; set; }
+    public List<ModifierGroupResponseForGetProductById>? ModifierGroups { get; set; }
+}
+public record ModifierGroupResponseForGetProductById
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public List<ModifierOptionResponseForGetProductById> ModifierOptions { get; set; }
+}
+public record ModifierOptionResponseForGetProductById
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; }
 }

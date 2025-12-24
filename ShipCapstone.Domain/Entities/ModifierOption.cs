@@ -9,5 +9,5 @@ public class ModifierOption : EntityBase<Guid>
     public Guid ModifierGroupId { get; set; }
     
     public virtual ModifierGroup ModifierGroup { get; set; }
-    public virtual ICollection<Inventory>? Inventories { get; set; } = new List<Inventory>();
+    public virtual ICollection<ProductVariantOption>? ProductVariantOptions { get; set; } = new List<ProductVariantOption>();
 }

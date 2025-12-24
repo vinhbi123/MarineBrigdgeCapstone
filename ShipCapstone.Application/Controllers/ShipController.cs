@@ -146,7 +146,7 @@ public class ShipController : BaseController<ShipController>
         var apiResponse = await _mediator.Send(command);
         return Ok(apiResponse);
     }
-
+    
     [CustomAuthorize(ERole.User)]
     [HttpDelete(ApiEndPointConstant.Ships.CaptainByShipId)]
     [ProducesResponseType<ApiResponse<GetShipByIdResponse>>(StatusCodes.Status200OK)]
@@ -164,7 +164,7 @@ public class ShipController : BaseController<ShipController>
         var apiResponse = await _mediator.Send(command);
         return Ok(apiResponse);
     }
-
+    
     [CustomAuthorize(ERole.User)]
     [HttpGet(ApiEndPointConstant.Ships.ReportProblemByShip)]
     [ProducesResponseType<ApiResponse<IPaginate<GetAllReportProblemResponse>>>(StatusCodes.Status200OK)]

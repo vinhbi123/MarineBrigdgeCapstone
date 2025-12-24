@@ -29,7 +29,7 @@ public class GetBookingByIdQueryHandler : IRequestHandler<GetBookingByIdQuery, A
         var booking = await _unitOfWork.GetRepository<Booking>().SingleOrDefaultAsync(
             predicate: b => b.Id == request.Id,
             include: b => b.Include(b => b.Ship)
-            .ThenInclude(b => b.Account)
+                .ThenInclude(b => b.Account)
                 .Include(b => b.DockSlot)
                 .Include(b => b.BookingServices)
                 .ThenInclude(bs => bs.BoatyardService)
@@ -74,7 +74,6 @@ public class GetBookingByIdQueryHandler : IRequestHandler<GetBookingByIdQuery, A
                 TypeService = bs.BoatyardService.TypeService,
                 Price = bs.BoatyardService.Price
             }).ToList()
-
         };
 
         return new ApiResponse()

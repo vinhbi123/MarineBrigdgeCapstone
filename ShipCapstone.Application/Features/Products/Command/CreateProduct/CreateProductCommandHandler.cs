@@ -14,7 +14,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
     private readonly ILogger _logger;
     private readonly IClaimService _claimService;
     private readonly IUploadService _uploadService;
-
+    
     public CreateProductCommandHandler(
         IUnitOfWork<ShipCapstoneContext> unitOfWork,
         ILogger logger,
@@ -25,21 +25,22 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         _claimService = claimService ?? throw new ArgumentNullException(nameof(claimService));
         _uploadService = uploadService ?? throw new ArgumentNullException(nameof(uploadService));
     }
-
+    
     public async ValueTask<ApiResponse> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         var accountId = _claimService.GetCurrentUserId;
 
         var supplier = await _unitOfWork.GetRepository<Supplier>().SingleOrDefaultAsync(
-           predicate: x => x.AccountId == accountId
-       );
+            predicate: x => x.AccountId == accountId
+        );
         if (supplier == null)
         {
             throw new NotFoundException("Nhà cung cấp không tồn tại");
         }
-
+        
         var category = await _unitOfWork.GetRepository<Category>().SingleOrDefaultAsync(
-            predicate: x => x.Id == request.CategoryId && x.Supplier.AccountId == accountId);
+            predicate: x => x.Id == request.CategoryId && x.Supplier.AccountId == accountId
+        );
         if (category == null)
         {
             throw new NotFoundException("Danh mục không tồn tại");
@@ -52,6 +53,8 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             Description = request.Description,
             CategoryId = category.Id,
             SupplierId = supplier.Id,
+            IsActive = true,
+            ProductVariants = new List<ProductVariant>()
         };
 
         if (request.IsHasVariant)
@@ -62,22 +65,46 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             }
 
             product.IsHasVariant = true;
-            product.ProductVariants = request.ProductVariants.Select(variant => new ProductVariant
+            // product.ProductVariants = request.ProductVariants.Select(variant => new ProductVariant
+            // {
+            //     Id = Guid.CreateVersion7(),
+            //     Name = variant.Name,
+            //     Price = variant.Price,
+            //     IsActive = true,
+            //     ProductId = product.Id
+            // }).ToList();
+            foreach (var requestProductVariant in request.ProductVariants)
             {
-                Id = Guid.CreateVersion7(),
-                Name = variant.Name,
-                Price = variant.Price,
-                ProductId = product.Id,
-                Inventories = new List<Inventory>()
+                var productVariant = new ProductVariant()
                 {
-                    new Inventory()
+                    Id = Guid.CreateVersion7(),
+                    Name = requestProductVariant.Name,
+                    Price = requestProductVariant.Price,
+                    IsActive = true,
+                    ProductId = product.Id
+                };
+
+                if (requestProductVariant.ModifierOptionIds != null && requestProductVariant.ModifierOptionIds.Any())
+                {
+                    var modifierOptions = await _unitOfWork.GetRepository<ModifierOption>()
+                        .GetListAsync(
+                            predicate: x => requestProductVariant.ModifierOptionIds.Contains(x.Id) &&
+                                             x.ModifierGroup.Supplier.AccountId == accountId
+                        );
+                    if (modifierOptions.Count != requestProductVariant.ModifierOptionIds.Count)
+                    {
+                        throw new NotFoundException("Một hoặc nhiều tùy chọn sửa đổi không tồn tại");
+                    }
+                    
+                    productVariant.ProductVariantOptions = modifierOptions.Select(x => new ProductVariantOption()
                     {
                         Id = Guid.CreateVersion7(),
-                        Quantity = 0,
-                        ModifierOptionId = null
-                    }
+                        ProductVariantId = productVariant.Id,
+                        ModifierOptionId = x.Id,
+                    }).ToList();
                 }
-            }).ToList();
+                product.ProductVariants.Add(productVariant);
+            }
         }
         else
         {
@@ -87,27 +114,35 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             }
 
             product.IsHasVariant = false;
-            product.ProductVariants = new List<ProductVariant>
+            var productVariant = new ProductVariant
             {
-                new ProductVariant
+                Id = Guid.CreateVersion7(),
+                Name = product.Name,
+                Price = request.Price.Value,
+                ProductId = product.Id
+            };
+            if(request.ModifierOptionIds != null && request.ModifierOptionIds.Any())
+            {
+                var modifierOptions = await _unitOfWork.GetRepository<ModifierOption>()
+                    .GetListAsync(
+                        predicate: x => request.ModifierOptionIds.Contains(x.Id) &&
+                                         x.ModifierGroup.Supplier.AccountId == accountId
+                    );
+                if (modifierOptions.Count != request.ModifierOptionIds.Count)
+                {
+                    throw new NotFoundException("Một hoặc nhiều tùy chọn sửa đổi không tồn tại");
+                }
+                
+                productVariant.ProductVariantOptions = modifierOptions.Select(x => new ProductVariantOption()
                 {
                     Id = Guid.CreateVersion7(),
-                    Name = product.Name,
-                    Price = request.Price.Value,
-                    ProductId = product.Id,
-                    Inventories = new List<Inventory>()
-                    {
-                        new Inventory()
-                        {
-                            Id = Guid.CreateVersion7(),
-                            Quantity = 0,
-                            ModifierOptionId = null
-                        }
-                    }
-                }
-            };
+                    ProductVariantId = productVariant.Id,
+                    ModifierOptionId = x.Id,
+                }).ToList();
+            }
+            product.ProductVariants = new List<ProductVariant> { productVariant };
         }
-
+        
         var productImages = new List<ProductImage>();
         var productImageUploadTasks = request.ProductImages.Select(async productImageUpload =>
         {
@@ -121,7 +156,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         });
         await Task.WhenAll(productImageUploadTasks);
         product.ProductImages = productImages;
-
+        
         await _unitOfWork.GetRepository<Product>().InsertAsync(product);
 
         var isSuccess = await _unitOfWork.CommitAsync() > 0;

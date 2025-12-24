@@ -19,7 +19,7 @@ public class GetAllReportProblemForCaptainQueryHandler : IRequestHandler<GetAllR
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _claimService = claimService ?? throw new ArgumentNullException(nameof(claimService));
     }
-
+    
     public async ValueTask<ApiResponse> Handle(GetAllReportProblemForCaptainQuery request, CancellationToken cancellationToken)
     {
         var accountId = _claimService.GetCurrentUserId;

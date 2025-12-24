@@ -11,6 +11,7 @@ public class ProductVariantConfiguration : IEntityTypeConfiguration<ProductVaria
         builder.HasKey(pv => pv.Id);
         builder.Property(pv => pv.Name).IsRequired().HasMaxLength(255);
         builder.Property(pv => pv.Price).IsRequired().HasPrecision(12, 2);
+        builder.Property(pv => pv.IsActive).IsRequired();
         builder.HasOne(pv => pv.Product)
             .WithMany(p => p.ProductVariants)
             .HasForeignKey(pv => pv.ProductId)

@@ -30,14 +30,14 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
         var accountId = _claimService.GetCurrentUserId;
         var role = Enum.Parse<ERole>(_claimService.GetRole);
         var account = await _unitOfWork.GetRepository<Account>().SingleOrDefaultAsync(
-           predicate: a => a.Id.Equals(accountId),
+            predicate: a => a.Id.Equals(accountId),
             include: a => a.Include(a => a.Boatyard)) ?? throw new NotFoundException("Không tìm thấy thông tin tài khoản");
         object? paymentObject = null;
         if (request.Type == EPaymentType.Supplier)
         {
             var order = await _unitOfWork.GetRepository<Order>().SingleOrDefaultAsync(
                 predicate: o => o.Id.Equals(request.Id),
-               include: o => o.Include(o => o.Ship)
+                include: o => o.Include(o => o.Ship)
                     .Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.ProductVariant)) ?? throw new NotFoundException("Không tìm thấy đơn hàng");
             if (role == ERole.User)
@@ -74,9 +74,9 @@ public class CreatePaymentCommandHandler : IRequestHandler<CreatePaymentCommand,
         {
             throw new BadHttpRequestException("Kiểu thanh toán không hợp lệ");
         }
-            Random random = new Random();
-        var transactionCode = DateTime.Now.Ticks % 10000000000000L * 10 + random.Next(0, 10);   
 
+        Random random = new Random();
+        var transactionCode = DateTime.Now.Ticks % 10000000000000L * 10 + random.Next(0, 10);
         CreatePaymentRequest paymentRequest = new CreatePaymentRequest()
         {
             Account = account,

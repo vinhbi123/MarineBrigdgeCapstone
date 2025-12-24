@@ -24,14 +24,13 @@ public class PaymentService : IPaymentService
     public async Task<CreatePaymentResult> CreatePaymentUrl(CreatePaymentRequest request)
     {
         CreatePaymentResult url = null;
-
         var expiredAt = DateTimeOffset.UtcNow.AddMinutes(10).ToUnixTimeSeconds();
         var description = "";
         int amount = 0;
         List<ItemData> items = new List<ItemData>();
         if (request.Type == EPaymentType.Supplier)
         {
-            var order = request.PaymentObject as Order
+            var order = request.PaymentObject as Order 
                         ?? throw new InvalidCastException("PaymentObject không phải là Order");
             foreach (var item in order.OrderItems)
             {
@@ -42,7 +41,7 @@ public class PaymentService : IPaymentService
         }
         else
         {
-            var booking = request.PaymentObject as Booking
+            var booking = request.PaymentObject as Booking 
                           ?? throw new InvalidCastException("PaymentObject không phải là Booking");
             items = null;
             amount = (int)booking.TotalAmount;

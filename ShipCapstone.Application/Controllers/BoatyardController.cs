@@ -136,7 +136,7 @@ public class BoatyardController : BaseController<BoatyardController>
         var apiResponse = await _mediator.Send(query);
         return Ok(apiResponse);
     }
-
+    
     [HttpGet(ApiEndPointConstant.Boatyards.BoatyardWithDockSlots)]
     [ProducesResponseType<ApiResponse<GetDockSlotByBoatyardIdResponse>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
@@ -157,4 +157,5 @@ public class BoatyardController : BaseController<BoatyardController>
         var apiResponse = await _mediator.Send(query);
         return Ok(apiResponse);
     }
+
 }

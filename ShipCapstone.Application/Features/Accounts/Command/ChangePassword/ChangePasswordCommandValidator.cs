@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 
 namespace ShipCapstone.Application.Features.Accounts.Command.ChangePassword;
 

@@ -42,8 +42,8 @@ namespace ShipCapstone.Application.Features.Orders.Query.GetOrder
                     Status = o.Status
                 },
                 predicate: o =>
-                (role != ERole.Supplier || (o.Status != EOrderStatus.Pending &&
-                                                                        o.OrderItems.Any(oi => oi.ProductVariant.Product.SupplierId == account.Supplier.Id))) &&
+                    (role != ERole.Supplier || (o.Status != EOrderStatus.Pending && 
+                                                o.OrderItems.Any(oi => oi.ProductVariant.Product.SupplierId == account.Supplier.Id))) &&
                     (role != ERole.Boatyard || o.BoatyardId == account.Boatyard.Id) &&
                     (role != ERole.User || o.Ship.AccountId == userId) &&
                     (request.StartDate == null || DateOnly.FromDateTime(o.CreatedDate) >= request.StartDate) &&
@@ -51,14 +51,14 @@ namespace ShipCapstone.Application.Features.Orders.Query.GetOrder
                     (!request.ShipId.HasValue || o.ShipId == request.ShipId) &&
                     (string.IsNullOrEmpty(request.Status) || o.Status.ToString() == request.Status) &&
                     (string.IsNullOrEmpty(request.Search) || o.Id.ToString().Contains(request.Search)),
-                 include: o => o.Include(o => o.OrderItems)
+                include: o => o.Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.ProductVariant)
                     .ThenInclude(pv => pv.Product),
                 page: request.Page,
                 size: request.PageSize,
                 sortBy: request.SortBy ?? nameof(Order.CreatedDate),
                 isAsc: request.IsAsc
-              );
+            );
 
             return new ApiResponse
             {

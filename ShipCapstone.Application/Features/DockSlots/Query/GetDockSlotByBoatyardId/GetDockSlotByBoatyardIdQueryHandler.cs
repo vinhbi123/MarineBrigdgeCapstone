@@ -1,4 +1,4 @@
-﻿using Mediator;
+using Mediator;
 using ShipCapstone.Domain.Entities;
 using ShipCapstone.Domain.Models.Common;
 using ShipCapstone.Domain.Models.DockSlots;
@@ -11,15 +11,15 @@ namespace ShipCapstone.Application.Features.DockSlots.Query.GetDockSlotByBoatyar
 public class GetDockSlotByBoatyardIdQueryHandler : IRequestHandler<GetDockSlotByBoatyardIdQuery, ApiResponse>
 {
     private readonly IUnitOfWork<ShipCapstoneContext> _unitOfWork;
-    private readonly ILogger _logger;
-
+    private readonly  ILogger _logger;
+    
     public GetDockSlotByBoatyardIdQueryHandler(IUnitOfWork<ShipCapstoneContext> unitOfWork,
         ILogger logger)
     {
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
-
+    
     public async ValueTask<ApiResponse> Handle(GetDockSlotByBoatyardIdQuery request, CancellationToken cancellationToken)
     {
         var time = TimeUtil.GetCurrentSEATime();

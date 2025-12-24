@@ -3,9 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Net.payOS.Types;
 using Newtonsoft.Json;
 using ShipCapstone.Application.Common.Utils;
-using ShipCapstone.Application.Features.Revenues.Command.HandleTransactionRevenue;
+using ShipCapstone.Application.Features.Payments.Command;
 using ShipCapstone.Application.Features.Payments.Command.CreatePayment;
 using ShipCapstone.Application.Features.Payments.Command.PaymentWebhook;
+using ShipCapstone.Application.Features.Revenues.Command.HandleTransactionRevenue;
 using ShipCapstone.Domain.Constants;
 using ShipCapstone.Domain.Models.Common;
 
@@ -18,7 +19,7 @@ public class PaymentController : BaseController<PaymentController>
     {
         _createPaymentValidationUtil = createPaymentValidationUtil ?? throw new ArgumentNullException(nameof(createPaymentValidationUtil));
     }
-
+    
     [HttpPost(ApiEndPointConstant.Payments.PaymentEndpoint)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
@@ -36,7 +37,7 @@ public class PaymentController : BaseController<PaymentController>
         var apiResponse = await _mediator.Send(command);
         return CreatedAtAction(nameof(CreateCategory), apiResponse);
     }
-
+    
     [HttpPost(ApiEndPointConstant.Payments.HandlePayment)]
     [ApiExplorerSettings(IgnoreApi = true)]
     public async Task<IActionResult> HandlePayment([FromBody] WebhookType payload)
@@ -51,10 +52,10 @@ public class PaymentController : BaseController<PaymentController>
             return Ok(apiResponse);
         }
         catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing the webhook.");
+        { return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing the webhook.");
         }
     }
+    
     [HttpPost(ApiEndPointConstant.Payments.HandlerPaymentSepay)]
     [ApiExplorerSettings(IgnoreApi = true)]
     [ProducesResponseType<ApiResponse<string>>(StatusCodes.Status200OK)]

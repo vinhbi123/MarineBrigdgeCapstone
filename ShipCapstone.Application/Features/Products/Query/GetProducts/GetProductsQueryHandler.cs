@@ -14,9 +14,9 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, ApiResp
     private readonly IUnitOfWork<ShipCapstoneContext> _unitOfWork;
     private readonly ILogger _logger;
     private readonly IClaimService _claimService;
-
+    
     public GetProductsQueryHandler(
-        IUnitOfWork<ShipCapstoneContext> unitOfWork,
+        IUnitOfWork<ShipCapstoneContext> unitOfWork, 
         ILogger logger,
         IClaimService claimService)
     {
@@ -24,12 +24,17 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, ApiResp
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _claimService = claimService ?? throw new ArgumentNullException(nameof(claimService));
     }
-
-
+    
+    
     public async ValueTask<ApiResponse> Handle(GetProductsQuery request, CancellationToken cancellationToken)
     {
         Enum.TryParse<ERole>(_claimService.GetRole, out var parsedRole);
 
+        if (parsedRole == ERole.Supplier)
+        {
+            request.SupplierId = null;
+        }
+        
         var products = await _unitOfWork.GetRepository<Product>().GetPagingListAsync(
             selector: x => new GetProductsResponse()
             {
@@ -43,17 +48,20 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, ApiResp
                 IsHasVariant = x.IsHasVariant,
                 ImageUrl = x.ProductImages.OrderBy(pi => pi.SortOrder ?? int.MaxValue)
                     .Select(x => x.ImageUrl).FirstOrDefault(),
+                IsActive = x.IsActive,
                 CreatedDate = x.CreatedDate,
                 LastModifiedDate = x.LastModifiedDate
             },
-            predicate: x => (string.IsNullOrEmpty(request.Name) || x.Name.Contains(request.Name))
-                           && (parsedRole != ERole.Supplier || x.Category.Supplier.AccountId == _claimService.GetCurrentUserId),
+            predicate: x => (string.IsNullOrEmpty(request.Name) || x.Name.Contains(request.Name)) 
+                            && (request.SupplierId == null || x.SupplierId == request.SupplierId)
+                            && (parsedRole != ERole.Supplier || x.Category.Supplier.AccountId == _claimService.GetCurrentUserId)
+                            && (parsedRole != ERole.User || parsedRole != ERole.Boatyard || parsedRole != ERole.Captain || x.IsActive),
             page: request.Page,
             size: request.Size,
             sortBy: request.SortBy ?? nameof(Product.CreatedDate),
             isAsc: request.IsAsc
         );
-
+        
         return new ApiResponse()
         {
             Status = StatusCodes.Status200OK,

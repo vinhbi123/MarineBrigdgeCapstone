@@ -1,4 +1,4 @@
-﻿using Mediator;
+using Mediator;
 using ShipCapstone.Application.Common.Exceptions;
 using ShipCapstone.Application.Common.Utils;
 using ShipCapstone.Application.Services.Interfaces;

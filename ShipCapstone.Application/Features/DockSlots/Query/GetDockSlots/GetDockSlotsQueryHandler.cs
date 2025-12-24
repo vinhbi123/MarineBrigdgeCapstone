@@ -6,6 +6,7 @@ using ShipCapstone.Domain.Models.Common;
 using ShipCapstone.Domain.Models.DockSlots;
 using ShipCapstone.Infrastructure.Persistence;
 using ShipCapstone.Infrastructure.Repositories.Interface;
+using ShipCapstone.Infrastructure.Utils;
 
 namespace ShipCapstone.Application.Features.DockSlots.Query.GetDockSlots;
 
@@ -37,6 +38,7 @@ public class GetDockSlotsQueryHandler : IRequestHandler<GetDockSlotsQuery, ApiRe
                 Name = x.Name,
                 AssignedFrom = x.AssignedFrom,
                 AssignedUntil = x.AssignedUntil,
+                IsExpired = x.AssignedUntil != null && x.AssignedUntil < TimeUtil.GetCurrentSEATime(),
                 IsActive = x.IsActive
             },
             predicate: x => x.Boatyard.AccountId == accountId 

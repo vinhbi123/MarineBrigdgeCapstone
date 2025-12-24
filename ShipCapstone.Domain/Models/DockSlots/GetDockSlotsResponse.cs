@@ -6,6 +6,7 @@ public record GetDockSlotsResponse
     public string Name { get; set; }
     public DateTime AssignedFrom { get; set; }
     public DateTime? AssignedUntil { get; set; }
+    public bool IsExpired { get; set; }
     public bool IsActive { get; set; }
     
 }

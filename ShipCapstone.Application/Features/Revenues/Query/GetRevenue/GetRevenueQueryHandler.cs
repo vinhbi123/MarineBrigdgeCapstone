@@ -33,7 +33,7 @@ public class GetRevenueQueryHandler : IRequestHandler<GetRevenueQuery, ApiRespon
                 predicate: s => s.AccountId == accountId) ?? throw new NotFoundException("Không tìm thấy nhà cung cấp");
             var orders = await _unitOfWork.GetRepository<Order>().GetListAsync(
                 predicate: o => o.OrderItems.Any(oi => oi.ProductVariant.Product.SupplierId == supplier.Id)
-                                && (o.Status != EOrderStatus.Pending || o.Status != EOrderStatus.Rejected)
+                                && o.Status != EOrderStatus.Pending && o.Status != EOrderStatus.Rejected
                                 && o.CreatedDate >= startDateQuery
                                 && o.CreatedDate <= endDateQuery);
             var groupRevenue = orders
@@ -61,7 +61,7 @@ public class GetRevenueQueryHandler : IRequestHandler<GetRevenueQuery, ApiRespon
                     TotalRevenue = group.TotalRevenue,
                     NetRevenue = group.NetRevenue,
                 });
-
+                
             }
         }
         else if (role == ERole.Boatyard)
@@ -70,7 +70,8 @@ public class GetRevenueQueryHandler : IRequestHandler<GetRevenueQuery, ApiRespon
                 predicate: s => s.AccountId == accountId) ?? throw new NotFoundException("Không tìm thấy nhà cung cấp");
             var orders = await _unitOfWork.GetRepository<Booking>().GetListAsync(
                 predicate: b => b.BookingServices.Any(bs => bs.BoatyardService.BoatyardId == boatyard.Id)
-                                && (b.Status == EBookingStatus.Pending)
+                                && b.Status != EBookingStatus.Cancelled 
+                                && b.Status != EBookingStatus.Pending
                                 && b.CreatedDate >= startDateQuery
                                 && b.CreatedDate <= endDateQuery);
             var groupRevenue = orders
@@ -98,7 +99,7 @@ public class GetRevenueQueryHandler : IRequestHandler<GetRevenueQuery, ApiRespon
                     TotalRevenue = group.TotalRevenue,
                     NetRevenue = group.NetRevenue,
                 });
-
+                
             }
         }
 
