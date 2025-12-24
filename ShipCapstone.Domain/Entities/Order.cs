@@ -9,7 +9,7 @@ public class Order : EntityAuditBase<Guid>
     public EOrderStatus Status { get; set; }
     public Guid? ShipId { get; set; }
     public Guid? BoatyardId { get; set; }
-
+    
     public virtual Ship? Ship { get; set; }
     public virtual Boatyard? Boatyard { get; set; }
 

@@ -29,7 +29,7 @@ public class ShipCapstoneContext : DbContext
     public virtual DbSet<Port> Port { get; set; }
     public virtual DbSet<Product> Product { get; set; }
     public virtual DbSet<ProductImage> ProductImage { get; set; }
-    public virtual DbSet<ProductModifierGroup> ProductModifierGroup { get; set; }
+    public virtual DbSet<ProductVariantOption> ProductVariantOption { get; set; }
     public virtual DbSet<ProductVariant> ProductVariant { get; set; }
     public virtual DbSet<Review> Review { get; set; }
     public virtual DbSet<Ship> Ship { get; set; }

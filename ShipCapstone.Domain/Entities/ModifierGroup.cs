@@ -9,5 +9,4 @@ public class ModifierGroup : EntityAuditBase<Guid>
     
     public virtual Supplier Supplier { get; set; }
     public virtual ICollection<ModifierOption> ModifierOptions { get; set; }
-    public virtual ICollection<ProductModifierGroup>? ProductModifierGroups { get; set; }
 }

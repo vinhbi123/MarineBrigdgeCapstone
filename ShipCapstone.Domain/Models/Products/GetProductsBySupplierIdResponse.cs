@@ -1,4 +1,4 @@
-﻿namespace ShipCapstone.Domain.Models.Products;
+namespace ShipCapstone.Domain.Models.Products;
 
 public record GetProductsBySupplierIdResponse
 {
@@ -11,6 +11,7 @@ public record GetProductsBySupplierIdResponse
     public Guid SupplierId { get; set; }
     public string SupplierName { get; set; }
     public string ImageUrl { get; set; }
+    public bool IsActive { get; set; }
     public DateTime CreatedDate { get; set; }
     public DateTime? LastModifiedDate { get; set; }
 }

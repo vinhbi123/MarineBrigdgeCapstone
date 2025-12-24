@@ -14,7 +14,7 @@ namespace ShipCapstone.Domain.Models.Orders
         public string? ShipName { get; set; }
         public Guid? BoatyardId { get; set; }
         public string? BoatyardName { get; set; }
-        public string Phone { get; set; }
+        public string Phone {get; set;}
         public decimal TotalAmount { get; set; }
         public EOrderStatus Status { get; set; }
     }

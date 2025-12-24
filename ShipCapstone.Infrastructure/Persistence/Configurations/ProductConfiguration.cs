@@ -13,6 +13,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(p => p.Description).HasMaxLength(500);
         builder.Property(p => p.IsHasVariant).IsRequired();
         builder.Property(p => p.SupplierId).IsRequired();
+        builder.Property(p => p.IsActive).IsRequired();
         builder.HasOne(p => p.Category)
             .WithMany(c => c.Products)
             .HasForeignKey(p => p.CategoryId)

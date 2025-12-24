@@ -1,4 +1,4 @@
-﻿namespace ShipCapstone.Domain.Models.DockSlots;
+namespace ShipCapstone.Domain.Models.DockSlots;
 
 public record GetDockSlotByBoatyardIdResponse
 {

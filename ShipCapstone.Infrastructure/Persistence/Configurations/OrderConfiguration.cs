@@ -16,9 +16,9 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .HasForeignKey(o => o.ShipId)
             .OnDelete(DeleteBehavior.Restrict);
         builder.HasOne(o => o.Boatyard)
-           .WithMany(b => b.Orders)
-           .HasForeignKey(o => o.BoatyardId)
-           .OnDelete(DeleteBehavior.Restrict);
+            .WithMany(b => b.Orders)
+            .HasForeignKey(o => o.BoatyardId)
+            .OnDelete(DeleteBehavior.Restrict);
         builder.Property(rp => rp.Status)
             .IsRequired()
             .HasConversion(

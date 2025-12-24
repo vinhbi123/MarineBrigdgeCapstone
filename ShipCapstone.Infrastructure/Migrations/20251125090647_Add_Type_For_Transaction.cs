@@ -32,37 +32,6 @@ namespace ShipCapstone.Infrastructure.Migrations
                     table.PrimaryKey("PK_Account", x => x.Id);
                 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             migrationBuilder.CreateTable(
                 name: "Port",
                 columns: table => new
@@ -127,48 +96,6 @@ namespace ShipCapstone.Infrastructure.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             migrationBuilder.CreateTable(
                 name: "Ship",
                 columns: table => new
@@ -208,7 +135,6 @@ namespace ShipCapstone.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-
                     Longitude = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Latitude = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -225,26 +151,6 @@ namespace ShipCapstone.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             migrationBuilder.CreateTable(
                 name: "BoatyardService",
@@ -297,7 +203,6 @@ namespace ShipCapstone.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TotalAmount = table.Column<decimal>(type: "decimal(12,2)", precision: 12, scale: 2, nullable: false),
-
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ShipId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     BoatyardId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -333,8 +238,6 @@ namespace ShipCapstone.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PortId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-
-
                     ShipId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
@@ -458,52 +361,12 @@ namespace ShipCapstone.Infrastructure.Migrations
                         column: x => x.AccountId,
                         principalTable: "Account",
                         principalColumn: "Id");
-
                     table.ForeignKey(
                         name: "FK_Booking_DockSlot_DockSlotId",
                         column: x => x.DockSlotId,
                         principalTable: "DockSlot",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     table.ForeignKey(
                         name: "FK_Booking_Ship_ShipId",
                         column: x => x.ShipId,
@@ -544,19 +407,10 @@ namespace ShipCapstone.Infrastructure.Migrations
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     DisplayOrder = table.Column<int>(type: "int", nullable: false),
                     ModifierGroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-
-
-
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ModifierOption", x => x.Id);
-
-
-
-
-
-
                     table.ForeignKey(
                         name: "FK_ModifierOption_ModifierGroup_ModifierGroupId",
                         column: x => x.ModifierGroupId,
@@ -688,8 +542,6 @@ namespace ShipCapstone.Infrastructure.Migrations
                     ImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     SortOrder = table.Column<int>(type: "int", nullable: true),
                     ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-
-
                 },
                 constraints: table =>
                 {
@@ -944,16 +796,6 @@ namespace ShipCapstone.Infrastructure.Migrations
                 table: "Complaint",
                 column: "OrderId");
 
-
-
-
-
-
-
-
-
-
-
             migrationBuilder.CreateIndex(
                 name: "IX_DockSlot_BoatyardId",
                 table: "DockSlot",
@@ -1009,20 +851,10 @@ namespace ShipCapstone.Infrastructure.Migrations
                 table: "OrderItem",
                 column: "ProductVariantId");
 
-
-
-
-
-
             migrationBuilder.CreateIndex(
                 name: "IX_Product_CategoryId",
                 table: "Product",
                 column: "CategoryId");
-
-
-
-
-
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductImage_ProductId",
@@ -1115,9 +947,6 @@ namespace ShipCapstone.Infrastructure.Migrations
             migrationBuilder.DropTable(
                 name: "Complaint");
 
-
-
-
             migrationBuilder.DropTable(
                 name: "Inventory");
 
@@ -1126,9 +955,6 @@ namespace ShipCapstone.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "OrderItem");
-
-
-
 
             migrationBuilder.DropTable(
                 name: "ProductImage");
@@ -1159,9 +985,6 @@ namespace ShipCapstone.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Port");
-
-
-
 
             migrationBuilder.DropTable(
                 name: "Order");
