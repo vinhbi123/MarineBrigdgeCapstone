@@ -30,19 +30,23 @@ public class UpdateProductVariantCommandHandler : IRequestHandler<UpdateProductV
             throw new BadHttpRequestException("Tài khoản không hợp lệ");
         }
 
-        var productVariant = await _unitOfWork
-        .GetRepository<ProductVariant>()
-        .SingleOrDefaultAsync(
-        predicate: x => x.Id == request.ProductVariantId,
-        include: x => x.Include(pv => pv.Product)
-    );
-
-        if (productVariant == null || productVariant.Product.SupplierId != accountId)
+        var supplier = await _unitOfWork.GetRepository<Supplier>().SingleOrDefaultAsync(
+            predicate: x => x.AccountId == accountId
+        );
+        if (supplier == null)
         {
-            throw new NotFoundException(
-                "Biến thể sản phẩm không tồn tại hoặc bạn không có quyền chỉnh sửa biến thể sản phẩm này.");
+            throw new NotFoundException("Nhà cung cấp không tồn tại.");
         }
+        
+        var productVariant = await _unitOfWork.GetRepository<ProductVariant>().SingleOrDefaultAsync(
+            predicate: x => x.Id == request.ProductVariantId && x.Product.SupplierId == supplier.Id
+        );
 
+        if (productVariant == null)
+        {
+            throw new NotFoundException("Biến thể sản phẩm không tồn tại hoặc bạn không có quyền chỉnh sửa biến thể sản phẩm này.");
+        }
+        
         productVariant.Name = request.Name ?? productVariant.Name;
         productVariant.Price = request.Price ?? productVariant.Price;
 

@@ -27,10 +27,23 @@ public class CreateUrlPaymentRevenueCommandHandler : IRequestHandler<CreateUrlPa
         var url = "";
         Transaction transaction;
         string referenceCode;
+        var existingTransaction = await _unitOfWork.GetRepository<Transaction>().SingleOrDefaultAsync(
+            predicate: t =>
+                t.Type == EPaymentType.Revenue 
+                && t.Status == ETransactionStatus.Approved 
+                && ((request.Type == ERevenueType.Supplier && t.SupplierId == request.Id) 
+                    || (request.Type == ERevenueType.Boatyard && t.BoatyardId == request.Id)) 
+                && t.CreatedDate.Date >= request.StartDate.ToDateTime(TimeOnly.MinValue)
+                && t.CreatedDate.Date <= request.EndDate.ToDateTime(TimeOnly.MaxValue)
+        );
+        if (existingTransaction != null)
+        {
+            throw new BadHttpRequestException("Doanh thu tháng này của nhà cung cấp/xưởng này đã được chuyển");
+        }
         if (request.Type.Equals(ERevenueType.Supplier))
         {
             var supplier = await _unitOfWork.GetRepository<Supplier>().SingleOrDefaultAsync(
-                predicate: x => x.Id.Equals(request.Id)) ?? throw new NotFoundException("Không tìm thấy thông tin đại lí");
+                predicate: x => x.Id.Equals(request.Id)) ?? throw new NotFoundException("Không tìm thấy thông tin nhà cung cấp");
 
             var orders = await _unitOfWork.GetRepository<Order>().GetListAsync(
                 predicate: o => o.OrderItems.Any(oi => oi.ProductVariant.Product.SupplierId == supplier.Id)
@@ -47,7 +60,7 @@ public class CreateUrlPaymentRevenueCommandHandler : IRequestHandler<CreateUrlPa
                 BankName = supplier.BankName,
                 BankNo = supplier.BankNo,
                 Revenue = revenueNumber,
-                Description = description
+                Description = description,
             };
             url = _paymentService.CreateUrlSepay(paymentSePayRequest);
             transaction = new Transaction()
@@ -57,7 +70,8 @@ public class CreateUrlPaymentRevenueCommandHandler : IRequestHandler<CreateUrlPa
                 CreatedDate = TimeUtil.GetCurrentSEATime(),
                 Status = ETransactionStatus.Pending,
                 TransactionCode = referenceCode,
-                Type = EPaymentType.Revenue
+                Type = EPaymentType.Revenue,
+                SupplierId = supplier.Id
             };
         }
         else
@@ -75,7 +89,7 @@ public class CreateUrlPaymentRevenueCommandHandler : IRequestHandler<CreateUrlPa
             var totalAmountService = bookings.Sum(b => b.BookingServices.Select(bs => bs.BoatyardService.Price).Sum(p => p));
             var revenue = totalAmountService;
             var revenueNumber = Math.Round(revenue, 0);
-            referenceCode = $"TXN-{DateTime.UtcNow:yyyyMMddHHmmss}-{boatyard.Id.ToString().Substring(0, 6)}";
+            referenceCode = $"SEVQR Chuyen tien TXN-{DateTime.UtcNow:yyMMddHHmm}-{boatyard.Id.ToString().Substring(0, 2)}";
             string description = $"{referenceCode} - TT doanh thu {boatyard.Name} tu {request.StartDate} den {request.EndDate}";
             CreatePaymentSePayRequest paymentSePayRequest = new CreatePaymentSePayRequest()
             {
@@ -92,7 +106,8 @@ public class CreateUrlPaymentRevenueCommandHandler : IRequestHandler<CreateUrlPa
                 CreatedDate = TimeUtil.GetCurrentSEATime(),
                 Status = ETransactionStatus.Pending,
                 TransactionCode = referenceCode,
-                Type = EPaymentType.Revenue
+                Type = EPaymentType.Revenue,
+                BoatyardId = boatyard.Id
             };
         }
         
