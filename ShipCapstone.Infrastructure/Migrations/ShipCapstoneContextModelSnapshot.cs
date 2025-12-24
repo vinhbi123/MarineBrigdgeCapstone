@@ -404,36 +404,6 @@ namespace ShipCapstone.Infrastructure.Migrations
                     b.ToTable("DockSlot");
                 });
 
-            modelBuilder.Entity("ShipCapstone.Domain.Entities.Inventory", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("LastModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("ModifierOptionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ProductVariantId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ModifierOptionId");
-
-                    b.HasIndex("ProductVariantId");
-
-                    b.ToTable("Inventory");
-                });
-
             modelBuilder.Entity("ShipCapstone.Domain.Entities.ModifierGroup", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1128,24 +1098,6 @@ namespace ShipCapstone.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Boatyard");
-                });
-
-            modelBuilder.Entity("ShipCapstone.Domain.Entities.Inventory", b =>
-                {
-                    b.HasOne("ShipCapstone.Domain.Entities.ModifierOption", "ModifierOption")
-                        .WithMany("Inventories")
-                        .HasForeignKey("ModifierOptionId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ShipCapstone.Domain.Entities.ProductVariant", "ProductVariant")
-                        .WithMany("Inventories")
-                        .HasForeignKey("ProductVariantId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("ModifierOption");
-
-                    b.Navigation("ProductVariant");
                 });
 
             modelBuilder.Entity("ShipCapstone.Domain.Entities.ModifierGroup", b =>

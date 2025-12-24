@@ -21,7 +21,6 @@ public class ShipCapstoneContext : DbContext
     public virtual DbSet<Category> Category { get; set; }
     public virtual DbSet<Complaint> Complaint { get; set; }
     public virtual DbSet<DockSlot> DockSlot { get; set; }
-    public virtual DbSet<Inventory> Inventory { get; set; }
     public virtual DbSet<ModifierGroup> ModifierGroup { get; set; }
     public virtual DbSet<ModifierOption> ModifierOption { get; set; }
     public virtual DbSet<Notification> Notification { get; set; }
