@@ -1,4 +1,4 @@
-﻿using Mediator;
+using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using ShipCapstone.Application.Common.Utils;
 using ShipCapstone.Application.Common.Validators;

@@ -7,6 +7,7 @@ namespace ShipCapstone.Application.Features.Bookings.Query.GetBooking
     {
         public int Page { get; set; }
         public int Size { get; set; }
+        public Guid? BoatyardId { get; set; }
         public DateOnly? StartDate { get; set; }
         public DateOnly? EndDate { get; set; }
         public string? SortBy { get; set; }
