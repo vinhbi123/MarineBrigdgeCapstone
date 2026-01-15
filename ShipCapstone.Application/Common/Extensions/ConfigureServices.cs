@@ -25,6 +25,7 @@ using ShipCapstone.Application.Features.Orders.Command.CreateOrder;
 using ShipCapstone.Application.Features.Payments.Command.CreatePayment;
 using ShipCapstone.Application.Features.Ports.Command.CreatePort;
 using ShipCapstone.Application.Features.Ports.Command.UpdatePort;
+using ShipCapstone.Application.Features.ProductImages.Command.CreateProductImage;
 using ShipCapstone.Application.Features.Products.Command.CreateProduct;
 using ShipCapstone.Application.Features.Products.Command.UpdateProduct;
 using ShipCapstone.Application.Features.ProductVariants.Command.CreateProductVariant;
@@ -94,6 +95,7 @@ public static class ConfigureServices
         services.AddScoped<IValidator<CreateReviewCommand>, CreateReviewCommandValidator>();
         services.AddScoped<IValidator<ChangePasswordCommand>, ChangePasswordCommandValidator>();
         services.AddScoped<IValidator<CreateReportProblemCommand>, CreateReportProblemCommandValidator>();
+        services.AddScoped<IValidator<CreateProductImageCommand>, CreateProductImageCommandValidator>();
         services.AddHttpContextAccessor();
         services.Configure<ApiBehaviorOptions>(options =>
         {
