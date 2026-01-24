@@ -87,7 +87,7 @@ public class CreateUrlPaymentRevenueCommandHandler : IRequestHandler<CreateUrlPa
                 include: b => b.Include(b => b.BookingServices)
                     .ThenInclude(bs => bs.BoatyardService));
             var totalAmountService = bookings.Sum(b => b.BookingServices.Select(bs => bs.BoatyardService.Price).Sum(p => p));
-            var revenue = totalAmountService;
+            var revenue = totalAmountService * ((100 - boatyard.CommissionFeePercent) / 100);
             var revenueNumber = Math.Round(revenue, 0);
             referenceCode = $"SEVQR Chuyen tien TXN-{DateTime.UtcNow:yyMMddHHmm}-{boatyard.Id.ToString().Substring(0, 2)}";
             string description = $"{referenceCode} - TT doanh thu {boatyard.Name} tu {request.StartDate} den {request.EndDate}";
