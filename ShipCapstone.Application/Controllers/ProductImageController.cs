@@ -1,0 +1,60 @@
+using Mediator;
+using Microsoft.AspNetCore.Mvc;
+using ShipCapstone.Application.Common.Utils;
+using ShipCapstone.Application.Common.Validators;
+using ShipCapstone.Application.Features.ProductImages.Command.CreateProductImage;
+using ShipCapstone.Application.Features.ProductImages.Command.RemoveProductImage;
+using ShipCapstone.Domain.Constants;
+using ShipCapstone.Domain.Enums;
+using ShipCapstone.Domain.Models.Common;
+
+namespace ShipCapstone.Application.Controllers;
+
+[ApiController]
+[Route(ApiEndPointConstant.ProductImages.ProductImageEndpoint)]
+public class ProductImageController : BaseController<ProductImageController>
+{
+    public ProductImageController(ILogger logger, IMediator mediator) : base(logger, mediator)
+    {
+    }
+
+    [CustomAuthorize(ERole.Supplier)]
+    [HttpPost(ApiEndPointConstant.ProductImages.ProductImageEndpoint)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status201Created)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> CreateProductImage([FromForm] CreateProductImageCommand command,
+        [FromServices] ValidationUtil<CreateProductImageCommand> validationUtil)
+    {
+        var (isValid, response) = await validationUtil.ValidateAsync(command);
+        if (!isValid)
+        {
+            return BadRequest(response);
+        }
+
+        var apiResponse = await _mediator.Send(command);
+        return CreatedAtAction(nameof(CreateProductImage), apiResponse);
+    }
+
+    [CustomAuthorize(ERole.Supplier)]
+    [HttpDelete(ApiEndPointConstant.ProductImages.ProductImageById)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteProductImage([FromRoute] Guid id)
+    {
+        var command = new RemoveProductImageCommand()
+        {
+            ProductImageId = id
+        };
+        
+        var apiResponse = await _mediator.Send(command);
+        return Ok(apiResponse);
+    }
+}

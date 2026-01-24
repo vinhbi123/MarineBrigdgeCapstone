@@ -46,6 +46,7 @@ namespace ShipCapstone.Application.Features.Orders.Query.GetOrder
                                                 o.OrderItems.Any(oi => oi.ProductVariant.Product.SupplierId == account.Supplier.Id))) &&
                     (role != ERole.Boatyard || o.BoatyardId == account.Boatyard.Id) &&
                     (role != ERole.User || o.Ship.AccountId == userId) &&
+                    (request.SupplierId == null || o.OrderItems.Any(oi => oi.ProductVariant.Product.Category.SupplierId == request.SupplierId)) &&
                     (request.StartDate == null || DateOnly.FromDateTime(o.CreatedDate) >= request.StartDate) &&
                     (request.EndDate == null || DateOnly.FromDateTime(o.CreatedDate) <= request.EndDate) &&
                     (!request.ShipId.HasValue || o.ShipId == request.ShipId) &&

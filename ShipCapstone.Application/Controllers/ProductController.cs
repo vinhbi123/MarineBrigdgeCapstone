@@ -7,7 +7,6 @@ using ShipCapstone.Application.Features.Products.Command.UpdateProduct;
 using ShipCapstone.Application.Features.Products.Query.GetProductById;
 using ShipCapstone.Application.Features.Products.Query.GetProducts;
 using ShipCapstone.Application.Features.ProductVariants.Command.CreateProductVariant;
-using ShipCapstone.Application.Features.ProductVariants.Command.UpdateProductVariant;
 using ShipCapstone.Application.Features.Reviews.Command.CreateReview;
 using ShipCapstone.Application.Features.Reviews.Query.GetAllReview;
 using ShipCapstone.Domain.Constants;

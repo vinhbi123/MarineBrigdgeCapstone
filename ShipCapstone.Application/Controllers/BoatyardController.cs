@@ -143,7 +143,7 @@ public class BoatyardController : BaseController<BoatyardController>
     [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
     [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetDockSlotsByBoatyardId([FromRoute] Guid id, [FromQuery] int page = 1,
-        [FromQuery] int size = 30, string? sortBy = null, bool isAsc = false)
+        [FromQuery] int size = 30, [FromQuery] string? sortBy = null, [FromQuery] bool isAsc = false, [FromQuery] bool isNoBooking = false)
     {
         var query = new GetDockSlotByBoatyardIdQuery()
         {
@@ -151,7 +151,8 @@ public class BoatyardController : BaseController<BoatyardController>
             Page = page,
             Size = size,
             SortBy = sortBy,
-            IsAsc = isAsc
+            IsAsc = isAsc,
+            IsNoBooking = isNoBooking
         };
 
         var apiResponse = await _mediator.Send(query);

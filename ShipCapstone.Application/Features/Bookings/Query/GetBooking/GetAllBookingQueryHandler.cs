@@ -38,8 +38,9 @@ namespace ShipCapstone.Application.Features.Bookings.Query.GetBooking
                     TotalAmount = b.TotalAmount,
                     Status = b.Status
                 },
-                predicate: b => (role != ERole.Boatyard || b.Status != EBookingStatus.Pending) && 
-                                (role != ERole.User || b.Ship.AccountId == userId) && 
+                predicate: b => (role != ERole.Boatyard || (b.Status != EBookingStatus.Pending && b.DockSlot.Boatyard.AccountId == userId)) &&
+                                (role != ERole.User || b.Ship.AccountId == userId) &&
+                                (role != ERole.Admin || request.BoatyardId == null || (b.BookingServices.Any(bs => bs.BoatyardService.BoatyardId == request.BoatyardId) && b.Status == EBookingStatus.Confirmed)) &&
                                 (request.StartDate == null || DateOnly.FromDateTime(b.CreatedDate) >= request.StartDate) &&
                                 (request.EndDate == null || DateOnly.FromDateTime(b.CreatedDate) <= request.EndDate),
                 page: request.Page,

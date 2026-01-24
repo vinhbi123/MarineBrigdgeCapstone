@@ -1,5 +1,6 @@
 using Mediator;
 using ShipCapstone.Domain.Entities;
+using ShipCapstone.Domain.Enums;
 using ShipCapstone.Domain.Models.Common;
 using ShipCapstone.Domain.Models.DockSlots;
 using ShipCapstone.Infrastructure.Persistence;
@@ -34,7 +35,8 @@ public class GetDockSlotByBoatyardIdQueryHandler : IRequestHandler<GetDockSlotBy
             },
             predicate: x => x.IsActive && x.AssignedFrom <= TimeUtil.GetCurrentSEATime()
                                        && (x.AssignedUntil == null || x.AssignedUntil >= TimeUtil.GetCurrentSEATime())
-                                       && x.BoatyardId.Equals(request.BoatyardId),
+                                       && x.BoatyardId.Equals(request.BoatyardId)
+                                       && (request.IsNoBooking == false || !x.Bookings.Any(b => b.Status != EBookingStatus.Pending)),
             page: request.Page,
             size: request.Size,
             sortBy: request.SortBy ?? nameof(DockSlot.Name),

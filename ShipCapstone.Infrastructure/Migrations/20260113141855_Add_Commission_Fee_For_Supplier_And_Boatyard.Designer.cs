@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShipCapstone.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using ShipCapstone.Infrastructure.Persistence;
 namespace ShipCapstone.Infrastructure.Migrations
 {
     [DbContext(typeof(ShipCapstoneContext))]
-    partial class ShipCapstoneContextModelSnapshot : ModelSnapshot
+    [Migration("20260113141855_Add_Commission_Fee_For_Supplier_And_Boatyard")]
+    partial class Add_Commission_Fee_For_Supplier_And_Boatyard
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

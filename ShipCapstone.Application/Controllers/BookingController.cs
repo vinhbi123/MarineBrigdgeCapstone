@@ -39,7 +39,8 @@ namespace ShipCapstone.Application.Controllers
         [ProducesResponseType<ApiResponse<IPaginate<GetAllBookingResponse>>>(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllBooking([FromQuery] int page = 1, [FromQuery] int size = 30, 
             [FromQuery] DateOnly? startDate = null, [FromQuery] DateOnly? endDate = null,
-            [FromQuery] string? sortBy = null, [FromQuery] bool isAsc = false)
+            [FromQuery] string? sortBy = null, [FromQuery] bool isAsc = false,
+            [FromQuery] Guid? id = null)
         {
             var query = new GetAllBookingQuery()
             {
@@ -48,7 +49,8 @@ namespace ShipCapstone.Application.Controllers
                 StartDate = startDate,
                 EndDate = endDate,
                 SortBy = sortBy,
-                IsAsc = isAsc
+                IsAsc = isAsc,
+                BoatyardId = id
             };
 
             var apiResponse = await _mediator.Send(query);

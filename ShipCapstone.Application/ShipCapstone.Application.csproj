@@ -36,6 +36,7 @@
       <Folder Include="Features\Accounts\Query\" />
       <Folder Include="Features\Authentication\Query\" />
       <Folder Include="Features\Captains\Query\" />
+      <Folder Include="Features\ProductImages\Query\" />
       <Folder Include="Features\ProductVariantOptions\Query\" />
       <Folder Include="Features\ProductVariants\Query\" />
     </ItemGroup>

@@ -43,7 +43,7 @@ namespace ShipCapstone.Application.Features.Bookings.Command.CreateBooking
                 throw new BadHttpRequestException("Tàu này không thuộc về bạn.");
 
             var dockSlot = await _unitOfWork.GetRepository<DockSlot>()
-                .SingleOrDefaultAsync(predicate: d => d.Id == request.DockSlotId)
+                .SingleOrDefaultAsync(predicate: d => d.Id == request.DockSlotId && d.Bookings.All(b => b.Status != EBookingStatus.Pending))
                 ?? throw new NotFoundException("Không tìm thấy DockSlot");
 
             var booking = new BookingEntity

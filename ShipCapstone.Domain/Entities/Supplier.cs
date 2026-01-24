@@ -10,6 +10,7 @@ public class Supplier : EntityAuditBase<Guid>
     public string? Latitude { get; set; }
     public string? BankName { get; set; }
     public string? BankNo { get; set; }
+    public decimal CommissionFeePercent { get; set; }
     public Guid AccountId { get; set; }
     
     public virtual Account Account { get; set; }

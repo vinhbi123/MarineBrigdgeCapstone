@@ -48,7 +48,7 @@ public class GetRevenueQueryHandler : IRequestHandler<GetRevenueQuery, ApiRespon
                     g.Key.Month,
                     g.Key.Year,
                     TotalRevenue = g.Sum(o => o.TotalAmount),
-                    NetRevenue = g.Sum(o => o.TotalAmount) - g.Sum(o => o.TotalAmount * 5 / 100m)
+                    NetRevenue = g.Sum(o => o.TotalAmount) - g.Sum(o => o.TotalAmount * supplier.CommissionFeePercent / 100m)
                 })
                 .Where(o => o.TotalRevenue > 0)
                 .OrderByDescending(g => g.Year).ThenByDescending(g => g.Month)
@@ -97,7 +97,7 @@ public class GetRevenueQueryHandler : IRequestHandler<GetRevenueQuery, ApiRespon
                     g.Key.Month,
                     g.Key.Year,
                     TotalRevenue = g.Sum(o => o.TotalAmount),
-                    NetRevenue = g.Sum(o => o.TotalAmount) - g.Sum(o => o.TotalAmount * 5 / 100m)
+                    NetRevenue = g.Sum(o => o.TotalAmount) - g.Sum(o => o.TotalAmount * boatyard.CommissionFeePercent / 100m)
                 })
                 .Where(o => o.TotalRevenue > 0)
                 .OrderByDescending(g => g.Year).ThenByDescending(g => g.Month)
@@ -148,14 +148,15 @@ public class GetRevenueQueryHandler : IRequestHandler<GetRevenueQuery, ApiRespon
                     g.Key.Month,
                     g.Key.Year,
                     TotalRevenue = g.Sum(o => o.TotalAmount),
-                    NetRevenue = g.Sum(o => o.TotalAmount * 5 / 100m)
+                    NetRevenue = g.Sum(o => o.OrderItems.
+                        Sum(oi => oi.Price * oi.Quantity * (oi.ProductVariant.Product.Category.Supplier.CommissionFeePercent / 100m)))
                 })
                 .Where(og => og.TotalRevenue > 0)
                 .OrderByDescending(g => g.Year).ThenByDescending(g => g.Month)
                 .ToList();
 
             var serviceAppointments = await _unitOfWork.GetRepository<Booking>().GetListAsync(
-                predicate: sa => (sa.Status == EBookingStatus.Confirmed)
+                predicate: sa => sa.Status == EBookingStatus.Confirmed
                                  && sa.CreatedDate >= startDateQuery
                                  && sa.CreatedDate <= endDateQuery,
                 include: sa => sa.Include(sa => sa.BookingServices).ThenInclude(bs => bs.BoatyardService)
@@ -171,8 +172,8 @@ public class GetRevenueQueryHandler : IRequestHandler<GetRevenueQuery, ApiRespon
                 {
                     g.Key.Month,
                     g.Key.Year,
-                    TotalRevenue = g.Sum(sa => sa.TotalAmount),
-                    NetRevenue = g.Sum(sa => sa.TotalAmount * 5 / 100m)
+                    TotalRevenue = g.Sum(b => b.TotalAmount),
+                    NetRevenue = g.Sum(b => b.BookingServices.Sum(bs => bs.BoatyardService.Price * (bs.BoatyardService.Boatyard.CommissionFeePercent / 100m)))
                 })
                 .Where(o => o.TotalRevenue > 0)
                 .OrderByDescending(g => g.Year).ThenByDescending(g => g.Month)
