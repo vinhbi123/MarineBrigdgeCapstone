@@ -128,9 +128,10 @@ public class GetRevenueQueryHandler : IRequestHandler<GetRevenueQuery, ApiRespon
         else if (role == ERole.Admin)
         {
             var orders = await _unitOfWork.GetRepository<Order>().GetListAsync(
-                predicate: o => (o.Status == EOrderStatus.Approved || o.Status == EOrderStatus.Completed)
-                                        && o.CreatedDate >= startDateQuery
-                                        && o.CreatedDate <= endDateQuery,
+                predicate: o => o.Status != EOrderStatus.Pending 
+                                && o.Status != EOrderStatus.Rejected 
+                                && o.CreatedDate >= startDateQuery
+                                && o.CreatedDate <= endDateQuery,
                 include: o => o.Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.ProductVariant)
                     .ThenInclude(pv => pv.Product)
