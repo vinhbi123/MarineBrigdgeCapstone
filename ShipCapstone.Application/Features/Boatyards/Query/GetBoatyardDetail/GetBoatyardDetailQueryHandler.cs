@@ -46,6 +46,7 @@ public class GetBoatyardDetailQueryHandler : IRequestHandler<GetBoatyardDetailQu
             Latitude = boatyard.Latitude,
             Longitude = boatyard.Longitude,
             AccountId = boatyard.AccountId,
+            CommissionFeePercent = boatyard.CommissionFeePercent,
             FullName = boatyard.Account.FullName,
             Username = boatyard.Account.Username,
             Address = boatyard.Account.Address,

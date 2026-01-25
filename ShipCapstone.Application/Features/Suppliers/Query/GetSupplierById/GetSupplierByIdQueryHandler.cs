@@ -1,26 +1,24 @@
-using Mediator;
+﻿using Mediator;
+using ShipCapstone.Application.Common.Exceptions;
 using ShipCapstone.Domain.Entities;
 using ShipCapstone.Domain.Models.Common;
 using ShipCapstone.Domain.Models.Suppliers;
 using ShipCapstone.Infrastructure.Persistence;
 using ShipCapstone.Infrastructure.Repositories.Interface;
 
-namespace ShipCapstone.Application.Features.Suppliers.Query.GetSuppliers;
+namespace ShipCapstone.Application.Features.Suppliers.Query.GetSupplierById;
 
-public class GetSuppliersQueryHandler : IRequestHandler<GetSuppliersQuery, ApiResponse>
+public class GetSupplierByIdQueryHandler : IRequestHandler<GetSupplierByIdQuery, ApiResponse>
 {
     private readonly IUnitOfWork<ShipCapstoneContext> _unitOfWork;
-    private readonly ILogger _logger;
     
-    public GetSuppliersQueryHandler(IUnitOfWork<ShipCapstoneContext> unitOfWork, ILogger logger)
+    public GetSupplierByIdQueryHandler(IUnitOfWork<ShipCapstoneContext> unitOfWork)
     {
-        _unitOfWork = unitOfWork;
-        _logger = logger;
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
     }
-    
-    public async ValueTask<ApiResponse> Handle(GetSuppliersQuery request, CancellationToken cancellationToken)
+    public async ValueTask<ApiResponse> Handle(GetSupplierByIdQuery request, CancellationToken cancellationToken)
     {
-        var suppliers = await _unitOfWork.GetRepository<Supplier>().GetPagingListAsync(
+        var supplier = await _unitOfWork.GetRepository<Supplier>().SingleOrDefaultAsync(
             selector: x => new GetSuppliersResponse()
             {
                 Id = x.Id,
@@ -38,19 +36,14 @@ public class GetSuppliersQueryHandler : IRequestHandler<GetSuppliersQuery, ApiRe
                 CreatedDate = x.CreatedDate,
                 LastModifiedDate = x.LastModifiedDate
             },
-            predicate: x => string.IsNullOrEmpty(request.Name) || x.Name.Contains(request.Name),
-            page: request.Page,
-            size: request.Size,
-            sortBy: request.SortBy ?? nameof(Supplier.CreatedDate),
-            isAsc: request.IsAsc
-        );
-        
+            predicate: x => x.Id == request.Id
+        ) ?? throw new NotFoundException("Không tìm thấy nhà cung cấp");
+
         return new ApiResponse
         {
             Status = StatusCodes.Status200OK,
-            Message = "Lấy danh sách nhà cung cấp thành công",
-            Data = suppliers
+            Message = "Tìm thấy nhà cung cấp",
+            Data = supplier
         };
-        
     }
 }

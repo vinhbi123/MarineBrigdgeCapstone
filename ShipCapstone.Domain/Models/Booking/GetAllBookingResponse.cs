@@ -14,6 +14,8 @@ namespace ShipCapstone.Domain.Models.Booking
         public string? ShipName { get; set; }
         public string? ShipOwnerName { get; set; }
         public string? ShipOwnerPhoneNumber { get; set; }
+        public Guid BoatyardId { get; set; }
+        public string? BoatyardName { get; set; }
         public Guid DockSlotId { get; set; }
         public string? DockSlotName { get; set; }
         public DateTime StartTime { get; set; }

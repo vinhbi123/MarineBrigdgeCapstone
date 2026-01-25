@@ -29,6 +29,7 @@ public class ApiEndPointConstant
         public const string SupplierEndpoint = ApiEndpoint + "/suppliers";
         public const string SupplierById = SupplierEndpoint + "/{id}";
         public const string SupplierWithProducts = SupplierById + "/products";
+        public const string SupplierDetail = SupplierEndpoint + "/detail";
     }
     public static class Categories
     {
@@ -102,6 +103,7 @@ public class ApiEndPointConstant
     {
         public const string AccountEndpoint = ApiEndpoint + "/accounts";
         public const string ChangePassword = AccountEndpoint + "/password";
+        public const string UpdateCommission = AccountEndpoint + "/{id}/commission";
     }
     public static class Orders
     {

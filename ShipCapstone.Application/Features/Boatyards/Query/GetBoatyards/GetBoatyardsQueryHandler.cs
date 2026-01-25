@@ -28,6 +28,7 @@ public class GetBoatyardsQueryHandler : IRequestHandler<GetBoatyardsQuery, ApiRe
                 Latitude = x.Latitude,
                 Longitude = x.Longitude,
                 AccountId = x.AccountId,
+                CommissionFeePercent = x.CommissionFeePercent,
                 FullName = x.Account.FullName,
                 Username = x.Account.Username,
                 Address = x.Account.Address,

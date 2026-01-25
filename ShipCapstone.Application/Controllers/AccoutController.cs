@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ShipCapstone.Application.Common.Utils;
 using ShipCapstone.Application.Features.Accounts.Command.ChangePassword;
+using ShipCapstone.Application.Features.Accounts.Command.UpdateComissionFee;
 using ShipCapstone.Application.Features.Accounts.Query.AllUser;
 using ShipCapstone.Domain.Constants;
 using ShipCapstone.Domain.Models.Common;
@@ -45,6 +46,23 @@ namespace ShipCapstone.Application.Controllers
             {
                 return BadRequest(response);
             }
+            var apiResponse = await _mediator.Send(command);
+            return Ok(apiResponse);
+        }
+        
+        [HttpPatch(ApiEndPointConstant.Accouts.UpdateCommission)]
+        [ProducesResponseType<ApiResponse<Guid>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateCommission([FromRoute] Guid id, [FromBody] UpdateCommissionFeeRequest request)
+        {
+            var command = new UpdateComissionFeeCommand()
+            {
+                Id = id,
+                Type = request.Type,
+                CommissionFeePercent = request.CommissionFeePercent
+            };
             var apiResponse = await _mediator.Send(command);
             return Ok(apiResponse);
         }
