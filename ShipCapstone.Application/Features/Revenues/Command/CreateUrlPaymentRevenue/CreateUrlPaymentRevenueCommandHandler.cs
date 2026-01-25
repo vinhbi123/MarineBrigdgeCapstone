@@ -51,7 +51,7 @@ public class CreateUrlPaymentRevenueCommandHandler : IRequestHandler<CreateUrlPa
                                 && o.CreatedDate <= request.EndDate.ToDateTime(TimeOnly.MaxValue)
                                 && !(o.Status.Equals(EOrderStatus.Pending) || o.Status.Equals(EOrderStatus.Rejected)));
             var totalAmountOrder = orders.Sum(o => o.TotalAmount);
-            var revenue = totalAmountOrder;
+            var revenue = totalAmountOrder * ((100 - supplier.CommissionFeePercent) / 100);
             var revenueNumber = Math.Round(revenue, 0);
             referenceCode = $"SEVQR Chuyen tien TXN-{DateTime.UtcNow:yyMMddHHmm}-{supplier.Id.ToString().Substring(0, 2)}";
             string description = $"{referenceCode} - TT doanh thu {supplier.Name} tu {request.StartDate} den {request.EndDate}";

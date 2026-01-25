@@ -6,6 +6,7 @@ public record GetBoatyardDetailResponse
     public string Name { get; set; }
     public string? Longitude { get; set; }
     public string? Latitude { get; set; }
+    public decimal CommissionFeePercent { get; set; }
     public Guid AccountId { get; set; }
     public string FullName { get; set; }
     public string Username { get; set; }

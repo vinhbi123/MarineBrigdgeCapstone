@@ -1,6 +1,6 @@
-namespace ShipCapstone.Domain.Models.Boatyards;
+﻿namespace ShipCapstone.Domain.Models.Suppliers;
 
-public record GetBoatyardsResponse
+public class GetSupplierDetailResponse
 {
     public Guid Id { get; set; }
     public string Name { get; set; }

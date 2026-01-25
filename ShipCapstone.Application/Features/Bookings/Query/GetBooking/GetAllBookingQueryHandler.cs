@@ -30,6 +30,8 @@ namespace ShipCapstone.Application.Features.Bookings.Query.GetBooking
                     ShipName = b.Ship.Name,
                     ShipOwnerName = b.Ship.Account.FullName,
                     ShipOwnerPhoneNumber = b.Ship.Account.PhoneNumber,
+                    BoatyardId = b.DockSlot.BoatyardId,
+                    BoatyardName = b.DockSlot.Boatyard.Name,
                     DockSlotId = b.DockSlotId,
                     DockSlotName = b.DockSlot.Name,
                     StartTime = b.StartTime,
@@ -40,6 +42,7 @@ namespace ShipCapstone.Application.Features.Bookings.Query.GetBooking
                 },
                 predicate: b => (role != ERole.Boatyard || (b.Status != EBookingStatus.Pending && b.DockSlot.Boatyard.AccountId == userId)) &&
                                 (role != ERole.User || b.Ship.AccountId == userId) &&
+                                (role != ERole.Captain || b.Ship.CaptainId == userId) &&
                                 (role != ERole.Admin || request.BoatyardId == null || (b.BookingServices.Any(bs => bs.BoatyardService.BoatyardId == request.BoatyardId) && b.Status == EBookingStatus.Confirmed)) &&
                                 (request.StartDate == null || DateOnly.FromDateTime(b.CreatedDate) >= request.StartDate) &&
                                 (request.EndDate == null || DateOnly.FromDateTime(b.CreatedDate) <= request.EndDate),

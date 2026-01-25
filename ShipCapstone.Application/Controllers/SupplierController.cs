@@ -1,10 +1,14 @@
 using Mediator;
 using Microsoft.AspNetCore.Mvc;
 using ShipCapstone.Application.Common.Utils;
+using ShipCapstone.Application.Common.Validators;
 using ShipCapstone.Application.Features.Products.Query.GetProductsBySupplierId;
 using ShipCapstone.Application.Features.Suppliers.Command.CreateSupplier;
+using ShipCapstone.Application.Features.Suppliers.Query.GetSupplierById;
+using ShipCapstone.Application.Features.Suppliers.Query.GetSupplierDetail;
 using ShipCapstone.Application.Features.Suppliers.Query.GetSuppliers;
 using ShipCapstone.Domain.Constants;
+using ShipCapstone.Domain.Enums;
 using ShipCapstone.Domain.Models.Authentication;
 using ShipCapstone.Domain.Models.Common;
 using ShipCapstone.Domain.Models.Products;
@@ -79,6 +83,37 @@ public class SupplierController : BaseController<SupplierController>
             IsAsc = isAsc,
             Name = name
         };
+        
+        var apiResponse = await _mediator.Send(query);
+        return Ok(apiResponse);
+    }
+    
+    [HttpGet(ApiEndPointConstant.Suppliers.SupplierById)]
+    [ProducesResponseType<ApiResponse<GetSuppliersResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetSupplierById([FromRoute] Guid id)
+    {
+        var query = new GetSupplierByIdQuery()
+        {
+            Id = id,
+        };
+        
+        var apiResponse = await _mediator.Send(query);
+        return Ok(apiResponse);
+    }
+    
+    [CustomAuthorize(ERole.Supplier)]
+    [HttpGet(ApiEndPointConstant.Suppliers.SupplierDetail)]
+    [ProducesResponseType<ApiResponse<GetSupplierDetailResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ApiResponse>(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetSupplierDetail()
+    {
+        var query = new GetSupplierDetailQuery();
         
         var apiResponse = await _mediator.Send(query);
         return Ok(apiResponse);
